@@ -27,9 +27,9 @@ Far from that light, in the snowbound north, the hamlet of **Forgelight** clings
 A priest with a secret mission, a rogue with a voice inside her head, and a stranger with a blade drawn from his own blood are about to meet in a tavern at the edge of the first snow. What they are looking for, and what is looking for them, is for the table to find out.
 
 <p align="center">
-  <img src="assets/readme/forgelight.jpg" alt="Forgelight" width="31%">
+  <img src="assets/readme/black-knight.jpg" alt="The Black Knight" width="31%">
   &nbsp;
-  <img src="assets/readme/tower.jpg" alt="An elven tower beneath a red sky" width="31%">
+  <img src="assets/readme/dread-wolf.jpg" alt="The Dread Wolf" width="31%">
   &nbsp;
   <img src="assets/readme/dhampir.jpg" alt="A Dhampir" width="31%">
 </p>
