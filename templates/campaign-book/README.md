@@ -1,10 +1,12 @@
 # Apotheosis campaign book template
 
-A LaTeX class in the style of the official fifth edition paperbacks, with a
-darker, aged tone and art that fades into the page.
+A LaTeX class in the style of the official fifth edition paperbacks, in a
+dark theme, with art that fades into the page.
 
-* Aged parchment pages, the gold scroll footer, two columns.
-* Dark red small-caps headings, gold rules under sections, Royal drop caps.
+* Charred parchment pages with bone-coloured text (dark is the default; the
+  `light` option gives the classic aged parchment), the gold scroll footer,
+  two columns.
+* Ember-red small-caps headings, gold rules under sections, Royal drop caps.
 * Bookman-style body (TeX Gyre Bonum), Gill-style sans for tables and stat
   blocks (Gillius).
 * Classic boxes: read-aloud, sidebar, comment, tables striped in the theme
@@ -34,7 +36,8 @@ change. `notes-preview/` is a copy of the notes set up exactly like that;
 `preview/` has the compiled result.
 
 Compile with **XeLaTeX** (on Overleaf, set the compiler to XeLaTeX). Keep
-`apotheosis-book.cls`, `apo-paper.jpg` and `apo-footerscroll.pdf` next to
+`apotheosis-book.cls`, `apo-paper-dark.jpg`, `apo-paper.jpg` and
+`apo-footerscroll.pdf` next to
 the document, or on `TEXINPUTS` as `notes-preview/latexmkrc` does.
 
 ```sh
@@ -43,7 +46,8 @@ cd notes-preview && latexmk
 
 ## Options
 
-`print` (white pages, no textures), `onecolumn`, `framedart`, `a4paper`.
+`light` (classic parchment), `print` (white pages, no textures),
+`onecolumn`, `framedart`, `a4paper`.
 
 ## Extra commands
 

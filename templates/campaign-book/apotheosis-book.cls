@@ -19,18 +19,22 @@
 %% ========================================================================
 %% OPTIONS
 %% ========================================================================
-%   (default)    aged parchment pages, full colour
+%   (default)    dark: charred parchment, bone text, ember-red titles
+%   light        aged parchment pages, as in the official books
 %   print        plain white pages, no textures (printer friendly)
 %   blackwhite   alias of print, kept for Dragonbane compatibility
 %   onecolumn    single column body (two columns by default)
 %   framedart    leave \includegraphics in figures as plain, hard-edged images
 %   a4paper / letterpaper (default)
 \newif\ifapo@print \apo@printfalse
+\newif\ifapo@dark \apo@darktrue
 \newif\ifapo@twocol \apo@twocoltrue
 \newif\ifapo@blendfigs \apo@blendfigstrue
 \def\apo@paper{letterpaper}
-\DeclareOption{print}{\apo@printtrue}
-\DeclareOption{blackwhite}{\apo@printtrue}
+\DeclareOption{dark}{\apo@darktrue\apo@printfalse}
+\DeclareOption{light}{\apo@darkfalse\apo@printfalse}
+\DeclareOption{print}{\apo@darkfalse\apo@printtrue}
+\DeclareOption{blackwhite}{\apo@darkfalse\apo@printtrue}
 \DeclareOption{onecolumn}{\apo@twocolfalse}
 \DeclareOption{framedart}{\apo@blendfigsfalse}
 \DeclareOption{twocolumn}{\apo@twocoltrue}
@@ -108,24 +112,48 @@
 %% ========================================================================
 % The D&D 5e LaTeX template palette, plus darker part colours for the
 % grimmer tone of this campaign.
-\definecolor{titlered}{HTML}{58180D}     % titles
-\definecolor{titlegold}{HTML}{C9AD6A}    % title rules
-\definecolor{rulered}{HTML}{9C2B1B}      % stat block rules
-\definecolor{pagegold}{HTML}{B89A67}     % page numbers, footer
-\definecolor{bgtan}{HTML}{F7F2E5}        % read-aloud
-\definecolor{statblockribbon}{HTML}{E69A28}
-\definecolor{statblockbg}{HTML}{FDF1DC}
-\definecolor{ink}{HTML}{1E1A16}
-\definecolor{PhbLightGreen}{HTML}{E0E5C1}
-\definecolor{PhbLightCyan}{HTML}{B5CEB8}
-\definecolor{PhbMauve}{HTML}{DCCCC5}
-\definecolor{PhbTan}{HTML}{E5D5AC}
-\definecolor{DmgLavender}{HTML}{E3CED3}
-\definecolor{DmgCoral}{HTML}{F3D7C1}
-\definecolor{DmgSlateGray}{HTML}{DBE4E4}
-\definecolor{DmgLilac}{HTML}{D7D4D6}
-\definecolor{AshGray}{HTML}{D6D0C4}      % grim extras
-\definecolor{Bloodwash}{HTML}{E2C4BC}
+\ifapo@dark
+  % Same roles, recoloured for dark pages.
+  \definecolor{titlered}{HTML}{C9503A}     % titles: ember red
+  \definecolor{titlegold}{HTML}{B8975A}    % title rules
+  \definecolor{rulered}{HTML}{B5402E}      % stat block rules
+  \definecolor{pagegold}{HTML}{B89A67}     % page numbers, footer
+  \definecolor{bgtan}{HTML}{2A231C}        % read-aloud
+  \definecolor{statblockribbon}{HTML}{B9772A}
+  \definecolor{statblockbg}{HTML}{221C17}
+  \definecolor{ink}{HTML}{E4D9C3}
+  \definecolor{rulecolour}{HTML}{8C6F45}   % sidebar rules and notches
+  \definecolor{PhbLightGreen}{HTML}{263024}
+  \definecolor{PhbLightCyan}{HTML}{22302C}
+  \definecolor{PhbMauve}{HTML}{33282A}
+  \definecolor{PhbTan}{HTML}{342B1E}
+  \definecolor{DmgLavender}{HTML}{30262E}
+  \definecolor{DmgCoral}{HTML}{3A2620}
+  \definecolor{DmgSlateGray}{HTML}{232B2D}
+  \definecolor{DmgLilac}{HTML}{2C2A30}
+  \definecolor{AshGray}{HTML}{2B2926}
+  \definecolor{Bloodwash}{HTML}{3D1E19}
+\else
+  \definecolor{titlered}{HTML}{58180D}     % titles
+  \definecolor{titlegold}{HTML}{C9AD6A}    % title rules
+  \definecolor{rulered}{HTML}{9C2B1B}      % stat block rules
+  \definecolor{pagegold}{HTML}{B89A67}     % page numbers, footer
+  \definecolor{bgtan}{HTML}{F7F2E5}        % read-aloud
+  \definecolor{statblockribbon}{HTML}{E69A28}
+  \definecolor{statblockbg}{HTML}{FDF1DC}
+  \definecolor{ink}{HTML}{1E1A16}
+  \definecolor{rulecolour}{HTML}{000000}
+  \definecolor{PhbLightGreen}{HTML}{E0E5C1}
+  \definecolor{PhbLightCyan}{HTML}{B5CEB8}
+  \definecolor{PhbMauve}{HTML}{DCCCC5}
+  \definecolor{PhbTan}{HTML}{E5D5AC}
+  \definecolor{DmgLavender}{HTML}{E3CED3}
+  \definecolor{DmgCoral}{HTML}{F3D7C1}
+  \definecolor{DmgSlateGray}{HTML}{DBE4E4}
+  \definecolor{DmgLilac}{HTML}{D7D4D6}
+  \definecolor{AshGray}{HTML}{D6D0C4}
+  \definecolor{Bloodwash}{HTML}{E2C4BC}
+\fi
 % The theme colour fills sidebars, comments and table stripes. Change it
 % per part with \partcolor{<colour>} or \DndSetThemeColor[<colour>].
 \colorlet{themecolor}{PhbMauve}
@@ -136,9 +164,14 @@
 \NewDocumentCommand{\DndSetThemeColor}{o}{\IfValueTF{#1}{\setthemecolor{#1}}{\setthemecolor{PhbLightGreen}}}
 \ifapo@print
   \definecolor{pagecolour}{HTML}{FFFFFF}
+  \def\apo@paperfile{}
+\else\ifapo@dark
+  \definecolor{pagecolour}{HTML}{18130F}
+  \def\apo@paperfile{apo-paper-dark.jpg}
 \else
   \definecolor{pagecolour}{HTML}{EEE5CE}
-\fi
+  \def\apo@paperfile{apo-paper.jpg}
+\fi\fi
 \pagecolor{pagecolour}
 \AtBeginDocument{\color{ink}}
 
@@ -150,7 +183,7 @@
   \ifapo@print\else
     \put(0,0){\begin{tikzpicture}[overlay]
       \node[inner sep=0pt, anchor=north west] at (0,0)
-        {\includegraphics[width=\paperwidth,height=\paperheight]{apo-paper.jpg}};
+        {\includegraphics[width=\paperwidth,height=\paperheight]{\apo@paperfile}};
     \end{tikzpicture}}%
   \fi}
 \AddToHook{shipout/background}{\apo@pageground}
@@ -543,13 +576,13 @@
 % black rules with notched corners and a soft shadow.
 \newtcolorbox{sidebar}[2][]{apo/base,
   colback=themecolor, boxsep=3pt, left=6pt, right=6pt, top=2pt, bottom=4pt,
-  borderline north={1pt}{-0.5pt}{black}, borderline south={1pt}{-0.5pt}{black},
+  borderline north={1pt}{-0.5pt}{rulecolour}, borderline south={1pt}{-0.5pt}{rulecolour},
   fuzzy shadow={0mm}{-3.5pt}{-0.5pt}{0.4mm}{black!60!white},
   overlay={%
-    \fill[black] (frame.south west) -- ++(7pt,0) -- ++(0,-5pt) -- cycle;
-    \fill[black] (frame.north west) -- ++(7pt,0) -- ++(0,5pt) -- cycle;
-    \fill[black] (frame.north east) -- ++(-7pt,0) -- ++(0,5pt) -- cycle;
-    \fill[black] (frame.south east) -- ++(-7pt,0) -- ++(0,-5pt) -- cycle;},
+    \fill[rulecolour] (frame.south west) -- ++(7pt,0) -- ++(0,-5pt) -- cycle;
+    \fill[rulecolour] (frame.north west) -- ++(7pt,0) -- ++(0,5pt) -- cycle;
+    \fill[rulecolour] (frame.north east) -- ++(-7pt,0) -- ++(0,5pt) -- cycle;
+    \fill[rulecolour] (frame.south east) -- ++(-7pt,0) -- ++(0,-5pt) -- cycle;},
   title={#2}, detach title, coltitle=ink, fontupper=\sffamily\small,
   before upper={\setlength{\parindent}{1em}\setlength{\parskip}{0pt}%
     {\noindent\sffamily\bfseries\scshape\large\tcbtitle\par}\vspace{2pt}},
@@ -558,7 +591,7 @@
 % Comment (D&D comment box): theme-coloured panel with a plain frame.
 \newtcolorbox{commentbox}[2][]{apo/base,
   colback=themecolor, boxsep=4pt, left=6pt, right=6pt, top=2pt, bottom=4pt,
-  borderline={0.6pt}{0pt}{black!70},
+  borderline={0.6pt}{0pt}{rulecolour!70},
   title={#2}, detach title, coltitle=ink, fontupper=\sffamily\small,
   before upper={\setlength{\parindent}{1em}\setlength{\parskip}{0pt}%
     {\noindent\sffamily\bfseries\scshape\large\tcbtitle\par}\vspace{2pt}},
