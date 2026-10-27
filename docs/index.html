@@ -8,58 +8,102 @@
   <meta property="og:title" content="Apotheosis">
   <meta property="og:description" content="A homebrew Dungeons & Dragons setting, campaign, and ruleset.">
   <meta property="og:image" content="assets/logo.png">
-  <meta name="theme-color" content="#0a0908">
+  <meta name="theme-color" content="#0b0a08">
   <link rel="icon" href="assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow+Semi+Condensed:ital,wght@0,300;0,400;0,500;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+Runic&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <canvas id="embers" aria-hidden="true"></canvas>
-  <div class="vignette" aria-hidden="true"></div>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="g-star" viewBox="0 0 24 24"><path d="M0.5 12Q9.6 9.6 12 0.5Q14.4 9.6 23.5 12Q14.4 14.4 12 23.5Q9.6 14.4 0.5 12Z" fill="currentColor"/></symbol>
+    <symbol id="g-banner" viewBox="-70 -14 140 36"><path d="M-68 -12H68L60 0C30 0 8 10 0 21C-8 10 -30 0 -60 0Z" fill="currentColor"/></symbol>
+    <symbol id="g-hourglass" viewBox="0 0 24 24"><path d="M6 3h12M6 21h12M7.5 3 12 12 7.5 21M16.5 3 12 12 16.5 21" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="g-twin" viewBox="0 0 24 24"><path d="M12 3.5 20.5 18H3.5Z M12 20.5 3.5 6H20.5Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+    <symbol id="g-moon" viewBox="0 0 24 24"><path d="M15.5 3.5a8.5 8.5 0 1 0 5 13.5 7 7 0 1 1-5-13.5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="g-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4M4.6 4.6l2.8 2.8M16.6 16.6l2.8 2.8M4.6 19.4l2.8-2.8M16.6 7.4l2.8-2.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="g-drop" viewBox="0 0 24 24"><path d="M12 3c4 5.5 6 8.8 6 11.5a6 6 0 0 1-12 0C6 11.8 8 8.5 12 3Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="g-alchemy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M12 4.5 19 17H5Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><rect x="9.6" y="11.2" width="4.8" height="4.8" fill="none" stroke="currentColor" stroke-width="1.3"/></symbol>
+    <symbol id="g-claw" viewBox="0 0 24 24"><path d="M7 3c1.5 6 1 12-2 18M12.5 2.5c1.2 6.5.6 12.5-2.5 19M18 3c1.2 6 .6 12-2.5 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="g-d20" viewBox="0 0 24 24"><path d="M12 2 20.7 7v10L12 22l-8.7-5V7Z M12 2 7.5 15h9Z M3.3 7l4.2 8L12 22l4.5-7 4.2-8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></symbol>
+    <symbol id="g-zigzag" viewBox="0 0 180 12" preserveAspectRatio="none"><path d="M0 2 7.5 10 15 2 22.5 10 30 2 37.5 10 45 2 52.5 10 60 2 67.5 10 75 2 82.5 10 90 2 97.5 10 105 2 112.5 10 120 2 127.5 10 135 2 142.5 10 150 2 157.5 10 165 2 172.5 10 180 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="miter"/></symbol>
+  </svg>
+
+  <canvas id="dust" aria-hidden="true"></canvas>
+  <div class="haze" aria-hidden="true"></div>
 
   <nav class="nav" id="nav">
-    <a class="nav-mark" href="#top" aria-label="Back to top">Apotheosis</a>
+    <a class="nav-mark" href="#top" aria-label="Back to top"><svg class="glyph"><use href="#g-star"/></svg>Apotheosis</a>
     <div class="nav-links">
-      <a href="#world">The World</a>
-      <a href="#inside">What's Inside</a>
-      <a href="#playing">Playing</a>
+      <a href="#world"><svg class="glyph"><use href="#g-star"/></svg><span>The World</span></a>
+      <a href="#inside"><svg class="glyph"><use href="#g-alchemy"/></svg><span>What's Inside</span></a>
+      <a href="#playing"><svg class="glyph"><use href="#g-d20"/></svg><span>Playing</span></a>
     </div>
   </nav>
 
   <header class="hero" id="top">
     <div class="hero-inner" data-parallax="0.25">
-      <img class="hero-logo" src="assets/logo.png" alt="Dungeons &amp; Dragons: Apotheosis" width="520" height="582">
-      <p class="hero-sub">A homebrew Dungeons &amp; Dragons setting, campaign, and ruleset</p>
-      <p class="hero-by">by The Charred Eye</p>
+      <p class="tracked">The Charred Eye</p>
+      <div class="sigil">
+        <svg class="frame" viewBox="0 0 400 400" aria-hidden="true">
+          <circle class="frame-circle" cx="200" cy="200" r="190" pathLength="1"/>
+          <rect class="frame-square" x="44" y="44" width="312" height="312" pathLength="1"/>
+          <g class="rays" id="rays"></g>
+        </svg>
+        <img class="hero-logo" src="assets/logo.png" alt="Dungeons &amp; Dragons: Apotheosis" width="520" height="582">
+        <p class="runes runes-left" aria-hidden="true">ᚦᛖ ᚲᚺᚨᚱᚱᛖᛞ ᛖᛃᛖ<br>ᚱᛟᛗᚢᛚᛟᚾ ᛞᛟᛗᛖᛋ<br>ᚠᛟᚱᚷᛖᛚᛁᚷᚺᛏ<br>ᚠᛁᚱᛋᛏ ᛋᚾᛟᚹ<br>ᛒᛚᚨᚲᚲ ᛁᚱᛟᚾ</p>
+        <p class="runes runes-right" aria-hidden="true">ᚨᛈᛟᚦᛖᛟᛋᛁᛋ<br>ᛋᛁᛚᛖᚾᛏ ᚷᛟᛞᛋ<br>ᛒᛚᛟᛟᛞ ᚨᚾᛞ ᛒᛚᚨᛞᛖ<br>ᚦᛖ ᛏᚨᛒᛚᛖ<br>ᚹᛁᛚᛚ ᚲᚾᛟᚹ</p>
+      </div>
+      <div class="triad">
+        <p class="triad-side">A homebrew <br>take on</p>
+        <p class="triad-main">Fifth Edition</p>
+        <p class="triad-side triad-right">Setting, <br>campaign <br>&amp; ruleset</p>
+      </div>
+
+      <dl class="hud">
+        <div class="hud-cell">
+          <dt>System</dt>
+          <dd>5e</dd>
+        </div>
+        <div class="hud-cell hud-status">
+          <div class="hud-row"><dt>Status</dt><dd>Alpha</dd></div>
+          <div class="hud-bar"><span>2014</span><svg><use href="#g-zigzag"/></svg><span>2024</span></div>
+        </div>
+        <div class="hud-cell">
+          <dt>Handbooks</dt>
+          <dd>Hybrid</dd>
+        </div>
+      </dl>
     </div>
     <a class="scroll-cue" href="#quote" aria-label="Scroll down"><span></span></a>
   </header>
 
   <main>
     <section class="quote reveal" id="quote">
-      <span class="rule" aria-hidden="true"></span>
       <blockquote>
         <p>&ldquo;You're the greatest project you will ever work on&hellip;&rdquo;</p>
         <cite>Father Indorilius</cite>
       </blockquote>
-      <span class="rule" aria-hidden="true"></span>
+      <span class="rule rule-short" aria-hidden="true"></span>
     </section>
 
     <section class="world" id="world">
-      <h2 class="reveal">The World</h2>
+      <header class="title reveal"><span class="tab">Part I</span><h2><svg class="glyph"><use href="#g-star"/></svg>The World</h2><span class="rule"></span></header>
       <div class="places">
         <article class="place reveal">
           <h3>Romulon</h3>
+          <p class="place-sub">The golden domes</p>
           <p>The known world turns on its golden domes, seat of the high elves and heart of the Church. Its faith claims to hold up the very structure of reality, and few who kneel there ask what lies beneath it.</p>
         </article>
         <article class="place reveal">
           <h3>Forgelight</h3>
+          <p class="place-sub">The snowbound north</p>
           <p>Far from that light, in the snowbound north, a hamlet clings to the ruins of an ancient snow-elven temple, digging into a past that was buried for a reason.</p>
         </article>
         <article class="place reveal">
           <h3>Black Iron</h3>
+          <p class="place-sub">The king's roads</p>
           <p>And on the king's roads between them, a host in black iron marches, burning everything in its path.</p>
         </article>
       </div>
@@ -82,28 +126,29 @@
     </section>
 
     <section class="inside" id="inside">
-      <h2 class="reveal">What's Inside</h2>
+      <header class="title reveal"><span class="tab">Part II</span><h2><svg class="glyph"><use href="#g-alchemy"/></svg>What's Inside</h2><span class="rule"></span></header>
       <p class="lede reveal"><em>Apotheosis</em> is a dark fantasy campaign built on fifth edition, with its own lore, peoples, and rules that lean into consequence and story.</p>
       <dl class="features">
-        <div class="feature reveal"><dt>Homebrew Rules</dt><dd>Tiered travel, class divergence, critical roll effects, group rolls, and the <em>Act of Valour</em> and <em>Heroic Death</em> options for when a character refuses to fall.</dd></div>
-        <div class="feature reveal"><dt>Gestalt Characters</dt><dd>A high-powered variant where small parties advance in two classes at once.</dd></div>
-        <div class="feature reveal"><dt>Species</dt><dd>Reimagined elves, dwerfen, orqs, golyaths, drakeborn, seraphs, tieflings and more, plus half-blood and variant species such as the Dhampir, Chymaera, and Reborn.</dd></div>
-        <div class="feature reveal"><dt>Religions</dt><dd>Rival faiths tied to the pillars of reality, each with its own domain, clergy, and history of holy war.</dd></div>
-        <div class="feature reveal"><dt>Afflictions</dt><dd>Diseases, curses and transformations, from lyrium and red rot to lycanthropy and vampirism.</dd></div>
-        <div class="feature reveal"><dt>Magic</dt><dd>Four sources of power: synthetic, occult, divine, and natural.</dd></div>
-        <div class="feature reveal"><dt>Bestiary</dt><dd>Original monsters and a playable monster class.</dd></div>
+        <div class="feature reveal"><span class="socket"><svg><use href="#g-hourglass"/></svg></span><div><dt>Homebrew Rules</dt><dd>Tiered travel, class divergence, critical roll effects, group rolls, and the <em>Act of Valour</em> and <em>Heroic Death</em> options for when a character refuses to fall.</dd></div></div>
+        <div class="feature reveal"><span class="socket"><svg><use href="#g-twin"/></svg></span><div><dt>Gestalt Characters</dt><dd>A high-powered variant where small parties advance in two classes at once.</dd></div></div>
+        <div class="feature reveal"><span class="socket"><svg><use href="#g-moon"/></svg></span><div><dt>Species</dt><dd>Reimagined elves, dwerfen, orqs, golyaths, drakeborn, seraphs, tieflings and more, plus half-blood and variant species such as the Dhampir, Chymaera, and Reborn.</dd></div></div>
+        <div class="feature reveal"><span class="socket"><svg><use href="#g-sun"/></svg></span><div><dt>Religions</dt><dd>Rival faiths tied to the pillars of reality, each with its own domain, clergy, and history of holy war.</dd></div></div>
+        <div class="feature reveal"><span class="socket"><svg><use href="#g-drop"/></svg></span><div><dt>Afflictions</dt><dd>Diseases, curses and transformations, from lyrium and red rot to lycanthropy and vampirism.</dd></div></div>
+        <div class="feature reveal"><span class="socket"><svg><use href="#g-alchemy"/></svg></span><div><dt>Magic</dt><dd>Four sources of power: synthetic, occult, divine, and natural.</dd></div></div>
+        <div class="feature reveal"><span class="socket"><svg><use href="#g-claw"/></svg></span><div><dt>Bestiary</dt><dd>Original monsters and a playable monster class.</dd></div></div>
       </dl>
     </section>
 
     <section class="playing" id="playing">
-      <h2 class="reveal">Playing</h2>
+      <header class="title reveal"><span class="tab">Part III</span><h2><svg class="glyph"><use href="#g-d20"/></svg>Playing</h2><span class="rule"></span></header>
       <p class="reveal">The campaign uses a <strong>hybrid of the 2014 and 2024 Player's Handbooks</strong>. Players should read the homebrew rules and species chapters before building a character; the rest of the world reveals itself in play.</p>
-      <p class="notice reveal"><span>Alpha</span> Rules and lore change between sessions, and some chapters are still being written.</p>
+      <p class="notice reveal"><kbd>Alpha</kbd> Rules and lore change between sessions, and some chapters are still being written.</p>
       <a class="button reveal" href="https://github.com/Shimji-EE/Apotheosis">View on GitHub</a>
     </section>
   </main>
 
   <footer class="footer">
+    <div class="footer-mark" aria-hidden="true"><span>Apotheosis</span><svg><use href="#g-banner"/></svg></div>
     <p>Written and run by <strong>The Charred Eye</strong>.</p>
     <p>Copyright &copy; 2026 Charl (The Charred Eye). All rights reserved. See the <a href="https://github.com/Shimji-EE/Apotheosis/blob/main/LICENSE">licence</a> for the full terms.</p>
     <p class="fine">This work includes material from the System Reference Document 5.1 and 5.2 by Wizards of the Coast LLC, licensed under <a href="https://creativecommons.org/licenses/by/4.0/legalcode">CC-BY-4.0</a>. That material stays under its own licence.</p>

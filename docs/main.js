@@ -49,9 +49,25 @@
   }, { passive: true });
   onScroll();
 
-  // Slow embers rising through the dark.
+  // Engraved rays around the hero sigil.
+  const rays = document.getElementById("rays");
+  if (rays) {
+    const ns = "http://www.w3.org/2000/svg";
+    for (let i = 0; i < 96; i++) {
+      const a = (i / 96) * Math.PI * 2;
+      const inner = i % 4 === 0 ? 150 : 162;
+      const line = document.createElementNS(ns, "line");
+      line.setAttribute("x1", (200 + Math.cos(a) * inner).toFixed(1));
+      line.setAttribute("y1", (200 + Math.sin(a) * inner).toFixed(1));
+      line.setAttribute("x2", (200 + Math.cos(a) * 182).toFixed(1));
+      line.setAttribute("y2", (200 + Math.sin(a) * 182).toFixed(1));
+      rays.appendChild(line);
+    }
+  }
+
+  // Slow dust and the odd ember drifting through the dark.
   if (reduceMotion) return;
-  const canvas = document.getElementById("embers");
+  const canvas = document.getElementById("dust");
   const ctx = canvas.getContext("2d");
   let width, height, embers;
 
@@ -75,6 +91,7 @@
       sway: Math.random() * Math.PI * 2,
       swaySpeed: Math.random() * 0.01 + 0.004,
       life: Math.random() * 0.5 + 0.5,
+      ember: Math.random() < 0.18,
     };
   }
 
@@ -88,9 +105,15 @@
       if (e.y < -10) embers[i] = spawn(false);
       const fade = Math.min(1, e.y / (height * 0.5)) * e.life;
       const glow = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.r * 4);
-      glow.addColorStop(0, `rgba(255, 120, 70, ${0.85 * fade})`);
-      glow.addColorStop(0.35, `rgba(196, 22, 28, ${0.35 * fade})`);
-      glow.addColorStop(1, "rgba(196, 22, 28, 0)");
+      if (e.ember) {
+        glow.addColorStop(0, `rgba(255, 120, 80, ${0.8 * fade})`);
+        glow.addColorStop(0.35, `rgba(200, 40, 58, ${0.3 * fade})`);
+        glow.addColorStop(1, "rgba(200, 40, 58, 0)");
+      } else {
+        glow.addColorStop(0, `rgba(240, 214, 160, ${0.55 * fade})`);
+        glow.addColorStop(0.35, `rgba(201, 162, 90, ${0.18 * fade})`);
+        glow.addColorStop(1, "rgba(201, 162, 90, 0)");
+      }
       ctx.fillStyle = glow;
       ctx.beginPath();
       ctx.arc(e.x, e.y, e.r * 4, 0, Math.PI * 2);
