@@ -12,7 +12,7 @@
   <link rel="icon" href="assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow+Semi+Condensed:ital,wght@0,300;0,400;0,500;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+Runic&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow+Semi+Condensed:ital,wght@0,300;0,400;0,500;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -27,7 +27,6 @@
     <symbol id="g-alchemy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M12 4.5 19 17H5Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><rect x="9.6" y="11.2" width="4.8" height="4.8" fill="none" stroke="currentColor" stroke-width="1.3"/></symbol>
     <symbol id="g-claw" viewBox="0 0 24 24"><path d="M7 3c1.5 6 1 12-2 18M12.5 2.5c1.2 6.5.6 12.5-2.5 19M18 3c1.2 6 .6 12-2.5 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
     <symbol id="g-d20" viewBox="0 0 24 24"><path d="M12 2 20.7 7v10L12 22l-8.7-5V7Z M12 2 7.5 15h9Z M3.3 7l4.2 8L12 22l4.5-7 4.2-8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></symbol>
-    <symbol id="g-zigzag" viewBox="0 0 180 12" preserveAspectRatio="none"><path d="M0 2 7.5 10 15 2 22.5 10 30 2 37.5 10 45 2 52.5 10 60 2 67.5 10 75 2 82.5 10 90 2 97.5 10 105 2 112.5 10 120 2 127.5 10 135 2 142.5 10 150 2 157.5 10 165 2 172.5 10 180 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="miter"/></symbol>
   </svg>
 
   <canvas id="dust" aria-hidden="true"></canvas>
@@ -48,33 +47,19 @@
       <div class="sigil">
         <svg class="frame" viewBox="0 0 400 400" aria-hidden="true">
           <circle class="frame-circle" cx="200" cy="200" r="190" pathLength="1"/>
-          <rect class="frame-square" x="44" y="44" width="312" height="312" pathLength="1"/>
-          <g class="rays" id="rays"></g>
+          <path class="frame-die" pathLength="1" d="M200 30 347.2 115 347.2 285 200 370 52.8 285 52.8 115Z"/>
+          <path class="frame-die frame-die-inner" pathLength="1" d="M200 118 286 266 114 266Z M200 118 200 30 M200 118 52.8 115 M200 118 347.2 115 M286 266 347.2 115 M286 266 347.2 285 M286 266 200 370 M114 266 200 370 M114 266 52.8 285 M114 266 52.8 115"/>
         </svg>
         <img class="hero-logo" src="assets/logo.png" alt="Dungeons &amp; Dragons: Apotheosis" width="520" height="582">
-        <p class="runes runes-left" aria-hidden="true">ᚦᛖ ᚲᚺᚨᚱᚱᛖᛞ ᛖᛃᛖ<br>ᚱᛟᛗᚢᛚᛟᚾ ᛞᛟᛗᛖᛋ<br>ᚠᛟᚱᚷᛖᛚᛁᚷᚺᛏ<br>ᚠᛁᚱᛋᛏ ᛋᚾᛟᚹ<br>ᛒᛚᚨᚲᚲ ᛁᚱᛟᚾ</p>
-        <p class="runes runes-right" aria-hidden="true">ᚨᛈᛟᚦᛖᛟᛋᛁᛋ<br>ᛋᛁᛚᛖᚾᛏ ᚷᛟᛞᛋ<br>ᛒᛚᛟᛟᛞ ᚨᚾᛞ ᛒᛚᚨᛞᛖ<br>ᚦᛖ ᛏᚨᛒᛚᛖ<br>ᚹᛁᛚᛚ ᚲᚾᛟᚹ</p>
+        <div class="script script-left" aria-hidden="true"></div>
+        <div class="script script-right" aria-hidden="true"></div>
       </div>
-      <div class="triad">
-        <p class="triad-side">A homebrew <br>take on</p>
-        <p class="triad-main">Fifth Edition</p>
-        <p class="triad-side triad-right">Setting, <br>campaign <br>&amp; ruleset</p>
+      <p class="hero-sub">A homebrew Dungeons &amp; Dragons setting, campaign, and ruleset</p>
+      <p class="hero-facts"><span>D&amp;D 5e</span><svg class="glyph"><use href="#g-star"/></svg><span>2014 + 2024 Player's Handbooks</span><svg class="glyph"><use href="#g-star"/></svg><span>Alpha</span></p>
+      <div class="hero-actions">
+        <a class="button" href="#world">Enter the world</a>
+        <a class="button button-quiet" href="#inside">What's inside</a>
       </div>
-
-      <dl class="hud">
-        <div class="hud-cell">
-          <dt>System</dt>
-          <dd>5e</dd>
-        </div>
-        <div class="hud-cell hud-status">
-          <div class="hud-row"><dt>Status</dt><dd>Alpha</dd></div>
-          <div class="hud-bar"><span>2014</span><svg><use href="#g-zigzag"/></svg><span>2024</span></div>
-        </div>
-        <div class="hud-cell">
-          <dt>Handbooks</dt>
-          <dd>Hybrid</dd>
-        </div>
-      </dl>
     </div>
     <a class="scroll-cue" href="#quote" aria-label="Scroll down"><span></span></a>
   </header>
@@ -142,7 +127,7 @@
     <section class="playing" id="playing">
       <header class="title reveal"><span class="tab">Part III</span><h2><svg class="glyph"><use href="#g-d20"/></svg>Playing</h2><span class="rule"></span></header>
       <p class="reveal">The campaign uses a <strong>hybrid of the 2014 and 2024 Player's Handbooks</strong>. Players should read the homebrew rules and species chapters before building a character; the rest of the world reveals itself in play.</p>
-      <p class="notice reveal"><kbd>Alpha</kbd> Rules and lore change between sessions, and some chapters are still being written.</p>
+      <p class="notice reveal"><span class="tab">Alpha</span> Rules and lore change between sessions, and some chapters are still being written.</p>
       <a class="button reveal" href="https://github.com/Shimji-EE/Apotheosis">View on GitHub</a>
     </section>
   </main>
