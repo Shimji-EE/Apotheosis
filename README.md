@@ -14,7 +14,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/system-D%26D%205e%20(2014%20%2B%202024)-8b0000?style=flat-square" alt="System: D&D 5e">
   <img src="https://img.shields.io/badge/status-alpha-1a1a1a?style=flat-square" alt="Status: alpha">
-  <img src="https://img.shields.io/badge/license-MIT-3a3a3a?style=flat-square" alt="License: MIT">
+  <img src="https://img.shields.io/badge/license-All%20rights%20reserved-3a3a3a?style=flat-square" alt="License: All rights reserved">
 </p>
 
 ---
@@ -65,6 +65,10 @@ The campaign book and session recaps are typeset in LaTeX with a clean, minimali
 
 ## Credits & License
 
-Written and run by **The Charred Eye**. Released under the [MIT License](LICENSE).
+Written and run by **The Charred Eye**.
+
+Copyright © 2026 Charl (The Charred Eye). **All rights reserved.** The setting, story, and homebrew rules in this repository may not be copied, adapted, or published elsewhere without written permission. See [LICENSE](LICENSE) for the full terms.
+
+This work includes material from the System Reference Document 5.1 and 5.2 by Wizards of the Coast LLC, licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode). That material stays under its own licence.
 
 *Apotheosis* is unofficial fan content. Dungeons &amp; Dragons is a trademark of Wizards of the Coast; this project is not affiliated with or endorsed by them.
