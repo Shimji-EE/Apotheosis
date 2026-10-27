@@ -19,7 +19,9 @@
 %% ========================================================================
 %% OPTIONS
 %% ========================================================================
-%   (default)    dark: charred parchment, bone text, ember-red titles
+%   (default)    grave: the Grave Gold theme (smoky soot pages, gold condensed
+%                capitals, hairlines and the abstract ornaments of the recap)
+%   ember        the earlier dark look: charred parchment, ember-red titles
 %   light        aged parchment pages, as in the official books
 %   print        plain white pages, no textures (printer friendly)
 %   blackwhite   alias of print, kept for Dragonbane compatibility
@@ -28,13 +30,16 @@
 %   a4paper / letterpaper (default)
 \newif\ifapo@print \apo@printfalse
 \newif\ifapo@dark \apo@darktrue
+\newif\ifapo@grave \apo@gravetrue
 \newif\ifapo@twocol \apo@twocoltrue
 \newif\ifapo@blendfigs \apo@blendfigstrue
 \def\apo@paper{letterpaper}
-\DeclareOption{dark}{\apo@darktrue\apo@printfalse}
-\DeclareOption{light}{\apo@darkfalse\apo@printfalse}
-\DeclareOption{print}{\apo@darkfalse\apo@printtrue}
-\DeclareOption{blackwhite}{\apo@darkfalse\apo@printtrue}
+\DeclareOption{grave}{\apo@darktrue\apo@gravetrue\apo@printfalse}
+\DeclareOption{dark}{\apo@darktrue\apo@gravetrue\apo@printfalse}
+\DeclareOption{ember}{\apo@darktrue\apo@gravefalse\apo@printfalse}
+\DeclareOption{light}{\apo@darkfalse\apo@gravefalse\apo@printfalse}
+\DeclareOption{print}{\apo@darkfalse\apo@gravefalse\apo@printtrue}
+\DeclareOption{blackwhite}{\apo@darkfalse\apo@gravefalse\apo@printtrue}
 \DeclareOption{onecolumn}{\apo@twocolfalse}
 \DeclareOption{framedart}{\apo@blendfigsfalse}
 \DeclareOption{twocolumn}{\apo@twocoltrue}
@@ -79,6 +84,7 @@
 \RequirePackage{Royal}
 \RequirePackage{pagecolor}
 \RequirePackage{ragged2e}
+\RequirePackage{stfloats}
 \RequirePackage[hidelinks]{hyperref}
 
 \setlength{\columnsep}{0.32in}
@@ -165,13 +171,16 @@
 \ifapo@print
   \definecolor{pagecolour}{HTML}{FFFFFF}
   \def\apo@paperfile{}
+\else\ifapo@grave
+  \definecolor{pagecolour}{HTML}{0B0A08}
+  \def\apo@paperfile{apo-paper-grave.jpg}
 \else\ifapo@dark
   \definecolor{pagecolour}{HTML}{18130F}
   \def\apo@paperfile{apo-paper-dark.jpg}
 \else
   \definecolor{pagecolour}{HTML}{EEE5CE}
   \def\apo@paperfile{apo-paper.jpg}
-\fi\fi
+\fi\fi\fi
 \pagecolor{pagecolour}
 \AtBeginDocument{\color{ink}}
 
@@ -333,6 +342,143 @@
   \vspace*{0.2in}}\clearpage}
 \newcommand{\onecolumn@apo}[1]{#1}
 
+% --- Ornaments -----------------------------------------------------------
+% The abstract shapes of the Apotheosis recap book (the Dragonbane
+% supplement class): four-point star, lozenge head, pointed tip, tabs with
+% pointed ends, and the spike banner.
+\usetikzlibrary{decorations.pathmorphing}
+\tikzset{
+  pics/apofourstar/.style={code={\fill (-.25,0) to[out=25,in=245] (0,.25)
+    to[out=295,in=155] (.25,0) to[out=205,in=65] (0,-.25) to[out=115,in=335] cycle;}},
+  pics/apolefttip/.style={code={\fill (0.25,-.45) to[out=180,in=18] (0,-.5)
+    to[in=0,out=-242] (-.9,0) to[out=0,in=242] (0,.5) to[out=-18,in=180] (0.25,.45);}},
+  pics/apoleftspike/.style={code={\fill (.25,0) to[out=180,in=18] (0,-.05)
+    to[in=-36,out=-242] (-.45,.45) to[out=36,in=270] (0,1.5);}},
+  pics/apodownspike/.style={code={\fill (-1.7,.3) -- (1.7,.3) -- (1.5,0)
+    to[out=180,in=50] (0,-.5) to[out=130,in=0] (-1.5,0) -- cycle;}},
+  pics/apotip/.style={code={\fill (-0.5,0) to[out=0,in=135] (0,-.15)
+    to[out=45,in=180] (0.5,0) to[out=180,in=-45] (0,.15) to[out=-135,in=0] cycle;}},
+  pics/apohead/.style={code={\fill (-.25,0) to[out=-20,in=135] (0,-.125)
+    to[out=45,in=200] (.25,0) to[out=160,in=-45] (0,.125) to[out=-135,in=20] cycle;}},
+}
+\colorlet{ornament}{titlegold}
+
+% --- Page-wide art: half pages and diagonals ------------------------------
+% Both are full bleed and fade into the page. They sit in a page-wide float
+% that keeps the text clear of them, so top art goes to the top of the next
+% page and bottom art to the foot of this page (or the next).
+%
+%  \halfpageart[top|bottom][keys]{file}
+%      keys: any \fadedart key, e.g. height=.4\paperheight, focus=.3
+%  \diagonalart[tl|tr|bl|br][keys]{file}
+%      the corner where the art runs deepest; keys:
+%      deep=<fraction of page height> (default .42), shallow=<...> (.2),
+%      blend=<...> (.06, width of the soft edge), plus any \fadedart key
+\newsavebox{\apo@diagsrc}
+\newlength{\apo@reserve}
+\pgfkeys{/apo/diag/.is family, /apo/diag,
+  deep/.store in=\apo@ddeep, shallow/.store in=\apo@dshallow,
+  blend/.store in=\apo@dblend, focus/.store in=\apo@dfocus,
+  .unknown/.code={\edef\apo@dkeys{\unexpanded\expandafter{\apo@dkeys},%
+    \pgfkeyscurrentname=\unexpanded{#1}}}}
+% Build the fading for one diagonal: art above the line from the left edge
+% (\apo@hl down from the top) to the right edge (\apo@hr down), with a soft
+% band of \apo@bl along it. #2 is 1 for top art, -1 for bottom art.
+\newcommand{\apo@makediagfading}[2]{%
+  \ifcsname apo@fading@#1\endcsname\else
+    \expandafter\gdef\csname apo@fading@#1\endcsname{}%
+    \begin{tikzfadingfrompicture}[name=#1]
+      \useasboundingbox (-.5\apo@W,-.5\apo@H) rectangle (.5\apo@W,.5\apo@H);
+      \fill[black] (-.5\apo@W,-.5\apo@H) rectangle (.5\apo@W,.5\apo@H);
+      \begin{scope}[yscale=#2]
+        \clip (-.5\apo@W,-.5\apo@H) rectangle (.5\apo@W,.5\apo@H);
+        \begin{scope}[shift={(-.5\apo@W,.5\apo@H-\apo@hl)}, rotate=\apo@ang]
+          \shade[bottom color=black, top color=white]
+            (-.5\apo@W,0) rectangle (1.6\apo@W,\apo@bl);
+          \fill[white] (-.5\apo@W,\apo@bl) rectangle (1.6\apo@W,2\apo@H);
+        \end{scope}
+      \end{scope}
+    \end{tikzfadingfrompicture}%
+  \fi}
+% \apo@makediag{corner}{file}: the finished diagonal art in \apo@artbox.
+\newcommand{\apo@makediag}[2]{%
+  \setlength{\apo@W}{\paperwidth}%
+  \setlength{\apo@H}{\apo@ddeep\paperheight}%
+  \edef\apo@tmp{\noexpand\fadedart[width=\the\apo@W, height=\the\apo@H,
+    fade=none, focus=\apo@dfocus\unexpanded\expandafter{\apo@dkeys}]{\unexpanded{#2}}}%
+  \sbox\apo@diagsrc{\apo@tmp}%
+  \def\apo@sign{1}%
+  \IfStrEqCase{#1}{{tl}{\def\apo@deepleft{1}}{tr}{\def\apo@deepleft{0}}%
+    {bl}{\def\apo@deepleft{1}\def\apo@sign{-1}}{br}{\def\apo@deepleft{0}\def\apo@sign{-1}}}%
+    [\def\apo@deepleft{1}]%
+  \if1\apo@deepleft
+    \pgfmathsetlengthmacro{\apo@hl}{\apo@H}%
+    \pgfmathsetlengthmacro{\apo@hr}{\apo@dshallow\paperheight}%
+  \else
+    \pgfmathsetlengthmacro{\apo@hl}{\apo@dshallow\paperheight}%
+    \pgfmathsetlengthmacro{\apo@hr}{\apo@H}%
+  \fi
+  \pgfmathsetlengthmacro{\apo@bl}{\apo@dblend\paperheight}%
+  \pgfmathsetmacro{\apo@ang}{atan2(\apo@hl-\apo@hr,\apo@W)}%
+  \edef\apo@fname{apodiag-#1-\apo@ddeep-\apo@dshallow-\apo@dblend}%
+  \edef\apo@tmp{\noexpand\apo@makediagfading{\apo@fname}{\apo@sign}}\apo@tmp
+  \sbox\apo@artbox{\begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (\apo@W,\apo@H);
+    \begin{scope}[shift={(.5\apo@W,.5\apo@H)}]
+      \begin{scope}[scope fading=\apo@fname, fit fading=false]
+        \node[inner sep=0pt] at (0,0) {\usebox\apo@diagsrc};
+      \end{scope}
+      \begin{scope}[yscale=\apo@sign]
+        \draw[ornament, line width=.5pt, opacity=.85]
+          (-.5\apo@W,.5\apo@H-\apo@hl) -- (.5\apo@W,.5\apo@H-\apo@hr);
+        \pic[fill=ornament, rotate=-\apo@ang, scale=.9]
+          at (0,.5\apo@H-.5*\apo@hl-.5*\apo@hr) {apotip};
+      \end{scope}
+    \end{scope}
+  \end{tikzpicture}}}
+% Put \apo@artbox in a page-wide float at the top or bottom, drawn against
+% the paper edge, with the space it covers kept clear of text.
+\newcommand{\apo@pagefloat}[1]{%
+  \setlength{\apo@H}{\dimexpr\ht\apo@artbox+\dp\apo@artbox\relax}%
+  \def\apo@tmpa{#1}\def\apo@tmpb{top}%
+  \ifx\apo@tmpa\apo@tmpb
+    \setlength{\apo@reserve}{\dimexpr\apo@H-0.7in-.6\textfloatsep\relax}%
+    \begin{figure*}[t!]
+      \noindent\begin{tikzpicture}[remember picture, overlay]
+        \node[inner sep=0pt, anchor=north] at (current page.north) {\usebox\apo@artbox};
+      \end{tikzpicture}%
+      \rule{0pt}{\apo@reserve}%
+    \end{figure*}%
+  \else
+    \setlength{\apo@reserve}{\dimexpr\apo@H-0.95in-.6\textfloatsep\relax}%
+    \begin{figure*}[b!]
+      \noindent\begin{tikzpicture}[remember picture, overlay]
+        \node[inner sep=0pt, anchor=south] at (current page.south) {\usebox\apo@artbox};
+      \end{tikzpicture}%
+      \rule{0pt}{\apo@reserve}%
+    \end{figure*}%
+  \fi}
+\NewDocumentCommand{\halfpageart}{O{top} O{} m}{%
+  \begingroup
+  \def\apo@tmpa{#1}\def\apo@tmpb{top}%
+  \ifx\apo@tmpa\apo@tmpb
+    \sbox\apo@artbox{\fadedart[width=\paperwidth, height=.5\paperheight,
+      top=0, bottom=.4, left=0, right=0,#2]{#3}}%
+  \else
+    \sbox\apo@artbox{\fadedart[width=\paperwidth, height=.5\paperheight,
+      top=.4, bottom=0, left=0, right=0,#2]{#3}}%
+  \fi
+  \apo@pagefloat{#1}%
+  \endgroup}
+\NewDocumentCommand{\diagonalart}{O{tl} O{} m}{%
+  \begingroup
+  \def\apo@dkeys{}%
+  \pgfkeys{/apo/diag/.cd, deep=.42, shallow=.2, blend=.06, focus=.5,#2}%
+  \apo@makediag{#1}{#3}%
+  \IfStrEqCase{#1}{{bl}{\apo@pagefloat{bottom}}{br}{\apo@pagefloat{bottom}}}
+    [\apo@pagefloat{top}]%
+  \endgroup}
+
 %% ========================================================================
 %% HEADINGS
 %% ========================================================================
@@ -354,7 +500,24 @@
   \gdef\apo@chapterartkeys{#1}\gdef\apo@chapterartfile{#2}\global\apo@chapterarttrue}
 \newlength{\apo@chartheight}
 \setlength{\apo@chartheight}{0.4\paperheight}
+% \chapterdiagonalart[tl|tr][keys]{file}: the same, cut on a diagonal
+% (keys as for \diagonalart).
+\newif\ifapo@chapterdiag
+\def\apo@chdiagcorner{tl}\def\apo@chdiagkeys{}
+\NewDocumentCommand{\chapterdiagonalart}{O{tl} O{} m}{%
+  \gdef\apo@chdiagcorner{#1}\gdef\apo@chdiagkeys{#2}%
+  \gdef\apo@chapterartfile{#3}\global\apo@chapterdiagtrue}
 \newcommand{\apo@chapteropening}{%
+  \ifapo@chapterdiag
+    \def\apo@dkeys{}%
+    \edef\apo@tmp{\noexpand\pgfkeys{/apo/diag/.cd, deep=.4, shallow=.18, blend=.06, focus=.5,
+      \unexpanded\expandafter{\apo@chdiagkeys}}}\apo@tmp
+    \edef\apo@tmp{\noexpand\apo@makediag{\apo@chdiagcorner}{\unexpanded\expandafter{\apo@chapterartfile}}}%
+    \apo@tmp
+    \apo@placeart{top}%
+    \vspace*{\dimexpr\apo@H-0.7in-8pt\relax}%
+    \global\apo@chapterdiagfalse
+  \fi
   \ifapo@chapterart
     \edef\apo@tmp{\noexpand\pagetopart[height=\noexpand\apo@chartheight,
       \unexpanded\expandafter{\apo@chapterartkeys}]{\unexpanded\expandafter{\apo@chapterartfile}}}%
@@ -813,5 +976,366 @@
   {\displayfont\bfseries\color{titlered}\fontsize{13}{14}\selectfont#1\par}
   {\itshape#2\par}\vspace{2pt}}
 \let\DndItemHeader\itemheader
+
+%% ========================================================================
+%% GRAVE GOLD THEME (default)
+%% ========================================================================
+% The Apotheosis house theme, shared with the website: smoky soot pages,
+% red condensed capitals, hairlines and a red zigzag rule (the
+% look, not the game elements, of the Vladimir UI for The Witcher 3), with the abstract
+% ornaments of the recap book (tabs with pointed ends, lozenge-ended rules,
+% the four-point star and the spike banner). The layout stays the
+% paperback's. The other looks are the ember, light and print options.
+\ifapo@grave
+
+% --- Fonts ---------------------------------------------------------------
+% Crimson Pro for prose, Barlow Condensed for headings and labels, Barlow
+% Semi Condensed for boxes, tables and stat blocks, Colus for drop caps.
+% They ship in fonts/ next to the class; installed copies work too.
+\def\apo@fontdir{}
+\IfFileExists{./fonts/BarlowCondensed-SemiBold.ttf}{\def\apo@fontdir{./fonts/}}{%
+  \IfFileExists{../fonts/BarlowCondensed-SemiBold.ttf}{\def\apo@fontdir{../fonts/}}{%
+    \IfFileExists{../../fonts/BarlowCondensed-SemiBold.ttf}{\def\apo@fontdir{../../fonts/}}{}}}
+\ifx\apo@fontdir\@empty
+  \ClassWarningNoLine{apotheosis-book}{fonts/ folder not found next to the
+    document; looking for the font files on the TeX path}
+\fi
+\setmainfont{CrimsonPro}[Path=\apo@fontdir, Extension=.ttf,
+  UprightFont=*-Regular, BoldFont=*-SemiBold, ItalicFont=*-Italic,
+  BoldItalicFont=*-SemiBoldItalic, Scale=1.08]
+\setsansfont{BarlowSemiCondensed}[Path=\apo@fontdir, Extension=.ttf,
+  UprightFont=*-Regular, BoldFont=*-SemiBold, ItalicFont=*-Italic,
+  BoldItalicFont=*-SemiBoldItalic, Scale=0.98]
+\renewfontfamily\displayfont{BarlowCondensed}[Path=\apo@fontdir, Extension=.ttf,
+  UprightFont=*-SemiBold, BoldFont=*-Bold, LetterSpace=3]
+\newfontfamily\labelfont{BarlowCondensed}[Path=\apo@fontdir, Extension=.ttf,
+  UprightFont=*-Medium, BoldFont=*-SemiBold, LetterSpace=18]
+\newfontfamily\carvedfont{Colus}[Path=\apo@fontdir, Extension=.otf]
+
+% --- Colours -------------------------------------------------------------
+\definecolor{soot}{HTML}{0B0A08}
+\definecolor{panel}{HTML}{15130F}
+\definecolor{haze}{HTML}{2A2016}
+\definecolor{bone}{HTML}{D8D2C6}
+\definecolor{ash}{HTML}{8C867B}
+\definecolor{hairline}{HTML}{2B2925}   % bone at 12% on soot
+\definecolor{gold}{HTML}{C23B3B}   % ornament red (was gold; the role keeps its name)
+\definecolor{goldbright}{HTML}{D9544C}
+\definecolor{blood}{HTML}{C8283A}
+\definecolor{graverow}{HTML}{1E1A15}
+% The shared roles, so everything above picks up the theme.
+\colorlet{titlered}{gold}\colorlet{titlegold}{gold}\colorlet{pagegold}{gold}
+\colorlet{rulered}{blood}\colorlet{statblockribbon}{gold}
+\colorlet{bgtan}{panel}\colorlet{statblockbg}{panel}
+\colorlet{ink}{bone}\colorlet{rulecolour}{gold}
+\colorlet{accent}{gold}\colorlet{secret}{blood}\colorlet{ornament}{gold}
+\colorlet{themecolor}{graverow}
+
+% --- Small pieces ----------------------------------------------------------
+\newcommand{\apo@up}[1]{\MakeUppercase{#1}}
+% The four-point star used as a heading glyph and list bullet.
+\newcommand{\apo@star}[1][.4]{\tikz[baseline=-.62ex]\pic[fill=gold,scale=#1]{apofourstar};}
+% A gold tab with pointed ends (the recap's "Episode" label).
+\newcommand{\apo@tab}[1]{\tikz[baseline=(t.base)]{%
+  \node[fill=gold, text=soot, inner xsep=.9em, inner ysep=0pt, minimum height=4.4mm]
+    (t) {\labelfont\bfseries\footnotesize\apo@up{#1}};
+  \pic[fill=gold, scale=.5] at (t.west) {apolefttip};
+  \pic[fill=gold, scale=-.5] at (t.east) {apolefttip};}}
+% A rule with lozenge ends and a pointed centre.
+\newcommand{\apo@crownrule}[1][\linewidth]{\tikz{%
+  \draw[gold, line width=.7pt] (0,0) -- (#1,0);
+  \pic[fill=gold, scale=.7] at (0,0) {apohead};
+  \pic[fill=gold, scale=.7] at (#1,0) {apohead};
+  \pic[fill=gold, scale=1.2] at (.5*#1,0) {apotip};}}
+% A hairline with a short gold bar at its start (the column divider).
+\newcommand{\apo@barrule}{\par\nointerlineskip\vspace{2pt}\noindent
+  \tikz{\fill[hairline] (0,0) rectangle (\linewidth,.6pt);
+        \fill[gold] (0,-.4pt) rectangle (26pt,1pt);}\par\nointerlineskip\vspace{4pt}}
+% The red zigzag (the XP bar).
+\newcommand{\apo@zigzag}{\par\nointerlineskip\vspace{3pt}\noindent
+  \tikz\draw[blood, line width=.55pt, decorate,
+    decoration={zigzag, segment length=3.2pt, amplitude=1.1pt}] (0,0) -- (\linewidth,0);%
+  \par\nointerlineskip\vspace{3pt}}
+\renewcommand{\goldrule}{\apo@barrule}
+
+% --- Headings --------------------------------------------------------------
+% Chapters: a "Chapter N" tab on a lozenge-ended hairline, the title in gold
+% condensed capitals, and the crowned rule below.
+\newcommand{\apo@gchapter}[2]{%
+  \begin{minipage}{\textwidth}\centering
+    \ifx\relax#1\relax
+      {\color{gold}\apo@star[.7]}\par\vspace{2pt}
+    \else
+      \tikz{\draw[gold!60, line width=.4pt] (0,0) -- (\textwidth,0);
+        \pic[fill=gold!80, scale=.55] at (0,0) {apohead};
+        \pic[fill=gold!80, scale=.55] at (\textwidth,0) {apohead};
+        \node at (.5\textwidth,0) {\apo@tab{#1}};}\par\vspace{6pt}
+    \fi
+    {\displayfont\color{gold}\fontsize{34}{36}\selectfont\apo@up{#2}\par}
+    \vspace{4pt}\apo@crownrule[\textwidth]\par
+  \end{minipage}}
+\titleformat{\chapter}[block]
+  {\apo@chapteropening\centering}{}{0pt}{\apo@gchapter{\chaptertitlename~\thechapter}}
+\titleformat{name=\chapter,numberless}[block]
+  {\apo@chapteropening\centering}{}{0pt}{\apo@gchapter{}}
+\titlespacing*{\chapter}{0pt}{0pt}{16pt}
+
+% Sections: star glyph and gold capitals, a hairline led by a gold bar.
+\newcommand{\apo@gsection}[1]{\apo@star\hspace{.4em}\apo@up{#1}}
+\titleformat{\section}
+  {\displayfont\color{gold}\fontsize{17}{19}\selectfont\RaggedRight}
+  {}{0pt}{\apo@gsection}[\apo@barrule]
+\titlespacing*{\section}{0pt}{12pt plus 3pt}{2pt}
+\titleformat{\subsection}
+  {\displayfont\color{gold}\fontsize{13}{15}\selectfont\RaggedRight}
+  {}{0pt}{\apo@up}
+\titlespacing*{\subsection}{0pt}{9pt plus 2pt}{2pt}
+\titleformat{\subsubsection}
+  {\labelfont\bfseries\color{ash}\fontsize{9.5}{11}\selectfont\RaggedRight}
+  {}{0pt}{\apo@up}
+\titlespacing*{\subsubsection}{0pt}{7pt plus 2pt}{1pt}
+\titleformat{\paragraph}[runin]
+  {\displayfont\color{gold}}{}{0pt}{\apo@up}
+\titlespacing*{\paragraph}{0pt}{4pt}{0.6em}
+
+% Parts: the art, then a tab, the title and the crowned rule.
+\RenewDocumentCommand{\part}{s m}{%
+  \if@twocolumn\onecolumn\@restonecoltrue\else\@restonecolfalse\fi
+  \clearpage\thispagestyle{empty}%
+  \IfBooleanF{#1}{\refstepcounter{part}\addcontentsline{toc}{part}{#2}}%
+  \ifx\apo@partimage\@empty\else
+    \sbox\apo@artbox{\fadedart[width=\paperwidth, height=\paperheight,
+      top=.06, bottom=.45, left=.06, right=.06, focus=.35]{\apo@partimage}}%
+    \apo@placeart{bottom}%
+    \gdef\apo@partimage{}%
+  \fi
+  \null\vfill
+  \begin{center}
+    \IfBooleanF{#1}{\apo@tab{\partname~\thepart}\par\vspace{8pt}}%
+    {\displayfont\fontsize{44}{48}\selectfont\color{gold}\apo@up{#2}\par}
+    \vspace{6pt}\apo@crownrule[0.6\textwidth]
+  \end{center}
+  \vspace*{0.6in}
+  \clearpage
+  \if@restonecol\twocolumn\fi}
+
+% --- Contents ------------------------------------------------------------
+\titlecontents{part}[0pt]
+  {\addvspace{10pt}\displayfont\large\color{gold}\MakeUppercase}
+  {}{}{}[\addvspace{3pt}]
+\titlecontents{chapter}[0pt]
+  {\addvspace{7pt}\displayfont\color{gold}}
+  {\thecontentslabel.\ }{}{\hfill\contentspage}
+\titlecontents{section}[1em]
+  {\color{bone}}{}{}{{\color{ash}\titlerule*[0.6pc]{.}}\contentspage}
+
+% --- Running feet ----------------------------------------------------------
+% A hairline across the foot with lozenge ends, the page number on the recap's
+% spike banner, and the title or chapter as a tracked label.
+\newcommand{\apo@gfoot}[1]{%
+  \begin{tikzpicture}[baseline=0pt]
+    \useasboundingbox (0,-2mm) rectangle (\textwidth,2mm);
+    \draw[gold!60, line width=.4pt] (0,.6mm) -- (\textwidth,.6mm);
+    \pic[fill=gold!80, scale=.5] at (0,.6mm) {apohead};
+    \pic[fill=gold!80, scale=.5] at (\textwidth,.6mm) {apohead};
+    \pic[fill=gold, scale=.36] at (.5\textwidth,0) {apodownspike};
+    \node at (.5\textwidth,.4mm) {\displayfont\footnotesize\color{soot}\thepage};
+    #1
+  \end{tikzpicture}}
+\fancyhf{}
+\fancyfoot[CE]{\apo@gfoot{\node[anchor=south west, inner sep=0pt] at (0,1.6mm)
+  {\labelfont\scriptsize\color{ash}\MakeUppercase{\apo@shorttitle}};}}
+\fancyfoot[CO]{\apo@gfoot{\node[anchor=south east, inner sep=0pt] at (\textwidth,1.6mm)
+  {\labelfont\scriptsize\color{ash}\MakeUppercase{\leftmark}};}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\apo@gfoot{}}}
+
+% --- Title page --------------------------------------------------------------
+\renewcommand*{\maketitle}{%
+  \begin{titlepage}
+    \ifx\apo@cover\@empty\else
+      \sbox\apo@artbox{\fadedart[width=\paperwidth, height=\paperheight,
+        top=.04, bottom=.42, left=.04, right=.04, focus=.15]{\apo@cover}}%
+      \apo@placeart{bottom}%
+    \fi
+    \null\vfill
+    \begin{center}
+      \ifx\apo@logo\@empty
+        {\displayfont\addfontfeature{LetterSpace=30}\fontsize{58}{62}\selectfont
+         \color{gold}\let\large\relax\let\\\par\apo@up{\@title}\par}
+      \else
+        \includegraphics[width=0.42\textwidth]{\apo@logo}\par
+      \fi
+      \vspace{8pt}\apo@crownrule[0.6\textwidth]\par
+      \ifx\@subtitle\@empty\else
+        \vspace{8pt}{\labelfont\large\color{ash}\apo@up{\@subtitle}\par}
+      \fi
+      \vspace{12pt}{\displayfont\large\color{bone}\@author\par}
+      \ifx\@version\@empty\else
+        \vspace{2pt}{\labelfont\small\color{ash}VERSION \@version\par}
+      \fi
+    \end{center}
+    \vspace*{0.4in}
+  \end{titlepage}}
+\renewcommand{\makecredits}{%
+  \if@twocolumn\onecolumn\@restonecoltrue\else\@restonecolfalse\fi
+  \clearpage\thispagestyle{empty}%
+  \null\vfill
+  \begin{center}\begin{minipage}{0.6\textwidth}\centering\small
+    \apo@tab{\authorkey}\par\vspace{6pt}
+    \@author\par\vspace{14pt}
+    \ifx\@credits\@empty\else
+      \apo@tab{\creditskey}\par\vspace{6pt}
+      {\setlength{\parskip}{0.5em}\@credits\par}
+    \fi
+  \end{minipage}\end{center}
+  \vspace*{0.4in}\clearpage
+  \if@restonecol\twocolumn\fi}
+
+% --- Text ----------------------------------------------------------------
+\renewcommand{\LettrineFontHook}{\carvedfont\color{gold}}
+\renewcommand{\LettrineTextFont}{\displayfont\color{bone}}
+\setlist[itemize]{noitemsep, topsep=3pt, leftmargin=1.2em,
+  label={\tikz[baseline=-.62ex]\pic[fill=gold,scale=.24]{apofourstar};}}
+\setlist[description]{font=\displayfont\color{gold}, topsep=3pt, itemsep=1pt, leftmargin=0pt}
+\renewcommand\coloritem[2][gold]{\item {\color{#1}\textbf{#2}}}
+\renewenvironment{quote}
+  {\par\medskip\begin{center}\begin{minipage}{0.88\linewidth}\centering
+   {\color{gold}\apo@star[.3]}\par\vspace{2pt}\itshape\setlength{\parskip}{3pt}}
+  {\end{minipage}\end{center}\medskip}
+
+% --- Boxes -----------------------------------------------------------------
+\tcbset{apo/base/.append style={coltitle=gold},
+  apo/hair/.style={borderline={.5pt}{0pt}{hairline}},
+  apo/brackets/.style={overlay={%
+    \foreach \c/\sx/\sy in {north west/1/-1, north east/-1/-1,
+                            south west/1/1, south east/-1/1}
+      {\draw[#1, line width=.8pt] ([xshift=\sx*9pt]frame.\c) -- (frame.\c)
+         -- ([yshift=\sy*9pt]frame.\c);}}}}
+\newcommand{\apo@boxtitle}[1]{{\noindent\displayfont\color{gold}\fontsize{12.5}{14}\selectfont
+  \apo@star[.32]\hspace{.35em}\apo@up{#1}\par}\vspace{3pt}}
+
+% Read-aloud: raised panel, a hairline down the left with a gold bar at
+% its head, italic text.
+\renewtcolorbox{readaloud}[1][]{apo/base,
+  colback=panel, opacityback=.9, boxsep=7pt, left=4pt, right=0pt, top=0pt, bottom=0pt,
+  overlay unbroken and first={%
+    \fill[hairline] (frame.north west) rectangle ([xshift=.8pt]frame.south west);
+    \fill[gold] ([yshift=.5pt]frame.north west) rectangle ([xshift=2.4pt,yshift=-36pt]frame.north west);},
+  overlay middle and last={%
+    \fill[hairline] (frame.north west) rectangle ([xshift=.8pt]frame.south west);},
+  fontupper=\itshape, #1}
+
+% Sidebar: raised panel, hairline frame, gold corner brackets and a tip.
+\renewtcolorbox{sidebar}[2][]{apo/base, apo/hair,
+  colback=panel, opacityback=.92, boxsep=4pt, left=7pt, right=7pt, top=4pt, bottom=6pt,
+  fuzzy shadow={0mm}{-3pt}{0pt}{0.5mm}{black!70!white},
+  apo/brackets=gold,
+  overlay unbroken app={\pic[fill=gold, scale=.8] at (frame.south) {apotip};},
+  title={#2}, detach title, fontupper=\sffamily\small,
+  before upper={\setlength{\parindent}{1em}\setlength{\parskip}{0pt}%
+    \apo@boxtitle{#2}},
+  #1}
+
+% Comment: hairline frame only, an ash label for a title.
+\renewtcolorbox{commentbox}[2][]{apo/base, apo/hair,
+  colback=panel, opacityback=.6, boxsep=4pt, left=7pt, right=7pt, top=3pt, bottom=5pt,
+  title={#2}, detach title, fontupper=\sffamily\small,
+  before upper={\setlength{\parindent}{1em}\setlength{\parskip}{0pt}%
+    {\noindent\labelfont\bfseries\footnotesize\color{ash}\apo@up{#2}\par}\vspace{3pt}},
+  #1}
+
+% Variant rule: a sidebar marked in blood.
+\renewtcolorbox{variantrule}[2][]{apo/base, apo/hair,
+  colback=panel, opacityback=.92, boxsep=4pt, left=7pt, right=7pt, top=4pt, bottom=6pt,
+  fuzzy shadow={0mm}{-3pt}{0pt}{0.5mm}{black!70!white},
+  apo/brackets=blood,
+  title={#2}, detach title, fontupper=\sffamily\small,
+  before upper={\setlength{\parindent}{1em}\setlength{\parskip}{0pt}%
+    {\noindent\labelfont\bfseries\scriptsize\color{blood}VARIANT RULE\par}\vspace{1pt}%
+    \apo@boxtitle{#2}},
+  #1}
+
+% Note (the recap's empty box): a gold tab for a title, between rules with
+% lozenge ends.
+\renewtcolorbox{note}[2][]{apo/base,
+  colback=white, opacityback=0, boxsep=0pt, left=0pt, right=0pt, top=12pt, bottom=8pt,
+  overlay unbroken={%
+    \draw[gold, line width=.6pt] (frame.north west) -- (frame.north east)
+      (frame.south west) -- (frame.south east);
+    \foreach \c in {north west, north east, south west, south east}
+      {\pic[fill=gold, scale=.55] at (frame.\c) {apohead};}
+    \pic[fill=gold, scale=1] at (frame.south) {apotip};
+    \node at (frame.north) {\apo@tab{#2}};},
+  #1}
+
+% --- Tables ----------------------------------------------------------------
+\renewcommand{\colhead}[1]{\leavevmode{\labelfont\bfseries\color{gold}\apo@up{#1}}}
+\renewcommand{\apo@tablestart}[1]{%
+  \par\addvspace{6pt}\noindent
+  \minipage{\linewidth}%
+  \ifx\relax#1\relax\else\apo@boxtitle{#1}\fi
+  \sffamily\small\renewcommand{\arraystretch}{1.2}%
+  \rowcolors{2}{themecolor}{}}
+\renewenvironment{tablebox}[2][]
+  {\par\addvspace{6pt}\noindent\apo@boxtitle{#2}%
+   \centering\sffamily\small\renewcommand{\arraystretch}{1.2}\rowcolors{2}{themecolor}{}}
+  {\par\addvspace{6pt}}
+
+% --- Stat blocks -------------------------------------------------------------
+% Raised panel between gold rules with lozenge ends, the red zigzag between
+% its parts, gold labels and bone values.
+\renewcommand{\monsterrule}{\apo@zigzag}
+\let\rpghline\monsterrule
+\let\dndline\monsterrule
+\renewtcolorbox{monster}[2][]{apo/base,
+  colback=panel, opacityback=.94, boxsep=0pt, left=8pt, right=8pt, top=9pt, bottom=9pt,
+  borderline north={.7pt}{0pt}{gold}, borderline south={.7pt}{0pt}{gold},
+  fuzzy shadow={0mm}{-3pt}{0pt}{0.5mm}{black!70!white},
+  overlay unbroken={%
+    \foreach \c in {north west, north east, south west, south east}
+      {\pic[fill=gold, scale=.6] at (frame.\c) {apohead};}
+    \pic[fill=gold, scale=1] at (frame.north) {apotip};
+    \pic[fill=gold, scale=1] at (frame.south) {apotip};},
+  title={#2}, detach title, fontupper=\sffamily\small,
+  before upper={\setlength{\parindent}{0pt}\setlength{\parskip}{3pt}%
+    {\displayfont\color{gold}\fontsize{17}{18}\selectfont\apo@up{#2}\par}},
+  #1}
+\renewcommand{\monstertype}[1]{{\itshape\color{ash}#1\par}\monsterrule}
+\renewcommand{\apo@attr}[2]{%
+  \ifx#2\@empty\else
+    \par\vspace{-2pt}\noindent\hangindent=1em{\color{gold}\textbf{#1}}~#2\par
+  \fi}
+\RenewDocumentCommand{\stats}{O{}}{%
+  \pgfkeys{/apo/mon/.cd, STR=\stat{10}, DEX=\stat{10}, CON=\stat{10},
+    INT=\stat{10}, WIS=\stat{10}, CHA=\stat{10},#1}%
+  \par\noindent
+  {\setlength{\tabcolsep}{0pt}%
+   \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}cccccc@{}}
+     {\labelfont\bfseries\color{gold}STR}&{\labelfont\bfseries\color{gold}DEX}&
+     {\labelfont\bfseries\color{gold}CON}&{\labelfont\bfseries\color{gold}INT}&
+     {\labelfont\bfseries\color{gold}WIS}&{\labelfont\bfseries\color{gold}CHA}\\
+     \apo@m@STR&\apo@m@DEX&\apo@m@CON&\apo@m@INT&\apo@m@WIS&\apo@m@CHA
+   \end{tabular*}}\par}
+\renewcommand{\monstersection}[1]{%
+  \par\vspace{6pt}{\displayfont\color{gold}\fontsize{13}{14}\selectfont\apo@up{#1}\par}%
+  \nointerlineskip\vspace{1pt}{\color{gold!50}\hrule height 0.5pt}\par\nointerlineskip\vspace{3pt}}
+\let\rpgmonstersection\monstersection
+
+% --- Spells and items --------------------------------------------------------
+\RenewDocumentCommand{\spellheader}{m m m m m m}{%
+  \par\addvspace{8pt}\noindent
+  {\displayfont\color{gold}\fontsize{13}{14}\selectfont\apo@up{#1}\par}
+  {\itshape\color{ash}#2\par}\vspace{2pt}%
+  \apo@sline{Casting Time}{#3}\apo@sline{Range}{#4}%
+  \apo@sline{Components}{#5}\apo@sline{Duration}{#6}\par\vspace{4pt}}
+\let\DndSpellHeader\spellheader
+\RenewDocumentCommand{\itemheader}{m m}{%
+  \par\addvspace{8pt}\noindent
+  {\displayfont\color{gold}\fontsize{13}{14}\selectfont\apo@up{#1}\par}
+  {\itshape\color{ash}#2\par}\vspace{2pt}}
+\let\DndItemHeader\itemheader
+\renewcommand{\apo@sline}[2]{\par\noindent{\color{gold}\textbf{#1:}}~#2}
+
+\fi
 
 \endinput

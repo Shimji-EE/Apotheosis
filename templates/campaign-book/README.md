@@ -3,7 +3,11 @@
 A LaTeX class in the style of the official fifth edition paperbacks, in a
 dark theme, with art that fades into the page.
 
-* Charred parchment pages with bone-coloured text (dark is the default; the
+* Grave Gold theme by default (shared with the website): smoky soot pages, red
+  condensed capitals (Barlow Condensed), Crimson Pro prose, hairlines, the red
+  zigzag rule, and the recap book's tabs, stars and lozenge rules. `ember` gives
+  the earlier charred-parchment look.
+* Charred parchment pages with bone-coloured text (the
   `light` option gives the classic aged parchment), the gold scroll footer,
   two columns.
 * Ember-red small-caps headings, gold rules under sections, Royal drop caps.
@@ -70,3 +74,13 @@ Fade keys: `fade=soft|all|bottom|top|sides|left|right|none`, or `top`,
 ## History
 
 Approved versions are kept in `history/`.
+
+## Page-wide art
+
+| Command | What it does |
+| --- | --- |
+| `\halfpageart[top|bottom][keys]{file}` | Full-bleed art over half a page, fading into it |
+| `\diagonalart[tl|tr|bl|br][keys]{file}` | Full-bleed art cut on a diagonal (deepest at the named corner); keys `deep`, `shallow`, `blend`, `focus` |
+| `\chapterdiagonalart[tl|tr][keys]{file}` | A diagonal opener for the next chapter |
+
+Keep `fonts/` next to the document (Overleaf: upload the folder).
