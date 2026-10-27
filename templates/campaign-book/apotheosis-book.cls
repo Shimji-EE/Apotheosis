@@ -1,12 +1,12 @@
 %% apotheosis-book.cls
-%% A clean, minimalist dark fantasy class for full campaign books.
+%% A campaign book class in the style of the official fifth edition
+%% paperbacks, with a darker, aged tone and art that fades into the page.
 %%
-%% Carries over the features of the Dragonbane Supplement class
-%% (parts with art, segments, dragon/demon/empty/table boxes, coloured list
-%% items, accent colours, credits title page, black & white printing) and the
-%% D&D 5e LaTeX template (read-aloud text, sidebars, rollable tables, stat
-%% blocks, spell headers, drop caps, keyed areas), restyled for dark pages and
-%% with art that fades into the page instead of sitting in a frame.
+%% Carries over the features of the Dragonbane Supplement class (part pages
+%% with art, segments, dragon/demon/empty/table boxes, coloured list items,
+%% \partcolor, credits, black & white printing) and the D&D 5e LaTeX template
+%% (read-aloud text, sidebars, comments, tables, stat blocks, spell headers,
+%% drop caps, keyed areas). The D&D and rpg-monster command names still work.
 %%
 %% Compile with XeLaTeX or LuaLaTeX (fontspec). All fonts ship with TeX Live.
 %%
@@ -14,31 +14,35 @@
 %% LaTeX Project Public License, version 1.3c or later.
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{apotheosis-book}[2026/10/27 v1.0 Minimalist dark fantasy campaign book]
+\ProvidesClass{apotheosis-book}[2026/10/27 v1.1 D&D paperback style campaign book]
 
 %% ========================================================================
 %% OPTIONS
 %% ========================================================================
-%   dark (default)  bone text on near-black pages, Cinzel titles
-%   vermis          aged gamebook paper, coral titles, rounded panels
-%                   (after Plastiboo's Vermis)
-%   light           ink on warm parchment-coloured pages
-%   print           ink on white, no textures (printer friendly)
-%   blackwhite      alias of print, kept for Dragonbane compatibility
+%   (default)    aged parchment pages, full colour
+%   print        plain white pages, no textures (printer friendly)
+%   blackwhite   alias of print, kept for Dragonbane compatibility
+%   onecolumn    single column body (two columns by default)
+%   framedart    leave \includegraphics in figures as plain, hard-edged images
 %   a4paper / letterpaper (default)
-\def\apo@theme{dark}
+\newif\ifapo@print \apo@printfalse
+\newif\ifapo@twocol \apo@twocoltrue
+\newif\ifapo@blendfigs \apo@blendfigstrue
 \def\apo@paper{letterpaper}
-\DeclareOption{dark}{\def\apo@theme{dark}}
-\DeclareOption{vermis}{\def\apo@theme{vermis}}
-\DeclareOption{light}{\def\apo@theme{light}}
-\DeclareOption{print}{\def\apo@theme{print}}
-\DeclareOption{blackwhite}{\def\apo@theme{print}}
+\DeclareOption{print}{\apo@printtrue}
+\DeclareOption{blackwhite}{\apo@printtrue}
+\DeclareOption{onecolumn}{\apo@twocolfalse}
+\DeclareOption{framedart}{\apo@blendfigsfalse}
+\DeclareOption{twocolumn}{\apo@twocoltrue}
 \DeclareOption{a4paper}{\def\apo@paper{a4paper}}
 \DeclareOption{letterpaper}{\def\apo@paper{letterpaper}}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{book}}
 \ProcessOptions\relax
-\LoadClass[10pt,twoside,openany]{book}
-\def\apo@dark{dark}\def\apo@vermis{vermis}\def\apo@light{light}\def\apo@print{print}
+\ifapo@twocol
+  \LoadClass[10pt,twoside,openany,twocolumn]{book}
+\else
+  \LoadClass[10pt,twoside,openany]{book}
+\fi
 
 %% ========================================================================
 %% PACKAGES
@@ -49,14 +53,15 @@
     {This class uses fontspec. Switch the compiler to XeLaTeX.}
 \fi
 \RequirePackage[\apo@paper,
-  top=0.8in, bottom=0.95in, inner=0.7in, outer=0.7in,
-  headsep=0pt, headheight=0pt, footskip=0.5in]{geometry}
+  top=0.7in, bottom=0.95in, inner=0.6in, outer=0.6in,
+  headsep=0pt, headheight=0pt, footskip=0.45in]{geometry}
 \RequirePackage[english]{babel}
 \RequirePackage[autostyle]{csquotes}
 \RequirePackage{fontspec}
 \RequirePackage{microtype}
 \RequirePackage[table,dvipsnames]{xcolor}
 \RequirePackage{graphicx}
+\let\apo@includegraphics\includegraphics
 \RequirePackage{tikz}
 \usetikzlibrary{fadings,calc}
 \RequirePackage[most]{tcolorbox}
@@ -67,10 +72,12 @@
 \RequirePackage{titlesec,titletoc}
 \RequirePackage{fancyhdr}
 \RequirePackage{lettrine}
+\RequirePackage{Royal}
 \RequirePackage{pagecolor}
+\RequirePackage{ragged2e}
 \RequirePackage[hidelinks]{hyperref}
 
-\setlength{\columnsep}{0.3in}
+\setlength{\columnsep}{0.32in}
 \setlength{\parindent}{1em}
 \setlength{\parskip}{0pt}
 \raggedbottom
@@ -78,120 +85,85 @@
 %% ========================================================================
 %% FONTS
 %% ========================================================================
-% dark / light / print: Crimson Pro body, Cinzel titles, Alegreya Sans labels.
-% vermis: IM Fell English body (rough old print), Kooper titles (soft
-% 70s gamebook serif), Alegreya Sans labels.
-\ifx\apo@theme\apo@vermis
-  \setmainfont{IMFeENrm28P.otf}[
-    ItalicFont = IMFeENit28P.otf, SmallCapsFont = IMFeENsc28P.otf,
-    BoldFont = IMFeENrm28P.otf, BoldFeatures = {FakeBold=2.2},
-    BoldItalicFont = IMFeENit28P.otf, BoldItalicFeatures = {FakeBold=2.2},
-    Scale = 1.06]
-  \newfontfamily\displayfont{QTKooper.otf}[
-    ItalicFont = QTKooper-Italic.otf, BoldFont = QTKooper.otf]
-  \newfontfamily\decorfont{QTKooper.otf}
-\else
-  \setmainfont{CrimsonPro}[
-    Extension = .ttf, UprightFont = *-Regular, BoldFont = *-SemiBold,
-    ItalicFont = *-Italic, BoldItalicFont = *-SemiBoldItalic]
-  \newfontfamily\displayfont{Cinzel}[
-    Extension = .ttf, UprightFont = *-Regular, BoldFont = *-Bold]
-  \newfontfamily\decorfont{CinzelDecorative}[
-    Extension = .ttf, UprightFont = *-Regular, BoldFont = *-Bold]
-\fi
-\setsansfont{AlegreyaSans}[
+% Body: TeX Gyre Bonum (the Bookman face behind the 5e body text).
+% Headings: Bonum small caps, as in the D&D 5e LaTeX template.
+% Tables, stat block labels: Gillius ADF No2 (a Gill Sans cut, like the
+% sans used in the books).  Drop caps: Royal initials, as in the D&D 5e
+% LaTeX template.
+\setmainfont{texgyrebonum}[
+  Extension = .otf, UprightFont = *-regular, BoldFont = *-bold,
+  ItalicFont = *-italic, BoldItalicFont = *-bolditalic, Scale = 0.94]
+\setsansfont{GilliusADFNo2Cond}[
   Extension = .otf, UprightFont = *-Regular, BoldFont = *-Bold,
-  ItalicFont = *-Italic, BoldItalicFont = *-BoldItalic,
-  SmallCapsFont = AlegreyaSansSC-Regular.otf]
-% Spaced capitals for small labels ("CHAPTER ONE", running feet, ...)
-\newcommand{\labelfont}{\sffamily\addfontfeatures{LetterSpace=18}}
-\newcommand{\spaced}[1]{{\addfontfeatures{LetterSpace=18}\MakeUppercase{#1}}}
+  ItalicFont = *-Italic, BoldItalicFont = *-BoldItalic, Scale = 1.05]
+\newfontfamily\displayfont{texgyrebonum}[
+  Extension = .otf, UprightFont = *-regular, BoldFont = *-bold,
+  Letters = SmallCaps]
 % Dragonbane compatibility
 \newcommand{\titlefont}{\displayfont}
 \newcommand{\tffamily}{\displayfont}
 
 %% ========================================================================
-%% COLOURS & THEME
+%% COLOURS
 %% ========================================================================
-% Named accents. Pick one per part with \partcolor{<name>} or \setaccent{<name>}.
-% Ember/Coral, Bile and Mustard are lifted from the Vermis palette.
-\definecolor{Coral}{HTML}{E0533F}
-\newcommand{\apo@palette}[8]{%
-  \definecolor{Ember}{HTML}{#1}\definecolor{Ochre}{HTML}{#2}%
-  \definecolor{Blood}{HTML}{#3}\definecolor{Bile}{HTML}{#4}%
-  \definecolor{Mustard}{HTML}{#5}\definecolor{Frost}{HTML}{#6}%
-  \definecolor{Amethyst}{HTML}{#7}\definecolor{Lyrium}{HTML}{#8}}
-%   page ground, page centre, ink, muted, box ground, table row
-\newcommand{\apo@grounds}[6]{%
-  \definecolor{pageground}{HTML}{#1}\definecolor{pagecentre}{HTML}{#2}%
-  \definecolor{ink}{HTML}{#3}\definecolor{muted}{HTML}{#4}%
-  \definecolor{boxground}{HTML}{#5}\definecolor{rowground}{HTML}{#6}}
-\newlength{\apo@arc}
-\def\apo@texture{}
-\ifx\apo@theme\apo@dark
-  \apo@palette{C4573F}{B8975A}{A8382F}{9EA35A}{C9A23F}{7C9AB0}{9A7DB8}{C0453A}
-  \apo@grounds{121110}{1B1917}{DCD3C2}{8E8678}{1E1C19}{211F1B}
-  \colorlet{accent}{Ember}
-  \def\apo@texture{art/texture-dark.jpg}
+% The D&D 5e LaTeX template palette, plus darker part colours for the
+% grimmer tone of this campaign.
+\definecolor{titlered}{HTML}{58180D}     % titles
+\definecolor{titlegold}{HTML}{C9AD6A}    % title rules
+\definecolor{rulered}{HTML}{9C2B1B}      % stat block rules
+\definecolor{pagegold}{HTML}{B89A67}     % page numbers, footer
+\definecolor{bgtan}{HTML}{F7F2E5}        % read-aloud
+\definecolor{statblockribbon}{HTML}{E69A28}
+\definecolor{statblockbg}{HTML}{FDF1DC}
+\definecolor{ink}{HTML}{1E1A16}
+\definecolor{PhbLightGreen}{HTML}{E0E5C1}
+\definecolor{PhbLightCyan}{HTML}{B5CEB8}
+\definecolor{PhbMauve}{HTML}{DCCCC5}
+\definecolor{PhbTan}{HTML}{E5D5AC}
+\definecolor{DmgLavender}{HTML}{E3CED3}
+\definecolor{DmgCoral}{HTML}{F3D7C1}
+\definecolor{DmgSlateGray}{HTML}{DBE4E4}
+\definecolor{DmgLilac}{HTML}{D7D4D6}
+\definecolor{AshGray}{HTML}{D6D0C4}      % grim extras
+\definecolor{Bloodwash}{HTML}{E2C4BC}
+% The theme colour fills sidebars, comments and table stripes. Change it
+% per part with \partcolor{<colour>} or \DndSetThemeColor[<colour>].
+\colorlet{themecolor}{PhbMauve}
+\colorlet{accent}{titlered}               % headings, labels
+\colorlet{secret}{rulered}
+\newcommand{\setthemecolor}[1]{\colorlet{themecolor}{#1}}
+\newcommand{\partcolor}[1]{\clearpage\setthemecolor{#1}}
+\NewDocumentCommand{\DndSetThemeColor}{o}{\IfValueTF{#1}{\setthemecolor{#1}}{\setthemecolor{PhbLightGreen}}}
+\ifapo@print
+  \definecolor{pagecolour}{HTML}{FFFFFF}
+\else
+  \definecolor{pagecolour}{HTML}{EEE5CE}
 \fi
-\ifx\apo@theme\apo@vermis
-  \apo@palette{D2492F}{9C7424}{A3271B}{6F8E33}{C99A1E}{3F6F8C}{6B4C8A}{C23A2C}
-  \apo@grounds{D9BB85}{ECDDB5}{2A1F17}{6E5B44}{23211D}{E2CD9C}
-  \colorlet{accent}{Coral}
-  \setlength{\apo@arc}{5pt}
-  \def\apo@texture{art/texture-vermis.jpg}
-\fi
-\ifx\apo@theme\apo@light
-  \apo@palette{9A3A26}{7D5F22}{7E1F17}{5E6324}{8A6A12}{34546B}{5A3F78}{8E2219}
-  \apo@grounds{E9E1D0}{F1EBDF}{221E1A}{6B6256}{DFD5C1}{E0D7C4}
-  \colorlet{accent}{Ember}
-\fi
-\ifx\apo@theme\apo@print
-  \apo@palette{9A3A26}{7D5F22}{7E1F17}{5E6324}{8A6A12}{34546B}{5A3F78}{8E2219}
-  \apo@grounds{FFFFFF}{FFFFFF}{1A1A1A}{5E5E5E}{F0EEEA}{F3F1ED}
-  \colorlet{accent}{Ember}
-\fi
-% Text colour inside the dark panels used by the vermis theme.
-\ifx\apo@theme\apo@vermis
-  \definecolor{panelink}{HTML}{EADBB4}\else\colorlet{panelink}{ink}\fi
-\colorlet{secret}{Blood}
-\newcommand{\setaccent}[1]{\colorlet{accent}{#1}}
-% Dragonbane: change the accent colour, starting on a new page.
-\newcommand{\partcolor}[1]{\clearpage\setaccent{#1}}
-\pagecolor{pageground}
+\pagecolor{pagecolour}
 \AtBeginDocument{\color{ink}}
 
 %% ========================================================================
 %% PAGE GROUND
 %% ========================================================================
-% Every page gets a texture (grain for dark, aged paper for vermis) or a soft
-% radial lift. Art drawn with the commands below sits on top of it and fades
-% into it with real transparency, so the texture shows through.
+% Aged parchment with darkened edges behind every page.
 \newcommand{\apo@pageground}{%
-  \put(0,0){\begin{tikzpicture}[overlay]
-    \fill[pageground] (0,0) rectangle (\paperwidth,-\paperheight);
-    \ifx\apo@theme\apo@print\else
-      \ifx\apo@texture\@empty
-        \shade[inner color=pagecentre, outer color=pageground]
-          (0.5\paperwidth,-0.5\paperheight) ellipse
-          [x radius=0.75\paperwidth, y radius=0.62\paperheight];
-      \else
-        \node[inner sep=0pt, anchor=north west] at (0,0)
-          {\includegraphics[width=\paperwidth,height=\paperheight]{\apo@texture}};
-      \fi
-    \fi
-  \end{tikzpicture}}}
+  \ifapo@print\else
+    \put(0,0){\begin{tikzpicture}[overlay]
+      \node[inner sep=0pt, anchor=north west] at (0,0)
+        {\includegraphics[width=\paperwidth,height=\paperheight]{apo-paper.jpg}};
+    \end{tikzpicture}}%
+  \fi}
 \AddToHook{shipout/background}{\apo@pageground}
 
 %% ========================================================================
 %% FADED ART
 %% ========================================================================
 % \fadedart[keys]{file} draws an image cropped to width x height whose edges
-% dissolve into whatever is behind it, like the art in the official books.
+% dissolve into the page behind it, like the art in the official books.
 %
 %   width=<len>        default \linewidth
 %   height=<len>       default: keep the image's aspect ratio
-%   fade=all|soft|bottom|top|sides|left|right|none   preset (default soft)
+%   fade=soft|all|bottom|top|sides|left|right|none   preset (default soft)
 %   top/bottom/left/right=<0..0.5>   fade depth as a fraction of the size
 %   focus=<0..1>       vertical crop focus: 0 top, .5 centre, 1 bottom
 %   opacity=<0..1>     overall strength (default 1)
@@ -238,7 +210,7 @@
 \NewDocumentCommand{\fadedart}{O{} m}{%
   \begingroup
   \pgfkeys{/apo/art/.cd, reset,#1}%
-  \sbox\apo@artbox{\includegraphics{#2}}%
+  \sbox\apo@artbox{\apo@includegraphics{#2}}%
   \setlength{\apo@W}{\apo@aw}%
   \ifx\apo@ah\@empty
     \setlength{\apo@H}{\dimexpr\apo@W*\ht\apo@artbox/\wd\apo@artbox\relax}%
@@ -264,28 +236,39 @@
         \pgfpathrectangle{\pgfpointorigin}{\pgfpoint{\apo@W}{\apo@H}}%
         \pgfusepath{clip}%
         \pgftext[at={\pgfpoint{.5\apo@W}{.5\apo@H+\apo@dy pt}}]{%
-          \includegraphics[width=\apo@iw pt,height=\apo@ih pt]{#2}}%
+          \apo@includegraphics[width=\apo@iw pt,height=\apo@ih pt]{#2}}%
       \end{pgftransparencygroup}
     \end{pgfscope}
   \end{tikzpicture}%
   \endgroup}
 
+% Plain figures blend in too: inside a figure, \includegraphics draws a
+% soft-edged \fadedart at the width it would have had. Turn this off with
+% the framedart class option.
+\newcommand{\apo@figart}[2][]{%
+  \sbox\apo@artbox{\apo@includegraphics[#1]{#2}}%
+  \edef\apo@figw{\the\wd\apo@artbox}%
+  \fadedart[width=\apo@figw]{#2}}
+\ifapo@blendfigs
+  \AddToHook{env/figure/begin}{\let\includegraphics\apo@figart}
+  \AddToHook{env/figure*/begin}{\let\includegraphics\apo@figart}
+\fi
+
 % In-column art. Soft edges on all sides; takes the same keys.
 \NewDocumentCommand{\columnart}{O{} m}{%
-  \par\vspace{6pt}\noindent\fadedart[#1]{#2}\par\vspace{6pt}}
-% Dragonbane name
+  \par\vspace{4pt}\noindent\fadedart[#1]{#2}\par\vspace{4pt}}
 \let\spotart\columnart
 
 % Art painted directly onto the page, behind the text.
 %  \pagetopart[keys]{file}     full-bleed band across the top, fades down
 %  \pagebottomart[keys]{file}  full-bleed band across the bottom, fades up
-% Both apply to the page being typeset when the next page is shipped out,
-% so call them at the top of the page they belong to.
+% Both apply to the page that ships next, so call them at the top of the
+% page they belong to.
 \NewDocumentCommand{\pagetopart}{O{} m}{%
-  \sbox\apo@artbox{\fadedart[width=\paperwidth, top=.04, bottom=.6, left=.04, right=.04, height=.42\paperheight, #1]{#2}}%
+  \sbox\apo@artbox{\fadedart[width=\paperwidth, top=0, bottom=.55, left=0, right=0, height=.4\paperheight,#1]{#2}}%
   \apo@placeart{top}}
 \NewDocumentCommand{\pagebottomart}{O{} m}{%
-  \sbox\apo@artbox{\fadedart[width=\paperwidth, fade=top, height=.3\paperheight, #1]{#2}}%
+  \sbox\apo@artbox{\fadedart[width=\paperwidth, fade=top, height=.3\paperheight,#1]{#2}}%
   \apo@placeart{bottom}}
 % Keep each placed art in its own box until its page ships, then paint it
 % anchored to the top or bottom edge of the paper.
@@ -306,164 +289,147 @@
     \put(0,-\paperheight){\expandafter\usebox\csname apo@art@#2\endcsname}%
   \fi}
 
-% A page that is only art, full bleed, with a soft vignette and an optional
-% caption set low on the page.
+% A page that is only art, full bleed, with an optional caption.
 \NewDocumentCommand{\fullpageart}{O{} m o}{%
   \clearpage\thispagestyle{empty}%
   \sbox\apo@artbox{\fadedart[width=\paperwidth, height=\paperheight,
-    top=.1, bottom=.22, left=.1, right=.1, #1]{#2}}%
-  \apo@placeart{bottom}
-  \null\vfill
-  \IfValueT{#3}{\begin{center}\color{ink}\itshape\large #3\end{center}}%
-  \vspace*{0.2in}\clearpage}
-
-%% ========================================================================
-%% ORNAMENTS
-%% ========================================================================
-\tikzfading[name=apo@in,  left color=transparent!100, right color=transparent!0]
-\tikzfading[name=apo@out, left color=transparent!0,   right color=transparent!100]
-\newcommand{\apo@diamond}[1][2.2pt]{%
-  \tikz[baseline=-0.6ex]\fill[accent] (0,#1)--(#1,0)--(0,-#1)--(-#1,0)--cycle;}
-% A hairline that fades out at both ends, with a diamond in the middle.
-\newcommand{\ornament}[1][0.55\linewidth]{%
-  \begin{tikzpicture}[baseline=-0.6ex]
-    \fill[accent, path fading=apo@in]  (-0.5*#1,-0.3pt) rectangle (-5pt,0.3pt);
-    \fill[accent, path fading=apo@out] (5pt,-0.3pt) rectangle (0.5*#1,0.3pt);
-    \fill[accent] (0,2.2pt)--(2.2pt,0)--(0,-2.2pt)--(-2.2pt,0)--cycle;
-  \end{tikzpicture}}
-% A hairline that fades out to the right (under section titles).
-% (vermis: a printed double rule instead.)
-\ifx\apo@theme\apo@vermis
-  \newcommand{\fadeline}[1][\linewidth]{%
-    \tikz{\fill[accent] (0,0) rectangle (#1,1pt);
-          \fill[accent] (0,-2pt) rectangle (#1,-1.5pt);}}
-\else
-  \newcommand{\fadeline}[1][\linewidth]{%
-    \tikz\fill[accent, path fading=apo@out] (0,-0.25pt) rectangle (#1,0.25pt);}
-\fi
-\newcommand{\divider}{\par\medskip{\centering\ornament\par}\medskip}
-% Dragonbane helpers
-\newcommand*{\hrulefil}{\leavevmode\leaders\hrule height 0.7ex depth \dimexpr0.4pt-0.7ex\hfill\kern0pt}
-\newcommand*{\bline}{\noalign{\color{accent}\hrule height 0.6pt}}
+    top=.08, bottom=.2, left=.08, right=.08,#1]{#2}}%
+  \apo@placeart{bottom}%
+  \onecolumn@apo{\null\vfill
+  \IfValueT{#3}{\begin{center}\itshape\large #3\end{center}}%
+  \vspace*{0.2in}}\clearpage}
+\newcommand{\onecolumn@apo}[1]{#1}
 
 %% ========================================================================
 %% HEADINGS
 %% ========================================================================
 \setcounter{secnumdepth}{0}
 \setcounter{tocdepth}{1}
-\newcommand{\thechapterhead}{\chaptername~\thechapter}
+\newcommand{\thechapterhead}{\chaptername~\thechapter:}
+
+% A gold rule under section titles, as in the books.
+\newcommand{\goldrule}{\par\nointerlineskip\vspace{1pt}%
+  {\color{titlegold}\hrule height 1.6pt}\par\nointerlineskip\vspace{3pt}}
+\newcommand{\apo@ruledtitle}[1]{#1\goldrule}
 
 % --- Chapters ----------------------------------------------------------
 % \chapterart[keys]{file} before \chapter paints art across the top of the
-% opening page; the title then sits in the faded lower edge of the art.
+% opening page, and the title sits in its faded lower edge.
 \newif\ifapo@chapterart
 \def\apo@chapterartfile{}\def\apo@chapterartkeys{}
 \NewDocumentCommand{\chapterart}{O{} m}{%
   \gdef\apo@chapterartkeys{#1}\gdef\apo@chapterartfile{#2}\global\apo@chapterarttrue}
 \newlength{\apo@chartheight}
-\setlength{\apo@chartheight}{0.46\paperheight}
+\setlength{\apo@chartheight}{0.4\paperheight}
 \newcommand{\apo@chapteropening}{%
   \ifapo@chapterart
     \edef\apo@tmp{\noexpand\pagetopart[height=\noexpand\apo@chartheight,
       \unexpanded\expandafter{\apo@chapterartkeys}]{\unexpanded\expandafter{\apo@chapterartfile}}}%
     \apo@tmp
-    \vspace*{\dimexpr\apo@chartheight-0.8in-0.45in\relax}%
+    \vspace*{\dimexpr\apo@chartheight-0.7in-0.95in\relax}%
     \global\apo@chapterartfalse
-  \else
-    \vspace*{0.6in}%
   \fi}
-\titleformat{\chapter}[display]
-  {\apo@chapteropening\centering}
-  {\labelfont\footnotesize\color{accent}\MakeUppercase{\thechapterhead}}
-  {6pt}
-  {\displayfont\fontsize{30}{34}\selectfont\color{ink}}
-  [{\vspace{6pt}\ornament[0.5\textwidth]}]
-\titleformat{name=\chapter,numberless}[display]
-  {\apo@chapteropening\centering}{}{0pt}
-  {\displayfont\fontsize{30}{34}\selectfont\color{ink}}
-  [{\vspace{6pt}\ornament[0.5\textwidth]}]
-\titlespacing*{\chapter}{0pt}{0pt}{0.35in}
+\titleformat{\chapter}[block]
+  {\apo@chapteropening\displayfont\color{titlered}\fontsize{30}{32}\selectfont\RaggedRight}
+  {\thechapterhead}{0.3em}{}
+\titleformat{name=\chapter,numberless}[block]
+  {\apo@chapteropening\displayfont\color{titlered}\fontsize{30}{32}\selectfont\RaggedRight}
+  {}{0pt}{}
+\titlespacing*{\chapter}{0pt}{0pt}{14pt}
 
 % --- Sections ----------------------------------------------------------
-% Title with a hairline set tight underneath.
-\newcommand{\apo@ruledtitle}[1]{#1\par\nointerlineskip\vspace{3pt}\noindent\fadeline\par}
 \titleformat{\section}
-  {\displayfont\fontsize{17}{20}\selectfont\color{accent}\raggedright}
-  {}{0pt}{\apo@ruledtitle}
-\titlespacing*{\section}{0pt}{14pt plus 4pt}{6pt}
+  {\displayfont\color{titlered}\fontsize{19}{20}\selectfont\RaggedRight}
+  {}{0pt}{}[{\color{titlegold}\titlerule[1.6pt]}]
+\titlespacing*{\section}{0pt}{10pt plus 3pt}{4pt}
 
 \titleformat{\subsection}
-  {\displayfont\bfseries\fontsize{12.5}{15}\selectfont\color{ink}\raggedright}
+  {\displayfont\color{titlered}\fontsize{14}{15}\selectfont\RaggedRight}
   {}{0pt}{}
-\titlespacing*{\subsection}{0pt}{10pt plus 3pt}{3pt}
+\titlespacing*{\subsection}{0pt}{8pt plus 2pt}{2pt}
 
 \titleformat{\subsubsection}
-  {\sffamily\bfseries\small\color{accent}\addfontfeatures{LetterSpace=10}\raggedright}
-  {}{0pt}{\MakeUppercase}
-\titlespacing*{\subsubsection}{0pt}{8pt plus 2pt}{2pt}
+  {\displayfont\bfseries\color{titlered}\fontsize{11}{13}\selectfont\RaggedRight}
+  {}{0pt}{}
+\titlespacing*{\subsubsection}{0pt}{6pt plus 2pt}{1pt}
 
 \titleformat{\paragraph}[runin]
-  {\bfseries\itshape\color{ink}}{}{0pt}{}
-\titlespacing*{\paragraph}{0pt}{4pt}{0.5em}
+  {\bfseries\itshape}{}{0pt}{}
+\titlespacing*{\paragraph}{0pt}{3pt}{0.5em}
 
 % --- Parts ---------------------------------------------------------------
 % \partimage{file} sets full-bleed art for the next \part page.
 \def\apo@partimage{}
 \newcommand{\partimage}[1]{\gdef\apo@partimage{#1}}
 \RenewDocumentCommand{\part}{s m}{%
+  \if@twocolumn\onecolumn\@restonecoltrue\else\@restonecolfalse\fi
   \clearpage\thispagestyle{empty}%
   \IfBooleanF{#1}{\refstepcounter{part}\addcontentsline{toc}{part}{#2}}%
   \ifx\apo@partimage\@empty\else
     \sbox\apo@artbox{\fadedart[width=\paperwidth, height=\paperheight,
-      top=.08, bottom=.5, left=.08, right=.08, focus=.35]{\apo@partimage}}%
-    \apo@placeart{bottom}
+      top=.06, bottom=.45, left=.06, right=.06, focus=.35]{\apo@partimage}}%
+    \apo@placeart{bottom}%
     \gdef\apo@partimage{}%
   \fi
   \null\vfill
   \begin{center}
-    \IfBooleanF{#1}{{\labelfont\small\color{accent}\MakeUppercase{\partname~\thepart}\par}\vspace{8pt}}%
-    {\displayfont\fontsize{40}{46}\selectfont\color{ink}#2\par}
-    \vspace{10pt}\ornament[0.45\textwidth]
+    \IfBooleanF{#1}{{\displayfont\large\color{titlered}\partname~\thepart\par}\vspace{4pt}}%
+    {\displayfont\fontsize{40}{44}\selectfont\color{titlered}#2\par}
+    \vspace{6pt}{\color{titlegold}\rule{0.4\textwidth}{1.6pt}}
   \end{center}
-  \vspace*{0.5in}
-  \clearpage}
+  \vspace*{0.6in}
+  \clearpage
+  \if@restonecol\twocolumn\fi}
 
 %% ========================================================================
 %% TABLE OF CONTENTS
 %% ========================================================================
 \renewcommand{\contentsname}{Contents}
 \titlecontents{part}[0pt]
-  {\addvspace{14pt}\centering\displayfont\color{accent}}
-  {}{}{}[\addvspace{4pt}]
+  {\addvspace{10pt}\displayfont\large\color{titlered}}
+  {}{}{}[\addvspace{3pt}]
 \titlecontents{chapter}[0pt]
-  {\addvspace{6pt}\displayfont\color{ink}}
-  {}{}{\hfill\color{accent}\contentspage}
-\titlecontents{section}[1.2em]
-  {\itshape\color{muted}}
-  {}{}{\titlerule*[0.6pc]{.}\color{muted}\contentspage}
+  {\addvspace{6pt}\displayfont\color{titlered}\bfseries}
+  {\thecontentslabel.\ }{}{\hfill\contentspage}
+\titlecontents{section}[1em]
+  {}{}{}{\titlerule*[0.5pc]{.}\contentspage}
 
 %% ========================================================================
 %% RUNNING FEET
 %% ========================================================================
-% Minimal: the page number at the outer corner, the chapter on odd pages,
-% the book's title on even pages. No header.
+% The gold scroll across the foot of every page, the page number at the
+% outer corner, and the chapter name beside it.
 \pagestyle{fancy}
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
-\fancyfoot[LE]{\apo@folio{\thepage}\hspace{10pt}{\labelfont\scriptsize\color{muted}\MakeUppercase{\@title}}}
-\fancyfoot[RO]{{\labelfont\scriptsize\color{muted}\MakeUppercase{\leftmark}}\hspace{10pt}\apo@folio{\thepage}}
-\newcommand{\apo@folio}[1]{{\displayfont\color{accent}#1}}
-\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\apo@folio{\thepage}}}
+\newif\ifapo@scroll \apo@scrolltrue
+\newcommand{\apo@scroll}[1]{%
+  \ifapo@scroll
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[inner sep=0pt, anchor=south, opacity=.85, xscale=#1] at (current page.south)
+        {\includegraphics[width=\paperwidth,height=.6in]{apo-footerscroll.pdf}};
+    \end{tikzpicture}%
+  \fi}
+\newcommand{\apo@footfont}{\sffamily\footnotesize\color{pagegold}}
+\fancyfoot[LE]{\apo@scroll{-1}\apo@footfont\bfseries\thepage\hspace{1.2em}\mdseries\MakeUppercase{\apo@shorttitle}}
+\fancyfoot[RO]{\apo@scroll{1}\apo@footfont\MakeUppercase{\leftmark}\hspace{1.2em}\bfseries\thepage}
+\fancypagestyle{plain}{\fancyhf{}%
+  \fancyfoot[LE]{\apo@scroll{-1}\apo@footfont\bfseries\thepage}%
+  \fancyfoot[RO]{\apo@scroll{1}\apo@footfont\bfseries\thepage}}
 
 %% ========================================================================
 %% TITLE PAGE & CREDITS
 %% ========================================================================
-\def\@subtitle{}\def\@credits{}\def\@version{}\def\apo@cover{}
+\def\@subtitle{}\def\@credits{}\def\@version{}\def\apo@cover{}\def\apo@logo{}
 \newcommand{\subtitle}[1]{\gdef\@subtitle{#1}}
 \newcommand{\credits}[1]{\gdef\@credits{#1}}
 \newcommand{\version}[1]{\gdef\@version{#1}}
 \newcommand{\coverimage}[1]{\gdef\apo@cover{#1}}
+% Title used in the running foot (defaults to \title without line breaks).
+\def\apo@shorttitle{{\def\\{ }\let\large\relax\let\Large\relax\let\small\relax\@title}}
+\newcommand{\shorttitle}[1]{\gdef\apo@shorttitle{#1}}
+\newcommand{\logo}[1]{\gdef\apo@logo{#1}}
 \newcommand{\authorkey}{Written by}
 \newcommand{\creditskey}{Credits}
 
@@ -471,204 +437,201 @@
   \begin{titlepage}
     \ifx\apo@cover\@empty\else
       \sbox\apo@artbox{\fadedart[width=\paperwidth, height=\paperheight,
-        top=.06, bottom=.55, left=.05, right=.05, focus=.2]{\apo@cover}}%
-      \apo@placeart{bottom}
+        top=.04, bottom=.42, left=.04, right=.04, focus=.15]{\apo@cover}}%
+      \apo@placeart{bottom}%
     \fi
     \null\vfill
     \begin{center}
-      {\displayfont\fontsize{56}{60}\selectfont\color{ink}\addfontfeatures{LetterSpace=6}\MakeUppercase{\@title}\par}
-      \vspace{10pt}\ornament[0.6\textwidth]\par
-      \ifx\@subtitle\@empty\else
-        \vspace{10pt}{\Large\itshape\color{ink}\@subtitle\par}
+      \ifx\apo@logo\@empty
+        {\displayfont\fontsize{60}{62}\selectfont\color{titlered}\@title\par}
+      \else
+        \includegraphics[width=0.42\textwidth]{\apo@logo}\par
       \fi
-      \vspace{18pt}
-      {\labelfont\small\color{muted}\MakeUppercase{\@author}\par}
+      \vspace{6pt}{\color{titlegold}\rule{0.5\textwidth}{1.6pt}}\par
+      \ifx\@subtitle\@empty\else
+        \vspace{6pt}{\Large\itshape\color{titlered}\@subtitle\par}
+      \fi
+      \vspace{10pt}{\displayfont\large\@author\par}
       \ifx\@version\@empty\else
-        \vspace{4pt}{\labelfont\scriptsize\color{muted}\MakeUppercase{Version \@version}\par}
+        \vspace{2pt}{\small Version \@version\par}
       \fi
     \end{center}
-    \vspace*{0.3in}
+    \vspace*{0.4in}
   \end{titlepage}}
 
-% \makecredits: a quiet credits page (Dragonbane's title block, moved inside).
+% \makecredits: a credits page (Dragonbane's title block, moved inside).
 \newcommand{\makecredits}{%
+  \if@twocolumn\onecolumn\@restonecoltrue\else\@restonecolfalse\fi
   \clearpage\thispagestyle{empty}%
   \null\vfill
-  \begin{center}\begin{minipage}{0.62\textwidth}\centering\small
-    {\labelfont\scriptsize\color{accent}\MakeUppercase{\authorkey}\par}\vspace{3pt}
+  \begin{center}\begin{minipage}{0.6\textwidth}\centering\small
+    {\displayfont\large\color{titlered}\authorkey\par}\vspace{2pt}
     \@author\par\vspace{12pt}
     \ifx\@credits\@empty\else
-      {\labelfont\scriptsize\color{accent}\MakeUppercase{\creditskey}\par}\vspace{3pt}
+      {\displayfont\large\color{titlered}\creditskey\par}\vspace{2pt}
       {\setlength{\parskip}{0.5em}\@credits\par}
     \fi
-    \vspace{12pt}\ornament[0.5\linewidth]
   \end{minipage}\end{center}
-  \vspace*{0.4in}\clearpage}
+  \vspace*{0.4in}\clearpage
+  \if@restonecol\twocolumn\fi}
 
 %% ========================================================================
 %% LAYOUT: SEGMENTS
 %% ========================================================================
-% Dragonbane's two-column block with an optional spanning section title.
-\newenvironment{segment}[1][]{%
-  \begin{multicols}{2}[\ifx\relax#1\relax\else\section{#1}\fi]}%
-  {\end{multicols}}
-\setlength{\multicolsep}{6pt plus 2pt}
+% Dragonbane's segment. In the default two-column layout it only sets the
+% optional section title; with onecolumn it opens a two-column block.
+\ifapo@twocol
+  \newenvironment{segment}[1][]{\ifx\relax#1\relax\else\section{#1}\fi}{}
+\else
+  \newenvironment{segment}[1][]{%
+    \begin{multicols}{2}[\ifx\relax#1\relax\else\section{#1}\fi]}%
+    {\end{multicols}}
+\fi
 
 %% ========================================================================
 %% TEXT ELEMENTS
 %% ========================================================================
-% --- Drop caps ---
-\renewcommand{\LettrineFontHook}{\decorfont\color{accent}}
-\setcounter{DefaultLines}{3}
-\setlength{\DefaultFindent}{2pt}
-\setlength{\DefaultNindent}{0.4em}
+% --- Drop caps (ornate initials, as in the books) ---
+\renewcommand{\LettrineFontHook}{\Royal\color{titlered}}
 \renewcommand{\LettrineTextFont}{\scshape}
-\NewDocumentCommand{\dropcap}{m m}{\lettrine{#1}{#2}}
+\NewDocumentCommand{\dropcap}{O{} m m}{%
+  \lettrine[lines=4, depth=0, findent=2pt, nindent=0pt,#1]{#2}{#3}}
 \let\DndDropCapLine\dropcap
 
-% --- Epigraph quote (Dragonbane's quote environment) ---
+% --- Quote (Dragonbane's quote environment) ---
 \renewenvironment{quote}
-  {\par\medskip\begin{center}\begin{minipage}{0.86\linewidth}\centering
-   \itshape\color{ink}\setlength{\parskip}{4pt}}
-  {\par\vspace{2pt}\apo@diamond\end{minipage}\end{center}\medskip}
-\newcommand{\quoteby}[1]{\par{\upshape\small\color{muted}--- #1}}
+  {\par\medskip\begin{center}\begin{minipage}{0.9\linewidth}\centering
+   \itshape\setlength{\parskip}{3pt}}
+  {\end{minipage}\end{center}\medskip}
+\newcommand{\quoteby}[1]{\par{\upshape\small --- #1}}
 
 % --- Lists ---
-\setlist[itemize]{noitemsep, topsep=4pt, leftmargin=1.2em,
-  label={\raisebox{0.15ex}{\apo@diamond[1.7pt]}}}
-\setlist[enumerate]{noitemsep, topsep=4pt, leftmargin=1.4em,
-  label={\color{accent}\displayfont\arabic*.}}
-\setlist[description]{font=\color{accent}\displayfont, topsep=4pt, itemsep=2pt, leftmargin=0pt}
+\setlist[itemize]{noitemsep, topsep=3pt, leftmargin=1.2em, label=\textbullet}
+\setlist[enumerate]{noitemsep, topsep=3pt, leftmargin=1.4em}
+\setlist[description]{font=\bfseries\itshape, topsep=3pt, itemsep=1pt, leftmargin=0pt}
 \newcommand\bolditem[1]{\item \textbf{#1}}
-\newcommand\coloritem[2][accent]{\item {\color{#1}\textbf{#2}}}
+\newcommand\coloritem[2][titlered]{\item {\color{#1}\textbf{#2}}}
 \newcommand\secretitem[1]{\item {\color{secret}\textbf{\itshape#1}}}
 
-% --- Keyed areas (A1. Gatehouse) ---
+% --- Keyed areas (1. The Nave) ---
 \newcounter{area}\newcounter{subarea}[area]
-\renewcommand{\thearea}{\@arabic\c@area}
 \newcommand{\areaprefix}{}
 \NewDocumentCommand{\area}{m}{%
-  \refstepcounter{area}%
-  \subsection{{\color{accent}\areaprefix\thearea.}~#1}}
+  \refstepcounter{area}\subsection{\areaprefix\thearea.~#1}}
 \NewDocumentCommand{\subarea}{m}{%
-  \refstepcounter{subarea}%
-  \subsubsection{\areaprefix\thearea\alph{subarea}.~#1}}
+  \refstepcounter{subarea}\subsubsection{\areaprefix\thearea\alph{subarea}.~#1}}
 \let\DndArea\area\let\DndSubArea\subarea
 
 %% ========================================================================
 %% BOXES
 %% ========================================================================
-% Each box has one look per theme family: hairline panels for dark / light /
-% print, and Vermis-style rounded panels (coral frame, cream type on black)
-% for vermis.
-\tcbset{apo/base/.style={enhanced, breakable, boxrule=0pt,
-  sharp corners, frame hidden,
-  before skip=10pt plus 2pt, after skip=10pt plus 2pt,
-  parbox=false, fontupper=\small, colupper=ink,
-  before upper={\setlength{\parindent}{0pt}\setlength{\parskip}{4pt}}}}
-\ifx\apo@theme\apo@vermis
-  \tcbset{
-    apo/vframe/.style={frame empty, arc=\apo@arc, boxrule=1.4pt,
-      frame code={\path[draw=accent, line width=1.4pt, rounded corners=\apo@arc]
-        ([xshift=.7pt,yshift=-.7pt]frame.north west) rectangle
-        ([xshift=-.7pt,yshift=.7pt]frame.south east);},
-      interior code={\path[fill=tcbcolback, rounded corners=\apo@arc]
-        (frame.north west) rectangle (frame.south east);}},
-    apo/readaloud/.style={colback=accent, colupper=panelink, apo/vframe,
-      frame code={}},
-    apo/panel/.style={colback=boxground, colupper=panelink, apo/vframe},
-    apo/statblock/.style={colback=boxground, colupper=panelink, apo/vframe},
-    apo/variant/.style={colback=Bile, colupper=panelink, apo/vframe, frame code={}},
-  }
-\else
-  \tcbset{
-    apo/readaloud/.style={colback=boxground, borderline west={1.2pt}{0pt}{accent}},
-    apo/panel/.style={colback=boxground,
-      borderline north={0.5pt}{0pt}{accent}, borderline south={0.5pt}{0pt}{accent},
-      overlay unbroken and first={\fill[accent] ([yshift=2.4pt]frame.north)--
-        ([xshift=2.4pt]frame.north)--([yshift=-2.4pt]frame.north)--
-        ([xshift=-2.4pt]frame.north)--cycle;}},
-    apo/statblock/.style={colback=boxground,
-      borderline north={1.2pt}{0pt}{accent}, borderline south={1.2pt}{0pt}{accent}},
-    apo/variant/.style={colback=accent!13!pageground,
-      borderline north={1.2pt}{0pt}{accent}},
-  }
-\fi
-% Labels inside panels: accent on dark/light, mustard-on-black for vermis.
-\ifx\apo@theme\apo@vermis
-  \colorlet{panelaccent}{Coral}\definecolor{panelmuted}{HTML}{B9A57C}
-\else
-  \colorlet{panelaccent}{accent}\colorlet{panelmuted}{muted}
-\fi
+\tcbset{apo/base/.style={enhanced, breakable, sharp corners, boxrule=0pt,
+  frame hidden, parbox=false, colupper=ink,
+  before skip=10pt plus 3pt, after skip=10pt plus 3pt,
+  before upper={\setlength{\parindent}{1em}\setlength{\parskip}{0pt}}}}
 
-% Read-aloud text.
-\newtcolorbox{readaloud}[1][]{apo/base, apo/readaloud,
-  left=10pt, right=9pt, top=7pt, bottom=7pt,
-  fontupper=\itshape\normalsize,#1}
+% Read-aloud text: tan panel, dark red bars on both sides, dotted corners.
+\newtcolorbox{readaloud}[1][]{apo/base,
+  colback=bgtan, boxsep=7pt, left=0pt, right=0pt, top=0pt, bottom=0pt,
+  borderline west={1pt}{-0.5pt}{titlered},
+  borderline east={1pt}{-0.5pt}{titlered},
+  overlay={\foreach \n in {north east, north west, south east, south west}
+    {\fill[titlered] (frame.\n) circle (1.5pt);}},
+  fontupper=\itshape, #1}
 
-% Sidebar (Dragonbane's dragonbox / D&D sidebar).
-\newtcolorbox{sidebar}[2][]{apo/base, apo/panel,
-  left=10pt, right=10pt, top=10pt, bottom=8pt,
-  title={#2}, detach title,
-  before upper={\setlength{\parindent}{0pt}\setlength{\parskip}{4pt}%
-    \colorlet{accent}{panelaccent}\colorlet{muted}{panelmuted}%
-    {\centering\displayfont\normalsize\color{accent}\tcbtitle\par}\vspace{2pt}},
+% Sidebar (Dragonbane's dragonbox / D&D sidebar): theme-coloured panel,
+% black rules with notched corners and a soft shadow.
+\newtcolorbox{sidebar}[2][]{apo/base,
+  colback=themecolor, boxsep=3pt, left=6pt, right=6pt, top=2pt, bottom=4pt,
+  borderline north={1pt}{-0.5pt}{black}, borderline south={1pt}{-0.5pt}{black},
+  fuzzy shadow={0mm}{-3.5pt}{-0.5pt}{0.4mm}{black!60!white},
+  overlay={%
+    \fill[black] (frame.south west) -- ++(7pt,0) -- ++(0,-5pt) -- cycle;
+    \fill[black] (frame.north west) -- ++(7pt,0) -- ++(0,5pt) -- cycle;
+    \fill[black] (frame.north east) -- ++(-7pt,0) -- ++(0,5pt) -- cycle;
+    \fill[black] (frame.south east) -- ++(-7pt,0) -- ++(0,-5pt) -- cycle;},
+  title={#2}, detach title, coltitle=ink, fontupper=\sffamily\small,
+  before upper={\setlength{\parindent}{1em}\setlength{\parskip}{0pt}%
+    {\noindent\sffamily\bfseries\scshape\large\tcbtitle\par}\vspace{2pt}},
   #1}
 
-% Variant rule (Dragonbane's demonbox): a washed panel for optional rules.
-\newtcolorbox{variantrule}[2][]{apo/base, apo/variant,
-  left=10pt, right=10pt, top=8pt, bottom=8pt,
-  title={#2}, detach title,
-  before upper={\setlength{\parindent}{0pt}\setlength{\parskip}{4pt}%
-    {\labelfont\scriptsize\color{\ifx\apo@theme\apo@vermis panelink\else accent\fi}OPTIONAL RULE\par}%
-    {\displayfont\normalsize\tcbtitle\par}\vspace{2pt}},
+% Comment (D&D comment box): theme-coloured panel with a plain frame.
+\newtcolorbox{commentbox}[2][]{apo/base,
+  colback=themecolor, boxsep=4pt, left=6pt, right=6pt, top=2pt, bottom=4pt,
+  borderline={0.6pt}{0pt}{black!70},
+  title={#2}, detach title, coltitle=ink, fontupper=\sffamily\small,
+  before upper={\setlength{\parindent}{1em}\setlength{\parskip}{0pt}%
+    {\noindent\sffamily\bfseries\scshape\large\tcbtitle\par}\vspace{2pt}},
   #1}
 
-% Note (Dragonbane's emptybox): no panel, title between two fading lines.
+% Variant rule (Dragonbane's demonbox): a sidebar in a blood wash.
+\newtcolorbox{variantrule}[2][]{apo/base,
+  colback=Bloodwash, boxsep=3pt, left=6pt, right=6pt, top=2pt, bottom=4pt,
+  borderline north={1pt}{-0.5pt}{titlered}, borderline south={1pt}{-0.5pt}{titlered},
+  fuzzy shadow={0mm}{-3.5pt}{-0.5pt}{0.4mm}{black!60!white},
+  title={#2}, detach title, coltitle=ink, fontupper=\sffamily\small,
+  before upper={\setlength{\parindent}{1em}\setlength{\parskip}{0pt}%
+    {\noindent\sffamily\scshape\footnotesize\color{titlered}Variant Rule\par}%
+    {\noindent\sffamily\bfseries\scshape\large\tcbtitle\par}\vspace{2pt}},
+  #1}
+
+% Note (Dragonbane's emptybox): no panel, a titled block between gold rules.
 \newtcolorbox{note}[2][]{apo/base,
-  colback=pageground, opacityback=0, left=0pt, right=0pt, top=0pt, bottom=2pt,
-  title={#2}, detach title,
-  before upper={\setlength{\parindent}{0pt}\setlength{\parskip}{4pt}%
-    {\centering\ornament[0.25\linewidth]~{\displayfont\color{accent}\tcbtitle}~\ornament[0.25\linewidth]\par}\vspace{2pt}},
+  colback=white, opacityback=0, boxsep=0pt, left=0pt, right=0pt, top=4pt, bottom=4pt,
+  borderline north={1pt}{0pt}{titlegold}, borderline south={1pt}{0pt}{titlegold},
+  title={#2}, detach title, coltitle=ink,
+  before upper={\setlength{\parindent}{1em}\setlength{\parskip}{0pt}%
+    {\noindent\displayfont\color{titlered}\large\tcbtitle\par}\vspace{1pt}},
   #1}
 
-% Dragonbane names
+% Dragonbane and D&D names
 \newenvironment{dragonbox}[2][]{\begin{sidebar}[#1]{#2}}{\end{sidebar}}
 \newenvironment{demonbox}[2][]{\begin{variantrule}[#1]{#2}}{\end{variantrule}}
 \newenvironment{emptybox}[2][]{\begin{note}[#1]{#2}}{\end{note}}
+\newenvironment{DndReadAloud}[1][]{\begin{readaloud}}{\end{readaloud}}
+\newenvironment{DndSidebar}[2][]{\begin{sidebar}{#2}}{\end{sidebar}}
+\newenvironment{DndComment}[2][]{\begin{commentbox}{#2}}{\end{commentbox}}
 
 %% ========================================================================
 %% TABLES
 %% ========================================================================
 % \begin{rolltable}[Title]{colspec} ... \end{rolltable}
-% Header row uses \colhead{...}; body rows are zebra striped.
-\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+% Sans body, bold header row via \colhead, theme-coloured stripes.
+\newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
 \newcolumntype{C}{>{\centering\arraybackslash}X}
-\newcommand{\colhead}[1]{\leavevmode{\labelfont\scriptsize\color{accent}\MakeUppercase{#1}}}
+\newcommand{\colhead}[1]{\leavevmode\textbf{#1}}
 \newcommand{\apo@tablestart}[1]{%
-  \par\addvspace{8pt}\noindent
+  \par\addvspace{6pt}\noindent
   \minipage{\linewidth}%
-  \ifx\relax#1\relax\else{\displayfont\normalsize\color{accent}#1\par}\vspace{3pt}\fi
-  \small\renewcommand{\arraystretch}{1.3}%
-  \rowcolors{2}{rowground}{}}
-\newcommand{\apo@tableend}{\endminipage\par\addvspace{8pt}}
+  \ifx\relax#1\relax\else{\sffamily\bfseries\scshape\large #1\par}\vspace{2pt}\fi
+  \sffamily\small\renewcommand{\arraystretch}{1.15}%
+  \rowcolors{2}{themecolor}{}}
+\newcommand{\apo@tableend}{\endminipage\par\addvspace{6pt}}
 \newenvironment{rolltable}[2][]
-  {\apo@tablestart{#1}\tabularx{\linewidth}{@{\hspace{4pt}}#2@{\hspace{4pt}}}}
+  {\apo@tablestart{#1}\tabularx{\linewidth}{@{\hspace{3pt}}#2@{\hspace{3pt}}}}
   {\endtabularx\apo@tableend}
+\newenvironment{DndTable}[2][]
+  {\def\apo@dthead{}\pgfkeys{/apo/dndtable/.cd,#1}%
+   \expandafter\apo@tablestart\expandafter{\apo@dthead}%
+   \tabularx{\linewidth}{@{\hspace{3pt}}#2@{\hspace{3pt}}}}
+  {\endtabularx\apo@tableend}
+\pgfkeys{/apo/dndtable/.cd, header/.store in=\apo@dthead,
+  color/.code={\rowcolors{2}{#1}{}}, width/.code={}, float/.code={}}
 
 % Dragonbane: \begin{tablebox}{Title} <any tabular> \end{tablebox}
 \newenvironment{tablebox}[2][]
-  {\begin{note}[#1]{#2}\centering\small\renewcommand{\arraystretch}{1.3}\rowcolors{2}{rowground}{}}
-  {\end{note}}
-\newenvironment{pagetable}[2][]
-  {\par\begin{tablebox}[#1]{#2}}{\end{tablebox}}
+  {\par\addvspace{6pt}\noindent{\sffamily\bfseries\scshape\large #2\par}\vspace{2pt}%
+   \centering\sffamily\small\renewcommand{\arraystretch}{1.15}\rowcolors{2}{themecolor}{}}
+  {\par\addvspace{6pt}}
+\newenvironment{pagetable}[2][]{\begin{tablebox}[#1]{#2}}{\end{tablebox}}
+\newcommand*{\bline}{\noalign{\hrule height 0.6pt}}
 
 %% ========================================================================
 %% STAT BLOCKS
 %% ========================================================================
 % \begin{monster}{Name} \monstertype{Large monstrosity, unaligned}
 %   \basics[...] \stats[...] \details[...]  actions...  \end{monster}
-% The keys match the rpg-monster package used in the Apotheosis notes.
+% Same keys as the rpg-monster package used in the Apotheosis notes.
 \newcommand\armorclassname{Armor Class}
 \newcommand\hitpointsname{Hit Points}
 \newcommand\speedname{Speed}
@@ -682,72 +645,87 @@
 \newcommand\languagesname{Languages}
 \newcommand\challengename{Challenge}
 
-\newtcolorbox{monster}[2][]{apo/base, apo/statblock,
-  left=9pt, right=9pt, top=8pt, bottom=8pt,
-  title={#2}, detach title,
-  before upper={\setlength{\parindent}{0pt}\setlength{\parskip}{3pt}%
-    \colorlet{accent}{panelaccent}\colorlet{muted}{panelmuted}%
-    {\displayfont\Large\color{accent}\tcbtitle\par}},
-  #1}
-\newenvironment{monsterbox}[2][]{\begin{monster}[#1]{#2}}{\end{monster}}
-\newcommand{\monstertype}[1]{{\itshape\color{muted}#1\par}\monsterrule}
-\newcommand{\monsterrule}{\par\nointerlineskip\vspace{3pt}\noindent\fadeline\par\nointerlineskip\vspace{1pt}}
+% The tapering red rule of the stat blocks.
+\newcommand{\monsterrule}{\par\nointerlineskip\vspace{3pt}\noindent
+  \tikz\fill[rulered] (0,0) -- (0,1.2pt) -- (\linewidth,0.6pt) -- cycle;%
+  \par\nointerlineskip\vspace{3pt}}
 \let\rpghline\monsterrule
 \let\dndline\monsterrule
 
+\newtcolorbox{monster}[2][]{apo/base,
+  colback=statblockbg, boxsep=0pt, left=7pt, right=7pt, top=8pt, bottom=8pt,
+  borderline north={4pt}{0pt}{titlered},
+  borderline north={2.5pt}{0.75pt}{statblockribbon},
+  borderline south={4pt}{0pt}{titlered},
+  borderline south={2.5pt}{0.75pt}{statblockribbon},
+  fuzzy shadow={0mm}{-2pt}{0pt}{0.4mm}{black!40!white},
+  title={#2}, detach title, coltitle=ink, fontupper=\sffamily\small,
+  before upper={\setlength{\parindent}{0pt}\setlength{\parskip}{3pt}%
+    {\displayfont\bfseries\color{titlered}\fontsize{17}{18}\selectfont\tcbtitle\par}},
+  #1}
+\newenvironment{monsterbox}[2][]{\begin{monster}[#1]{#2}}{\end{monster}}
+\newenvironment{DndMonster}[2][]{\begin{monster}{#2}}{\end{monster}}
+\newcommand{\monstertype}[1]{{\itshape#1\par}\monsterrule}
+
 \newcommand{\apo@attr}[2]{%
   \ifx#2\@empty\else
-    \par\vspace{-2pt}\noindent\hangindent=1em{\color{accent}\textbf{#1}}~#2\par
+    \par\vspace{-2pt}\noindent\hangindent=1em{\color{titlered}\textbf{#1}}~{\color{titlered}#2}\par
   \fi}
-\pgfkeys{/apo/mon/.is family, /apo/mon,
-  armorclass/.store in=\apo@m@ac, hitpoints/.store in=\apo@m@hp,
-  speed/.store in=\apo@m@sp,
-  STR/.store in=\apo@m@str, DEX/.store in=\apo@m@dex, CON/.store in=\apo@m@con,
-  INT/.store in=\apo@m@int, WIS/.store in=\apo@m@wis, CHA/.store in=\apo@m@cha,
-  skills/.store in=\apo@m@skills, savingthrows/.store in=\apo@m@saves,
-  damagevulnerabilities/.store in=\apo@m@dvul,
-  damageresistances/.store in=\apo@m@dres,
-  damageimmunities/.store in=\apo@m@dimm,
-  conditionimmunities/.store in=\apo@m@cimm,
-  senses/.store in=\apo@m@senses, languages/.store in=\apo@m@lang,
-  challenge/.store in=\apo@m@cr}
+% Each key stores into \apo@m@<name>. A bare piece without "=" (as in
+% "skills = Athletics +10, Religion +2") is added back onto the previous
+% key, so comma lists written for rpg-monster keep working.
+\pgfkeys{/apo/mon/.is family,
+  /apo/mon/store/.style={/apo/mon/#1/.code={%
+    \expandafter\def\csname apo@m@#1\endcsname{##1}\def\apo@m@last{#1}}},
+  /apo/mon/store/.list={armorclass,hitpoints,speed,STR,DEX,CON,INT,WIS,CHA,
+    skills,savingthrows,damagevulnerabilities,damageresistances,
+    damageimmunities,conditionimmunities,senses,languages,challenge},
+  /apo/mon/.unknown/.code={%
+    \ifx\apo@m@last\@undefined\else
+      \expandafter\let\expandafter\apo@tmpv\csname apo@m@\apo@m@last\endcsname
+      \expandafter\edef\csname apo@m@\apo@m@last\endcsname{%
+        \unexpanded\expandafter{\apo@tmpv}, \pgfkeyscurrentname}%
+    \fi}}
 \NewDocumentCommand{\basics}{O{}}{%
   \pgfkeys{/apo/mon/.cd, armorclass=, hitpoints=, speed=,#1}%
-  \apo@attr{\armorclassname}{\apo@m@ac}%
-  \apo@attr{\hitpointsname}{\apo@m@hp}%
-  \apo@attr{\speedname}{\apo@m@sp}}
+  \apo@attr{\armorclassname}{\apo@m@armorclass}%
+  \apo@attr{\hitpointsname}{\apo@m@hitpoints}%
+  \apo@attr{\speedname}{\apo@m@speed}}
 \NewDocumentCommand{\stats}{O{}}{%
   \pgfkeys{/apo/mon/.cd, STR=\stat{10}, DEX=\stat{10}, CON=\stat{10},
     INT=\stat{10}, WIS=\stat{10}, CHA=\stat{10},#1}%
-  \par\vspace{2pt}\noindent
-  {\setlength{\tabcolsep}{0pt}\footnotesize
+  \par\noindent
+  {\setlength{\tabcolsep}{0pt}\color{titlered}%
    \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}cccccc@{}}
-     \colhead{Str}&\colhead{Dex}&\colhead{Con}&\colhead{Int}&\colhead{Wis}&\colhead{Cha}\\
-     \apo@m@str&\apo@m@dex&\apo@m@con&\apo@m@int&\apo@m@wis&\apo@m@cha
-   \end{tabular*}}\par\vspace{2pt}}
+     \textbf{STR}&\textbf{DEX}&\textbf{CON}&\textbf{INT}&\textbf{WIS}&\textbf{CHA}\\
+     \apo@m@STR&\apo@m@DEX&\apo@m@CON&\apo@m@INT&\apo@m@WIS&\apo@m@CHA
+   \end{tabular*}}\par}
 \NewDocumentCommand{\details}{O{}}{%
   \pgfkeys{/apo/mon/.cd, skills=, savingthrows=, damagevulnerabilities=,
     damageresistances=, damageimmunities=, conditionimmunities=,
     senses=---, languages=---, challenge=,#1}%
-  \apo@attr{\savesname}{\apo@m@saves}%
+  \apo@attr{\savesname}{\apo@m@savingthrows}%
   \apo@attr{\skillsname}{\apo@m@skills}%
-  \apo@attr{\dvulname}{\apo@m@dvul}%
-  \apo@attr{\dresname}{\apo@m@dres}%
-  \apo@attr{\dimmname}{\apo@m@dimm}%
-  \apo@attr{\cimmname}{\apo@m@cimm}%
+  \apo@attr{\dvulname}{\apo@m@damagevulnerabilities}%
+  \apo@attr{\dresname}{\apo@m@damageresistances}%
+  \apo@attr{\dimmname}{\apo@m@damageimmunities}%
+  \apo@attr{\cimmname}{\apo@m@conditionimmunities}%
   \apo@attr{\sensesname}{\apo@m@senses}%
-  \apo@attr{\languagesname}{\apo@m@lang}%
-  \ifx\apo@m@cr\@empty\else
-    \apo@attr{\challengename}{\crexp{\apo@m@cr}}\fi}
+  \apo@attr{\languagesname}{\apo@m@languages}%
+  \ifx\apo@m@challenge\@empty\else
+    \apo@attr{\challengename}{\crexp{\apo@m@challenge}}\fi}
 
 % Monster sections and actions
 \newcommand{\monstersection}[1]{%
-  \par\vspace{5pt}{\displayfont\color{accent}#1\par}\nointerlineskip\vspace{2pt}\noindent\fadeline\par\nointerlineskip\vspace{2pt}}
+  \par\vspace{6pt}{\displayfont\color{titlered}\fontsize{14}{15}\selectfont#1\par}%
+  \nointerlineskip\vspace{1pt}{\color{titlered}\hrule height 0.6pt}\par\nointerlineskip\vspace{3pt}}
 \let\rpgmonstersection\monstersection
 \NewDocumentEnvironment{monsteraction}{o}
   {\par\IfValueT{#1}{\textbf{\itshape #1.}~}\ignorespaces}{\par}
 \NewDocumentEnvironment{rpg-monsteraction}{o}
   {\par\IfValueT{#1}{\textbf{\itshape #1.}~}\ignorespaces}{\par}
+\let\DndMonsterAction\relax
+\NewDocumentCommand{\DndMonsterAction}{m}{\par\textbf{\itshape #1.}~}
 
 % \stat{12} -> "12 (+1)"
 \newcommand{\stat}[1]{%
@@ -788,34 +766,19 @@
 %% SPELLS, AFFLICTIONS, ITEMS
 %% ========================================================================
 % \spellheader{Name}{Level & school}{Casting time}{Range}{Components}{Duration}
-\newcommand{\apo@sline}[2]{\par\noindent{\color{accent}\textbf{#1:}}~#2}
+\newcommand{\apo@sline}[2]{\par\noindent\textbf{#1:}~#2}
 \NewDocumentCommand{\spellheader}{m m m m m m}{%
   \par\addvspace{8pt}\noindent
-  {\displayfont\large\color{accent}#1\par}
-  {\itshape\color{muted}#2\par}\vspace{2pt}%
+  {\displayfont\bfseries\color{titlered}\fontsize{13}{14}\selectfont#1\par}
+  {\itshape#2\par}\vspace{2pt}%
   \apo@sline{Casting Time}{#3}\apo@sline{Range}{#4}%
   \apo@sline{Components}{#5}\apo@sline{Duration}{#6}\par\vspace{4pt}}
 \let\DndSpellHeader\spellheader
 % \itemheader{Name}{Wondrous item, rare (requires attunement)}
 \NewDocumentCommand{\itemheader}{m m}{%
-  \par\addvspace{8pt}\noindent{\displayfont\large\color{accent}#1\par}
-  {\itshape\color{muted}#2\par}\vspace{2pt}}
+  \par\addvspace{8pt}\noindent
+  {\displayfont\bfseries\color{titlered}\fontsize{13}{14}\selectfont#1\par}
+  {\itshape#2\par}\vspace{2pt}}
 \let\DndItemHeader\itemheader
-
-%% ========================================================================
-%% D&D 5e TEMPLATE COMPATIBILITY
-%% ========================================================================
-% Lets existing notes written for dndbook move over with few edits.
-\newenvironment{DndReadAloud}{\begin{readaloud}}{\end{readaloud}}
-\newenvironment{DndSidebar}[2][]{\begin{sidebar}{#2}}{\end{sidebar}}
-\newenvironment{DndComment}[2][]{\begin{sidebar}{#2}}{\end{sidebar}}
-\newenvironment{DndTable}[2][]
-  {\def\apo@dthead{}\pgfkeys{/apo/dndtable/.cd,#1}%
-   \expandafter\apo@tablestart\expandafter{\apo@dthead}%
-   \tabularx{\linewidth}{@{\hspace{4pt}}#2@{\hspace{4pt}}}}
-  {\endtabularx\apo@tableend}
-\pgfkeys{/apo/dndtable/.cd, header/.store in=\apo@dthead,
-  color/.code={}, width/.code={}, float/.code={}}
-\NewDocumentCommand{\DndSetThemeColor}{o}{\IfValueT{#1}{\@ifundefined{\string\color@#1}{}{\setaccent{#1}}}}
 
 \endinput

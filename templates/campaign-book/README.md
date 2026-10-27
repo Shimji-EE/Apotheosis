@@ -1,95 +1,68 @@
 # Apotheosis campaign book template
 
-A LaTeX class for a full campaign book in a clean, minimalist dark fantasy
-style. Art fades into the page instead of sitting in a frame, the way it does
-in the official fifth edition books.
+A LaTeX class in the style of the official fifth edition paperbacks, with a
+darker, aged tone and art that fades into the page.
 
-It carries over everything from the two templates the campaign already used:
+* Aged parchment pages, the gold scroll footer, two columns.
+* Dark red small-caps headings, gold rules under sections, Royal drop caps.
+* Bookman-style body (TeX Gyre Bonum), Gill-style sans for tables and stat
+  blocks (Gillius).
+* Classic boxes: read-aloud, sidebar, comment, tables striped in the theme
+  colour, and stat blocks with the orange ribbons and tapering red rules.
+* **Art blends into the page.** Every `\includegraphics` inside a `figure`
+  is drawn with soft, faded edges automatically. Use the `framedart` class
+  option to turn that off.
 
-| From | Kept as |
-| --- | --- |
-| Dragonbane Supplement | parts with full-page art, `\partcolor`, `segment`, `dragonbox`, `demonbox`, `emptybox`, `tablebox`, `\bolditem` / `\coloritem` / `\secretitem`, epigraph `quote`, credits block, black & white option |
-| D&D 5e LaTeX template | read-aloud text, sidebars, rollable tables, stat blocks (`\basics`, `\stats`, `\details`, `\stat`, `\rpgdice`, CR to XP), spell headers, drop caps, keyed areas |
+It keeps the features of the Dragonbane Supplement class and the D&D 5e
+LaTeX template, and the old command names still work (`DndReadAloud`,
+`DndSidebar`, `DndComment`, `DndTable`, `\DndSetThemeColor`, `\DndSpellHeader`,
+`\DndDropCapLine`, `monsterbox`, `rpg-monsteraction`, `\rpgmonstersection`,
+`\rpghline`, `\basics`, `\stats`, `\details`, `\stat`, `\rpgdice`; and
+`dragonbox`, `demonbox`, `emptybox`, `tablebox`, `segment`, `\partcolor`,
+`\bolditem`, `\coloritem`, `\secretitem`).
 
-The old command names still work (`DndReadAloud`, `DndSidebar`, `DndTable`,
-`monsterbox`, `rpg-monsteraction`, `\rpgmonstersection`, `\rpghline`,
-`\DndSpellHeader`, `\DndDropCapLine`, `\DndSetThemeColor`), so chapters from
-the Apotheosis notes can be pasted in with few edits.
+## Using it on the campaign notes
 
-## Building
-
-Use **XeLaTeX** (or LuaLaTeX). Every font ships with TeX Live, and Overleaf
-works if you set the compiler to XeLaTeX.
-
-```sh
-latexmk                 # writes build/campaign.pdf
-# or
-xelatex campaign.tex && xelatex campaign.tex
-```
-
-## Themes
+Change the class line of `Apotheosis.tex` to
 
 ```latex
-\documentclass{apotheosis-book}           % dark (default)
-\documentclass[vermis]{apotheosis-book}   % aged gamebook paper, after Vermis
-\documentclass[light]{apotheosis-book}    % ink on warm parchment
-\documentclass[print]{apotheosis-book}    % white paper, no textures
+\documentclass{apotheosis-book}
 ```
 
-Add `a4paper` for A4. Letter is the default.
+and drop `\usepackage[utf8]{inputenc}`. Nothing else in the notes needs to
+change. `notes-preview/` is a copy of the notes set up exactly like that;
+`preview/` has the compiled result.
 
-* **dark**: bone text on near-black grain, Cinzel titles, Crimson Pro body,
-  hairline rules that fade out at the ends.
-* **vermis**: yellowed paper, coral Kooper titles, IM Fell body, rounded
-  panels (coral read-aloud, black sidebars and stat blocks, green optional
-  rules), printed double rules.
+Compile with **XeLaTeX** (on Overleaf, set the compiler to XeLaTeX). Keep
+`apotheosis-book.cls`, `apo-paper.jpg` and `apo-footerscroll.pdf` next to
+the document, or on `TEXINPUTS` as `notes-preview/latexmkrc` does.
 
-Previews of both are in `preview/`.
+```sh
+cd notes-preview && latexmk
+```
 
-## Art that blends in
+## Options
+
+`print` (white pages, no textures), `onecolumn`, `framedart`, `a4paper`.
+
+## Extra commands
 
 | Command | What it does |
 | --- | --- |
-| `\coverimage{file}` | Full-bleed cover behind `\maketitle` |
-| `\partimage{file}` | Full-bleed art for the next `\part` page |
-| `\chapterart[keys]{file}` | Art across the top of the next chapter opener, title set below it |
+| `\chapterart[keys]{file}` | Art across the top of the next chapter opener |
 | `\columnart[keys]{file}` | Soft-edged art inside a column |
-| `\pagetopart[keys]{file}` / `\pagebottomart[keys]{file}` | Full-bleed bands painted behind the current page |
-| `\fullpageart[keys]{file}[caption]` | A page that is only art |
-| `\fadedart[keys]{file}` | The faded image box all of the above use |
+| `\pagetopart` / `\pagebottomart` | Full-bleed bands painted behind the current page |
+| `\fullpageart{file}[caption]` | A page that is only art |
+| `\partimage{file}` before `\part` | Full-bleed part page |
+| `\coverimage{file}`, `\logo{file}` | Cover art and logo for `\maketitle` |
+| `\makecredits` | Credits page (Dragonbane title block) |
+| `\fadedart[keys]{file}` | The faded image box behind all of these |
+| `\shorttitle{...}` | Title used in the running foot |
 
-Keys:
+Fade keys: `fade=soft|all|bottom|top|sides|left|right|none`, or `top`,
+`bottom`, `left`, `right` (0 to 0.5), plus `width`, `height`, `focus`,
+`opacity`.
 
-* `fade=soft|all|bottom|top|sides|left|right|none`: presets
-* `top`, `bottom`, `left`, `right`: fade depth per edge, 0 to 0.5 of the size
-* `width`, `height`: the image is cropped to cover this box
-* `focus`: where to crop vertically, 0 is the top, 1 is the bottom
-* `opacity`
+## History
 
-The fade is a real soft mask, so the page texture shows through and PNGs with
-their own transparency fade too.
-
-## Boxes and blocks
-
-```latex
-\begin{readaloud} ... \end{readaloud}
-\begin{sidebar}{Title} ... \end{sidebar}
-\begin{variantrule}{Title} ... \end{variantrule}
-\begin{note}{Title} ... \end{note}
-\begin{rolltable}[Title]{c L} \colhead{d6} & \colhead{Effect} \\ ... \end{rolltable}
-\begin{monster}{Name} \monstertype{...} \basics[...] \stats[...] \details[...] ... \end{monster}
-\spellheader{Name}{Level & school}{Casting time}{Range}{Components}{Duration}
-\itemheader{Name}{Wondrous item, rare}
-\area{The Nave}  \subarea{The Font}
-\dropcap{T}{he first words}
-```
-
-## Colour
-
-`\partcolor{Name}` (new page) or `\setaccent{Name}` with Ember, Coral, Ochre,
-Blood, Bile, Mustard, Frost, Amethyst or Lyrium.
-
-## Layout
-
-Text sits in `segment` environments (two columns). Put `\chapter` and `\part`
-outside segments; a wide box placed outside a segment spans both columns.
+Approved versions are kept in `history/`.
