@@ -1,0 +1,36 @@
+\RequirePackage{graphicx}
+\RequirePackage{dblfloatfix}
+\RequirePackage[strict]{changepage}
+
+\newcommand{\rpghline}{
+  \noindent
+  \begin{tikzpicture}[]
+    \draw [rulered, fill=rulered] (0, 0) --(0,0.1) -- (\textwidth, 0.05);
+  \end{tikzpicture}%
+  \par%
+}
+
+\newlength{\rpghmargin}
+\newcommand*{\rpgart}[2]{%
+    \checkoddpage
+    \ifoddpage
+        \setlength{\rpghmargin}{\dimexpr 1in+\hoffset+\oddsidemargin\relax}
+    \else
+        \setlength{\rpghmargin}{\dimexpr 1in+\hoffset+\evensidemargin\relax}
+    \fi
+    \begin{figure*}[#1!]
+        \centering
+        \if #1t
+            \vspace*{-\dimexpr1in+\voffset+\topmargin+\headheight+\headsep\relax}
+        \fi
+
+        \makebox[\paperwidth][l]{%
+            \hskip-\rpghmargin
+            \includegraphics[width=\paperwidth]{#2}%
+        }
+
+        \if #1b
+            \vspace*{-\dimexpr\paperheight-\textheight-1in+13pt-\voffset-\topmargin-\headheight-\headsep\relax}
+        \fi
+    \end{figure*}
+}
