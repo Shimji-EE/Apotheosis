@@ -29,6 +29,28 @@
 
 \captionsetup[table]{labelformat=empty,font={sf,sc,bf,},skip=0pt}
 
+
+% --- Appendix links -------------------------------------------------------
+% \appendixlink{label}{Appendix I}{Purgeflame Spells} in the main text, and
+% \backlink{label}{Purgeflame} under the appendix heading. Both are banners
+% in the book's colours that jump to the other end when clicked.
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\usepackage{amssymb}
+\providecolor{titlered}{HTML}{58180D}
+\newsavebox{\apolinkbox}
+\newcommand{\apolinkbanner}[3]{% target, small label, title
+  \par\addvspace{4pt}\noindent
+  \sbox{\apolinkbox}{\begin{tcolorbox}[enhanced, unbreakable, sharp corners, boxrule=0pt,
+      frame hidden, colback=titlered!8, left=6pt, right=6pt, top=3pt, bottom=3pt,
+      borderline west={2.5pt}{0pt}{titlered}, nobeforeafter, width=\linewidth]
+    {\sffamily\scshape\footnotesize\color{titlered}#2\hfill p.~\pageref{#1}}\par
+    {\sffamily\bfseries\small #3~\textcolor{titlered}{$\blacktriangleright$}}
+  \end{tcolorbox}}%
+  \hyperref[#1]{\usebox{\apolinkbox}}\par\addvspace{4pt}}
+\newcommand{\appendixlink}[3]{\apolinkbanner{app:#1}{See #2}{#3}}
+\newcommand{\backlink}[2]{\apolinkbanner{main:#1}{Back to the main text}{#2}}
+
 \MakeShortVerb{|}
 
 \lstset{%
@@ -562,6 +584,7 @@ The religion governed by the \textit{\textbf{Greater Will}} is known as Gnocism,
 \endgroup
 
 \subsection{Lyrium Drawbacks}
+\label{main:lyrium}\appendixlink{lyrium}{Appendix IV}{Red Lyrium Enemies}
 Blue Lyrium, a magical stimulant used by mages, sorcerers, paladins, eldritch knights etc. is used to empower their spellcasting abilities, in the case of the abyssal tieflings, outright removing the need for any material components, with the exception of warlocks and clerics as their power isn't innate. Red Lyrium, a poor attempt at an artificial substitute to Blue Lyrium, is a chaotic growth of bright ruby crystals found underground in the deep roads. A creation of the Dwerfen Gemmists, abandoned and sealed due to its failed, corrupting behaviour. The Blue Lyrium trade however has provided to be quite lucrative and many mercenary companies and smugglers seek to profit from this dangerous pharmaceutical.
 
 \DndSpellHeader%
@@ -635,6 +658,7 @@ When you are separated from a steady supply of \textbf{blue lyrium} (or attempt 
 \endgroup
 
 \subsection{Purgeflame}
+\label{main:purgeflame}\appendixlink{purgeflame}{Appendix I}{Purgeflame Spells}
 
 flavour text
 
@@ -687,6 +711,7 @@ Empyrosis is the Purgeflame behind the eyes: a bright, cleansing lie that reward
 \medskip
 
 \subsection{Red Rot}
+\label{main:redrot}\appendixlink{redrot}{Appendix II}{Red Rot Spells}
 
 It acts as an incurable, infectious disease that decays the bodies and minds of living things. The manifestation of the outer deity of rot, this 
 
@@ -729,6 +754,7 @@ You unlock the Plagueboon \emph{Carrion-Breath} (Once per Long Rest).
 You unlock the Plagueboon \emph{Abyssal Bloom} (Once per Long Rest).
 
 \subsection{Lycanthropy}
+\label{main:lycanthropy}\appendixlink{lycanthropy}{Appendix III}{Carlislean Lycanthrope (Monster Class)}
 
 Carlisle was a wretched, fainthearted man of no renown, who wearied of being kicked aside and went begging for strength. In the old wood he found the Dread Wolf, and took its bargain: stout sinew and a predator’s bite, in return for a heart that would sooner turn coat than stand fast. The curse didn’t end with Carlisle, it clung to teeth and bloodlines, spreading wherever desperate people wanted strength more than they wanted to stay themselves.
 
@@ -981,6 +1007,7 @@ The disease reaches the \textbf{head}: pale patches creep up the neck and scalp,
 \DndDropCapLine{I}{}n this world of broken saints, alchemical marvels, and wandering magic, there exist rare blessings, gifted mutations, and fortunate afflictions that may elevate the body, sharpen the spirit, or ward off doom itself. Count yourself favoured if such wonders find you, for though they may grant great power, even a blessing is seldom without consequence
 
 \subsection{Lyrium Benefits}
+\appendixlink{lyrium}{Appendix IV}{Red Lyrium Enemies}
 
 \DndSpellHeader%
   {Caeruleostasis}
@@ -1038,6 +1065,7 @@ On a failure, you become \textbf{addicted to blue lyrium}.
 \chapter*{Appendices}
 
 \section{I. Purgeflame}
+\label{app:purgeflame}\backlink{purgeflame}{Purgeflame}
 \subsection{Purgeflame Spells}
 
 \DndSpellHeader%
@@ -1094,6 +1122,7 @@ You compress Purgeflame into a single catastrophic blink. Choose one creature yo
 \newpage
 
 \section{II. Red rot}
+\label{app:redrot}\backlink{redrot}{Red Rot}
 \subsection{Red Rot Spells}
 
 \DndSpellHeader%
@@ -1139,6 +1168,7 @@ A creature reduced to 0 hit points inside the sphere leaves behind a smear of bl
 \newpage
 
 \section{III. Carlislean Lycanthrope (Monster Class)}
+\label{app:lycanthropy}\backlink{lycanthropy}{Lycanthropy}
 \textit{A werewolf monster class for characters who have reached Stage 5 of \textbf{Canis Hysteria}}
 
 \subsection*{Class Features}
@@ -1240,6 +1270,7 @@ At 20th level, the curse stops asking. While transformed, you gain advantage on 
 \newpage
 
 \section{IV. Red Lyrium Enemies}
+\label{app:lyrium}\backlink{lyrium}{Lyrium Drawbacks}
 
 \subsection{Red Lyrium Behemoth}
 
