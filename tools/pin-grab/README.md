@@ -16,8 +16,9 @@ python -m pip install gallery-dl
 python pin_grab.py https://pin.it/1okTtMLvv
 ```
 
-The images land in `art-inspo/<user>-<board>/`. For a secret board, add
-`--cookies-from chrome` (or firefox, edge...) so it uses your logged-in
-browser session. `--out <folder>` changes where they go.
+The images land in `art-inspo/<user>-<board>/`. If Pinterest says the board
+can't be found, the board or the whole profile is private: add
+`--cookies-from firefox` so it uses your logged-in Firefox session. Chrome
+locks its cookies against outside tools, so its login can't be borrowed. `--out <folder>` changes where they go.
 
 To share them with Claude, zip the board folder and upload it in the project.
