@@ -1,0 +1,85 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{apotheosis-cards}[2026/10/30 Apotheosis item and spell cards, Grave Red]
+\RequirePackage[paperwidth=63.5mm,paperheight=88.9mm,margin=0pt]{geometry}
+\RequirePackage{xcolor,fontspec,tikz,graphicx,etoolbox}
+\usetikzlibrary{positioning,shapes.geometric,calc}
+\pagestyle{empty}\setlength{\parindent}{0pt}
+\newlength{\apocardw}\setlength{\apocardw}{63.5mm}
+\newlength{\apocardh}\setlength{\apocardh}{88.9mm}
+\definecolor{apoSoot}{HTML}{0B0A08}
+\definecolor{apoPanel}{HTML}{15130F}
+\definecolor{apoBone}{HTML}{D8D2C6}
+\definecolor{apoAsh}{HTML}{8C867B}
+\definecolor{apoRed}{HTML}{D0313F}
+\definecolor{apoRedHi}{HTML}{EC4A56}
+\setmainfont{CrimsonPro-Regular.ttf}[Path=fonts/,ItalicFont=CrimsonPro-Italic.ttf,BoldFont=CrimsonPro-SemiBold.ttf]
+\newfontfamily\apoHead{BarlowCondensed-SemiBold.ttf}[Path=fonts/]
+\newfontfamily\apoUI{BarlowSemiCondensed-SemiBold.ttf}[Path=fonts/]
+\newfontfamily\apoUIr{BarlowSemiCondensed-Regular.ttf}[Path=fonts/]
+
+% \apochip{label}{value}: one cell of the stat strip at the top of the rules box
+\newlength{\apochipw}
+\newcommand{\apochip}[2]{\parbox[t]{\apochipw}{\centering
+  {\apoUI\fontsize{4.8}{5}\selectfont\color{apoRedHi}\MakeUppercase{#1}}\par\vskip.3mm
+  {\apoUIr\fontsize{6.4}{7}\selectfont\color{apoBone}#2}}}
+
+\newif\ifapo@star
+\pgfkeys{/apocard/.cd,
+  title/.store in=\apo@title, type/.store in=\apo@type, rarity/.store in=\apo@rarity,
+  cost/.store in=\apo@cost, badge/.store in=\apo@badge, art/.store in=\apo@art,
+  chips/.store in=\apo@chips, nchips/.store in=\apo@nchips, no/.store in=\apo@no,
+  src/.store in=\apo@src, star/.code=\apo@startrue}
+
+% text with a dark offset copy underneath so it reads over art
+\newcommand{\apo@shadow}[4]{% anchor, position, colour, text
+  \node[anchor=#1,text=black,text opacity=.85] at ($#2+(.2,-.2)$) {#4};
+  \node[anchor=#1,text=#3] at #2 {#4};}
+
+\newcommand{\apo@placeholder}{%
+  \fill[apoSoot] (0,0) rectangle (63.5,88.9);
+  \begin{scope}
+  \clip (0,0) rectangle (63.5,88.9);
+  \fill[apoRed!70!black] (-2,40)--(66,68)--(66,46)--(-2,18)--cycle;
+  \fill[apoBone!88!black] (-2,52)--(66,80)--(66,74)--(-2,46)--cycle;
+  \fill[apoRedHi,opacity=.28] (31.75,54) circle (15);
+  \end{scope}}
+
+\newcommand{\apocard}[2][]{%
+  \begingroup\apo@starfalse
+  \pgfkeys{/apocard/.cd,title={},type={},rarity={},cost={},badge={},art={},chips={},nchips=4,no={},src={},#1}%
+  \setlength{\apochipw}{\dimexpr 50mm/\apo@nchips\relax}%
+  \begin{tikzpicture}[remember picture,overlay,x=1mm,y=1mm,shift={(current page.south west)}]
+    \ifdefempty{\apo@art}{\apo@placeholder}{%
+      \node[anchor=south west,inner sep=0] at (0,0)
+        {\includegraphics[width=\apocardw,height=\apocardh]{\apo@art}};}
+    % darken the top and bottom so type stays readable over any art
+    \foreach \i in {0,...,23}{\fill[black,opacity=.045] (0,88.9) rectangle (63.5,{88.9-(24-\i)});}
+    \foreach \i in {0,...,19}{\fill[black,opacity=.035] (0,0) rectangle (63.5,{14+2*\i});}
+    % frame
+    \draw[apoRed,line width=.3pt] (2.4,2.4) rectangle (61.1,86.5);
+    % title, with the recap's lozenge-and-tip rule beneath
+    \begin{scope}
+      \apo@shadow{west}{(5.2,83.4)}{apoBone}{\apoHead\fontsize{10.5}{11}\selectfont\addfontfeatures{LetterSpace=3}\MakeUppercase{\apo@title}}
+    \end{scope}
+    \draw[apoRed,line width=.3pt] (5.2,79.3)--(28.9,79.3);
+    \fill[apoRed] (31.75,79.3) ++(0,1) -- ++(1,-1) -- ++(-1,-1) -- ++(-1,1) -- cycle;
+    \draw[apoRed,line width=.3pt] (34.6,79.3)--(58.3,79.3);
+    \ifdefempty{\apo@cost}{}{%
+      \node[circle,fill=apoBone,text=apoSoot,minimum size=6.2mm,inner sep=0,font=\apoUI\fontsize{9}{9}\selectfont] at (56.6,83.4) {\apo@cost};}
+    % rules box
+    \node[anchor=south,align=left,text width=50mm,inner sep=2.3mm,
+          fill=apoPanel,fill opacity=.84,draw=apoRed,draw opacity=.9,text opacity=1,line width=.3pt,
+          font=\fontsize{6.6}{7.9}\selectfont\color{apoBone}] (box) at (31.75,9.6)
+      {\ifdefempty{\apo@chips}{}{\apo@chips\par\vskip1mm{\color{apoRed}\hrule height .3pt}\vskip1.3mm}#2};
+    % type line above the box, rarity at the right
+    \apo@shadow{south west}{($(box.north west)+(0,.9)$)}{apoBone}{\apoUI\fontsize{7.6}{8}\selectfont\apo@type}
+    \apo@shadow{south east}{($(box.north east)+(0,.9)$)}{apoRedHi}{\apoUI\fontsize{6.6}{7}\selectfont\MakeUppercase{\apo@rarity}\ifapo@star\ \tikz[baseline=-.6ex]\node[star,star points=4,star point ratio=2.6,fill=apoRedHi,inner sep=.9pt]{};\fi}
+    \ifdefempty{\apo@badge}{}{%
+      \node[diamond,aspect=1.1,fill=apoSoot,draw=apoRedHi,line width=.3pt,inner sep=.55mm,text=apoBone,font=\apoUI\fontsize{8}{8}\selectfont]
+        at ($(box.south east)+(-4.2,.2)$) {\apo@badge};}
+    % footer
+    \node[anchor=south west,text=apoAsh,font=\apoUIr\fontsize{4.3}{4.6}\selectfont] at (4.8,3.5) {APOTHEOSIS\ \textperiodcentered\ \apo@no};
+    \node[anchor=south east,text=apoAsh,font=\apoUIr\fontsize{4.3}{4.6}\selectfont] at (58.7,3.5) {\apo@src};
+  \end{tikzpicture}\clearpage
+  \endgroup}
+\endinput
