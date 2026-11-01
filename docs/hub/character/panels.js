@@ -173,7 +173,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
           select({ "data-i": "rarity", "aria-label": "Rarity" }, RARITIES.map((r) => [r, r]), it.rarity),
           select({ "data-i": "slot", "aria-label": "Equipped slot" }, [["", "In pack"], ...SLOTS.map(([k, l]) => [k, k.startsWith("ring") ? `Ring ${k.slice(-1)}` : l])], it.slot || ""),
           el("button", { type: "button", class: "link-button remove", "data-remove-item": i, title: "Remove", text: "×" }),
-          el("input", { "data-i": "image", value: it.image || "", type: "url", placeholder: "Texture image link (https://…), optional", "aria-label": "Texture image link", class: "irow-notes" }),
+          el("input", { "data-i": "image", value: it.image || "", type: "url", placeholder: "Texture: https://… or ../icons/items/… (optional)", "aria-label": "Texture image link", class: "irow-notes" }),
           textarea({ "data-i": "notes", rows: "2", placeholder: "Description, properties, charges", "aria-label": "Notes", class: "irow-notes" }, it.notes)
         )
       ),
@@ -341,7 +341,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
       Object.assign(it, {
         name: clip(v("name"), 60), kind: v("kind"), rarity: v("rarity"), slot: v("slot") || null,
         qty: Math.round(num(v("qty"), 0, 9999, 1)), weight: num(v("weight"), 0, 9999, 0), notes: clip(v("notes"), 1000),
-        image: /^https:\/\//i.test(v("image").trim()) ? clip(v("image"), 500) : null,
+        image: /^(https:\/\/|\.\.\/icons\/)/i.test(v("image").trim()) ? clip(v("image").trim(), 500) : null,
       });
       if (!it.image) delete it.image;
     });

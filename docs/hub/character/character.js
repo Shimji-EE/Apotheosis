@@ -65,30 +65,34 @@
   };
   const input = (props) => el("input", props);
 
-  // Skill, power and effect icons (power-icons.js): painted neon glyphs on stone.
-  const POWERS = window.PowerIcons || {};
-  const KIND_POWER = { feature: "rune", action: "slash", bonus: "dash", reaction: "ward" };
-  function powerIcon(name, kind) {
-    const key = POWERS[name] ? name : KIND_POWER[kind] || "rune";
-    const NS = "http://www.w3.org/2000/svg";
-    const svg = document.createElementNS(NS, "svg");
-    svg.setAttribute("viewBox", "0 0 100 100");
-    svg.setAttribute("aria-hidden", "true");
-    const use = document.createElementNS(NS, "use");
-    use.setAttribute("href", `#p-${key}`);
-    use.setAttribute("fill", "currentColor");
-    use.setAttribute("filter", "url(#brush)");
-    svg.append(use);
-    const tile = el("span", { class: "ficon power", title: POWERS[key]?.label || "", style: `--glow:${POWERS[key]?.color || "var(--accent)"}` }, svg);
-    return tile;
+  // Skill, power and effect icons come straight from the icon packs (tools/icons/icons.py powers).
+  // A feature shows the icon it names, else the icon whose name matches it, else one for its kind.
+  let POWERS = {};
+  try {
+    POWERS = await (await fetch("../icons/powers/manifest.json")).json();
+  } catch { /* no icons: rows fall back to a plain tile */ }
+  const KIND_POWER = { feature: "darkvision", action: "main hand attack", bonus: "dash", reaction: "opportunity attack" };
+  const keyOf = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  function powerKey(f) {
+    for (const k of [keyOf(f.icon), keyOf(f.name)]) {
+      if (!k) continue;
+      if (POWERS[k]) return k;
+      const close = Object.keys(POWERS).find((p) => p.startsWith(`${k} `)); // "spiritual weapon" → "spiritual weapon greatsword"
+      if (close) return close;
+    }
+    return POWERS[KIND_POWER[f.kind]] ? KIND_POWER[f.kind] : null;
   }
-  const powerSelect = (value) => {
-    const s = el("select", { "data-f": "icon", "aria-label": "Icon" },
-      el("option", { value: "", text: "Icon: default" }),
-      ...Object.entries(POWERS).map(([k, v]) => el("option", { value: k, text: v.label })));
-    s.value = value || "";
-    return s;
-  };
+  function powerIcon(f) {
+    const key = powerKey(f);
+    const p = POWERS[key];
+    return el("span", { class: `ficon power${p && p.stone ? " has-stone" : ""}`, title: p ? p.label : "" },
+      p ? el("img", { src: `../icons/powers/${p.file}`, alt: "", loading: "lazy" }) : "");
+  }
+  // One shared list of icon names for the edit field's suggestions.
+  document.body.append(el("datalist", { id: "power-list" },
+    ...Object.values(POWERS).map((p) => el("option", { value: p.label }))));
+  const powerSelect = (value) =>
+    input({ "data-f": "icon", value: value || "", list: "power-list", placeholder: "Icon (matches name)", "aria-label": "Icon" });
 
   function renderHead() {
     document.title = `${c.name} · The Tavern`;
@@ -185,7 +189,7 @@
                   el("button", { type: "button", class: "link-button remove", "data-remove": i, title: "Remove", text: "×" })
                 )
               : el("div", { class: "frow" },
-                  el("span", { class: "fname" }, powerIcon(f.icon, f.kind), el("span", { text: f.name })),
+                  el("span", { class: "fname" }, powerIcon(f), el("span", { text: f.name })),
                   el("span", { text: f.uses || "–" }),
                   el("span", { text: f.roll || "–" }),
                   el("span", { text: f.formula || "–" })

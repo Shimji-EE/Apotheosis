@@ -456,17 +456,15 @@ button.pip-flame { cursor: pointer; }
 .tile { width: 54px; height: 54px; padding: 6px; opacity: 0.6; transition: opacity 0.2s; }
 [aria-selected=true] .tile, [role=tab]:hover .tile { opacity: 1; outline: 1px solid var(--accent); outline-offset: 1px; }
 
-/* Skill, power and effect icons: painted neon glyphs (power-icons.js) on lit stone */
+/* Skill, power and effect icons from the packs. Stone versions fill the tile; glyph-only ones sit on our stone. */
 .power {
-  flex: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 4px;
-  color: var(--glow); border: 1px solid #050403; border-radius: 3px;
-  background:
-    radial-gradient(circle at 50% 48%, color-mix(in srgb, var(--glow) 30%, transparent), transparent 65%),
-    var(--stone-tex),
-    linear-gradient(150deg, #3a322b, #241e19 55%, #16120f);
+  flex: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 3px; overflow: hidden;
+  border: 1px solid #050403; border-radius: 3px;
+  background: var(--stone-tex), linear-gradient(150deg, #3a322b, #241e19 55%, #16120f);
   box-shadow: var(--stone-bevel);
 }
-.power svg { width: 100%; height: 100%; overflow: visible; }
+.power.has-stone { padding: 0; }
+.power img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .frow { padding-top: 0.45rem; padding-bottom: 0.45rem; }
 
 /* Item textures supplied later replace the line-art stand-ins */
