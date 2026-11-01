@@ -256,8 +256,8 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist,
 
   /* ---------- Inspiration ---------- */
 
-  // BG3's own inspiration point, the red star (pack: Resource/Red_Star_Icon).
-  const inspirationArt = () => el("img", { class: "insp-art", src: "../icons/resources/red-star.webp", alt: "" });
+  // BG3's inspiration icon (the four-point star Charl supplied), tinted red.
+  const inspirationArt = () => el("img", { class: "insp-art", src: "../icons/ui/inspiration-star.webp", alt: "" });
   // A background the pack has an icon for (Acolyte, Soldier…) shows it beside the name.
   function backgroundArt(name) {
     const k = window.Rules ? window.Rules.keyOf(`background ${name}`) : "";
