@@ -1,0 +1,33 @@
+% apotheosis-gravered.sty
+% Grave Red accents for the Apotheosis Manual.
+% Recolours the dndbook bars, rules, ribbons and box tints to the shared
+% Grave Red palette (/website-theme/grave-red.md). Fonts and layout are not
+% touched. Load it right after \documentclass{dndbook}.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{apotheosis-gravered}[2026/11/01 Grave Red accents for Apotheosis]
+\RequirePackage{xcolor}
+
+% Grave Red palette
+\definecolor{graveRed}{HTML}{D0313F}     % accent red
+\definecolor{graveRedDeep}{HTML}{8E1F29} % darker red, for type on the footer scroll
+\definecolor{graveAsh}{HTML}{8C867B}     % secondary grey
+\definecolor{graveSoot}{HTML}{0B0A08}    % near-black
+\colorlet{graveTint}{graveRed!10!white}  % pale red wash for box backgrounds
+
+% Headings, title rules and red bars
+\colorlet{titlered}{graveRed}        % chapter/section titles, read-aloud bars, link banners, stat block frames
+\colorlet{titlegold}{graveRed}       % rule under section titles
+\colorlet{rulered}{graveRed}         % tapered rule in stat blocks
+\colorlet{statblockribbon}{graveAsh} % inner stat block ribbon
+\colorlet{sidebarrule}{graveRed}     % sidebar top/bottom bars and corner tabs
+\colorlet{pagegold}{graveRedDeep}    % footer text and page numbers
+
+% Box tints: sidebars, comments and even table rows
+\colorlet{PhbMauve}{graveTint}
+\colorlet{PhbLightGreen}{graveTint}
+\colorlet{themecolor}{graveTint}
+\colorlet{commentcolor}{graveTint}
+\colorlet{sidebarcolor}{graveTint}
+\colorlet{tablecolor}{graveTint}
+
+\endinput
