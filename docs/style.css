@@ -138,6 +138,7 @@ main, .hero, .footer { position: relative; z-index: 2; }
   place-items: center;
   text-align: center;
   padding: 5rem 16px 6rem;
+  overflow: clip; /* parallax drift must not slide the hero over the Tavern */
 }
 
 .tracked {
