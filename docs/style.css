@@ -391,48 +391,11 @@ blockquote cite {
   color: var(--ink-dim);
 }
 
-/* World: quest-log columns, each with a red bar atop a hairline */
-
-.places {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(1.5rem, 4vw, 3.5rem);
-}
-
-.place {
-  position: relative;
-  padding-left: 1.4rem;
-  border-left: 1px solid var(--line);
-}
-
-.place::before {
-  content: "";
-  position: absolute;
-  left: -2px;
-  top: 0;
-  width: 3px;
-  height: 48px;
-  background: var(--accent);
-}
-
-.place-sub {
-  margin: 0 0 0.9rem;
-  font-family: var(--display);
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-}
-
-.place p:last-child { margin: 0; font-family: var(--prose); font-size: 1.2rem; line-height: 1.55; color: var(--ink-dim); }
-
-.place:nth-child(2) { transition-delay: 0.15s; }
-.place:nth-child(3) { transition-delay: 0.3s; }
+/* World: an over-arching premise above the atlas links */
 
 .premise {
   max-width: 760px;
-  margin: 5rem auto 0;
+  margin: 0 auto;
   text-align: center;
   font-family: var(--prose);
   font-size: clamp(1.3rem, 2.6vw, 1.6rem);
@@ -440,9 +403,8 @@ blockquote cite {
   font-style: italic;
 }
 
-@media (max-width: 800px) {
-  .places { grid-template-columns: 1fr; }
-}
+.premise + .premise { margin-top: 1.4rem; }
+
 
 /* Gallery: dim plates that wake on hover, with red corner brackets */
 

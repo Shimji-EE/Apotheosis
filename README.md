@@ -23,16 +23,13 @@
 
 ## ✦ Part I · The World
 
-**Romulon** · *The golden domes*<br>
-The known world turns on its golden domes, seat of the high elves and heart of the Church. Its faith claims to hold up the very structure of reality, and few who kneel there ask what lies beneath it.
+Apotheosis is a land of frozen mud and woodsmoke, of gallows creaking at the crossroads and crows grown fat on what hangs there. Children cough through winters that take the old and the weak, tithe-men carry off the last sack of grain, and the bells ring for the dead more often than for prayer. The faithful still kneel on cold stone before an old church that sells salvation by the coin, and everyone, from the beggar picking lice in the gutter to the king on his gilded chair, dreams of rising above the filth. But beneath the incense and gold leaf, that faith has long since begun to rot.
 
-**Forgelight** · *The snowbound north*<br>
-Far from that light, in the snowbound north, a hamlet clings to the ruins of an ancient snow-elven temple, digging into a past that was buried for a reason.
+And where the rot seeps in, monsters crawl out. Wolves that walk like men drag shepherds from their fires, a miller's wife claws her way out of the grave still hungry, and the neighbour who prayed too hard for more now prowls the churchyard on all fours. Still, people dig. Under flooded crypts and barrow hills lie crowns, reliquaries and saints' bones wrapped in gold, each one whispering of a way up, and every hand that pries them loose pays in blood, silver, or something it cannot name.
 
-**Black Iron** · *The king's roads*<br>
-And on the king's roads between them, a host in black iron marches, burning everything in its path.
+Those whispers do not come from the dead. Older than any crown or creed, other hungers stir beneath the world. Fishermen haul up nets heavy with eyes, and whole villages wake to black water in the wells and children muttering in tongues no priest can read. These things dwell past the edge of the maps and the reach of prayer, turning the wheels of this world as surely as the seasons, and they feed on every soul that tries to climb.
 
-A priest with a secret mission, a rogue with a voice inside her head, and a stranger with a blade drawn from his own blood are about to meet in a tavern at the edge of the first snow. What they are looking for, and what is looking for them, is for the table to find out.
+So it has always gone, for apotheosis is the oldest sin of all: the dream of ascending to sit upon the throne of heaven. Kings have bled whole provinces dry for it, saints have starved themselves to bone, and beasts have devoured their own kind, and the land is littered with what remained of them: husks rotting in iron gibbets, cathedrals burned to their footings, names scratched from every record. That throne was never meant for man or beast, and what becomes of those who forget it is for the table to find out.
 
 <p align="center">
   <img src="assets/readme/black-knight.jpg" alt="The Black Knight" width="31%">
@@ -65,7 +62,7 @@ The campaign uses a **hybrid of the 2014 and 2024 Player's Handbooks**. Players 
 
 ## Repository
 
-The campaign book and session recaps are typeset in LaTeX with a clean, minimalist dark fantasy look, and will be published here as they reach a playable state. Art lives in the `assets/` folder.
+The campaign book is typeset in LaTeX with a clean, minimalist dark fantasy look, and will be published here as they reach a playable state. Art lives in the `assets/` folder.
 
 ## Credits & License
 
