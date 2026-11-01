@@ -1,0 +1,132 @@
+/* Campaign hub: reuses the Grave Red tokens from ../style.css. */
+
+.hub-bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.2rem 16px;
+  font-family: var(--display);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.hub-home { color: var(--ink-dim); text-decoration: none; }
+.hub-home:hover { color: var(--accent-bright); }
+
+.hub-who { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+.hub-who[hidden] { display: none; }
+
+.link-button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: var(--ink-dim);
+  cursor: pointer;
+}
+.link-button:hover { color: var(--accent-bright); }
+
+.hub-main {
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 16px 5rem;
+}
+
+.hub-title {
+  margin: 0.4rem 0 0.6rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.hub-status { min-height: 1.6em; color: var(--ink-dim); font-style: italic; }
+.hub-status.is-error { color: var(--accent-bright); font-style: normal; }
+
+.hub .panel {
+  max-width: none;
+  margin: 2rem 0 0;
+  padding: 1.6rem clamp(1rem, 4vw, 2rem) 2rem;
+  background: rgba(21, 19, 15, 0.82);
+  border-top: 2px solid var(--accent);
+}
+.hub .panel[hidden] { display: none; }
+
+.panel h2 {
+  margin: 0 0 1rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.panel p { margin: 0 0 1rem; color: var(--ink-dim); }
+
+.form { display: grid; gap: 1rem; max-width: 420px; }
+.form-inline { grid-template-columns: 1fr auto; align-items: end; max-width: 520px; margin-top: 1.5rem; }
+
+.form label {
+  display: grid;
+  gap: 0.35rem;
+  font-family: var(--display);
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.form input {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font: 400 1.05rem var(--body);
+  letter-spacing: normal;
+  text-transform: none;
+}
+.form input:focus { outline: 1px solid var(--accent); border-color: var(--accent); }
+
+.form .button { justify-self: start; background: none; cursor: pointer; }
+.form .button:disabled { opacity: 0.5; cursor: wait; }
+
+.setup { margin-top: 2rem; }
+.setup summary {
+  cursor: pointer;
+  font-family: var(--display);
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.setup[open] summary { margin-bottom: 1rem; color: var(--accent); }
+
+.roster { list-style: none; margin: 0; padding: 0; }
+.roster li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.roster .handle { color: var(--ink-dim); font-size: 0.95rem; }
+.roster .tab { margin-left: auto; }
+
+@media (max-width: 560px) {
+  .form-inline { grid-template-columns: 1fr; }
+}
