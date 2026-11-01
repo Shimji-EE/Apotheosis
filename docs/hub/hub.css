@@ -183,7 +183,6 @@
   box-shadow: 0 0 24px rgba(208, 49, 63, 0.25);
 }
 .portrait.has-art .portrait-sigil { display: none; }
-.portrait-sigil { width: 56px; height: 56px; fill: none; stroke: var(--accent); stroke-width: 1.4; opacity: 0.6; }
 .badge-prof, .badge-level {
   position: absolute; display: grid; place-items: center;
   font: 700 1.05rem var(--display); color: var(--ink);
@@ -258,15 +257,6 @@
 /* Side rail: glowing line-art tiles as tabs */
 .dash-rail { display: grid; gap: 0.5rem; position: sticky; top: 1rem; }
 .dash-rail [role=tab] { padding: 0; background: none; border: 0; cursor: pointer; }
-.tile {
-  display: block; width: 52px; height: 52px; padding: 7px;
-  background: radial-gradient(circle at 50% 40%, #1d1712, #0b0a08 75%);
-  border: 1px solid #2a221b;
-  fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
-  filter: drop-shadow(0 0 3px rgba(236, 74, 86, 0.55));
-  opacity: 0.6; transition: opacity 0.2s, stroke 0.2s, border-color 0.2s;
-}
-[aria-selected=true] .tile, [role=tab]:hover .tile { opacity: 1; stroke: var(--accent-bright); border-color: var(--accent); }
 
 @media (max-width: 900px) {
   .sheet-head, .sheet-body { grid-template-columns: 1fr; }
@@ -292,7 +282,6 @@
 .add-row { font: 500 0.85rem var(--display); letter-spacing: 0.12em; text-transform: uppercase; }
 
 /* ---------- Inventory, Inspiration and Journal tabs ---------- */
-.glyph { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .sub-head { margin: 1.4rem 0 0.5rem; font: 600 0.8rem var(--display); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-dim); }
 .sub-note { margin: -0.3rem 0 0.6rem; font-size: 0.85rem; color: var(--ink-dim); font-style: italic; }
 .kicker { display: block; font: 600 0.7rem var(--display); letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
@@ -305,16 +294,6 @@
 .tab-body .wide { margin-top: 0.8rem; }
 
 /* Item tiles: dark stone cells with glowing line art, like the rail */
-.cell {
-  position: relative; display: grid; place-items: center; width: 56px; height: 56px; padding: 9px;
-  background: radial-gradient(circle at 50% 40%, #17120e, #0b0a08 80%);
-  border: 1px solid #241c16; color: #3a2e24;
-}
-.cell.has-item { cursor: pointer; color: var(--accent); border-color: #3a2e24; }
-.cell.has-item .glyph { filter: drop-shadow(0 0 3px rgba(236, 74, 86, 0.55)); }
-.cell.has-item:hover, .cell.is-picked { color: var(--accent-bright); border-color: var(--accent); }
-.cell.is-empty { color: #3a2e24; }
-.cell.is-empty .glyph { opacity: 0.7; }
 .qty { position: absolute; right: 3px; bottom: 1px; font: 600 0.75rem var(--display); color: var(--ink); text-shadow: 0 0 3px #000; }
 /* Rarity shows as an edge glow along the bottom of the tile */
 .cell.has-item::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--rarity, transparent); box-shadow: 0 0 6px var(--rarity, transparent); }
@@ -339,8 +318,6 @@
 .bag { display: grid; grid-template-columns: repeat(auto-fill, 56px); gap: 4px; padding: 6px; background: #0e0b09; border: 1px solid var(--line); }
 .item-card { display: grid; grid-template-columns: 64px 1fr; gap: 0.9rem; margin-top: 0.8rem; padding: 0.8rem; border: 1px solid var(--line); border-top: 2px solid var(--rarity, var(--line)); background: #120f0c; }
 .item-card.r-common { --rarity: var(--line); }
-.item-card-icon { width: 64px; height: 64px; padding: 10px; color: var(--accent-bright); border: 1px solid #3a2e24; background: radial-gradient(circle at 50% 40%, #1d1712, #0b0a08 75%); }
-.item-card-icon .glyph { filter: drop-shadow(0 0 4px rgba(236, 74, 86, 0.6)); }
 .item-name { margin: 0; font: 600 1.25rem var(--prose); color: var(--ink); }
 .item-card:not(.r-common) .item-name { color: var(--rarity); }
 .item-meta { margin: 0.1rem 0 0.5rem; font: 500 0.75rem var(--display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-dim); }
@@ -350,13 +327,7 @@
 .inv-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 1.2rem; padding-top: 0.9rem; border-top: 1px solid var(--line); }
 .purse { display: flex; flex-wrap: wrap; gap: 0.9rem; }
 .coin { display: inline-flex; align-items: center; gap: 0.3rem; font: 600 1rem var(--display); color: var(--ink); }
-.coin .glyph { width: 20px; height: 20px; stroke-width: 2.2; }
 .coin small { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-dim); }
-.coin-pp .glyph { color: #c9c4ba; }
-.coin-gp .glyph { color: #c9922e; }
-.coin-ep .glyph { color: #9fae8e; }
-.coin-sp .glyph { color: #9a9a9a; }
-.coin-cp .glyph { color: #b06a3e; }
 .purse.is-edit .mini { width: 5em; }
 .load { display: flex; align-items: center; gap: 0.6rem; min-width: 260px; }
 .load-label, .load-text { font: 500 0.75rem var(--display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-dim); white-space: nowrap; }
@@ -376,10 +347,6 @@
 .line-input { margin-top: 0.3rem; font: 600 1.2rem var(--prose) !important; }
 .insp-count { text-align: right; }
 .insp-pips { display: flex; gap: 0.3rem; margin-top: 0.3rem; }
-.pip-flame { display: grid; width: 38px; height: 38px; padding: 5px; background: radial-gradient(circle at 50% 40%, #1d1712, #0b0a08 75%); border: 1px solid #2a221b; color: #3a2e24; }
-button.pip-flame { cursor: pointer; }
-.pip-flame.is-lit { color: var(--accent-bright); border-color: var(--accent); }
-.pip-flame.is-lit .glyph { filter: drop-shadow(0 0 4px rgba(236, 74, 86, 0.7)); }
 .insp-story { margin-top: 1rem; max-width: 70ch; }
 .goal { display: grid; grid-template-columns: 18px 1fr auto; gap: 0.7rem; align-items: center; padding: 0.55rem 0; border-top: 1px solid var(--line); }
 .goal.is-edit { grid-template-columns: 18px 1fr 24px; }
@@ -428,3 +395,63 @@ button.pip-flame { cursor: pointer; }
   .traits { grid-template-columns: 1fr; }
   .load { min-width: 0; width: 100%; }
 }
+
+/* ---------- Icons: neon brush strokes on carved stone (after the BG3 icon sheets) ----------
+   The frame and tile are the monochrome UI. The icon inside carries its own colour (--glow). */
+:root {
+  --stone-tex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .5 0 0 0 0 .45 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23n)'/%3E%3C/svg%3E");
+  --stone-bevel: inset 1px 1px 0 rgba(255, 240, 220, 0.09), inset -2px -2px 0 rgba(0, 0, 0, 0.55), inset 0 0 14px rgba(0, 0, 0, 0.65), 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+.glyph { display: block; width: 100%; height: 100%; overflow: visible; fill: none; stroke-linecap: round; stroke-linejoin: round; color: var(--glow, var(--accent)); }
+.glyph .g-glow { stroke: currentColor; stroke-width: 7; opacity: 0.7; filter: url(#neon); }
+.glyph .g-core { stroke: color-mix(in srgb, currentColor 55%, #fff); stroke-width: 2.6; }
+
+.stone, .tile {
+  position: relative; display: grid; place-items: center;
+  border: 1px solid #050403; border-radius: 3px;
+  background:
+    radial-gradient(circle at 50% 48%, color-mix(in srgb, var(--glow, var(--accent)) 28%, transparent), transparent 64%),
+    var(--stone-tex),
+    linear-gradient(150deg, #221c17, #110e0b 60%, #0a0807);
+  box-shadow: var(--stone-bevel);
+}
+
+/* Unlit: empty cells and slots, spent inspiration */
+.cell.stone:not(.has-item), .pip-flame:not(.is-lit) { --glow: #6b5d50; background: var(--stone-tex), linear-gradient(150deg, #1b1713, #0e0b09 60%, #090706); }
+.cell:not(.has-item) .g-glow, .pip-flame:not(.is-lit) .g-glow { opacity: 0; }
+.cell:not(.has-item) .g-core, .pip-flame:not(.is-lit) .g-core { stroke: #4b4037; stroke-width: 2.2; }
+
+.cell { width: 56px; height: 56px; padding: 7px; }
+.cell.has-item { cursor: pointer; }
+.cell.has-item:hover, .cell.is-picked { outline: 1px solid var(--accent); outline-offset: 1px; }
+.cell.has-item:hover .g-glow, .cell.is-picked .g-glow { opacity: 0.85; }
+.item-card-icon { width: 72px; height: 72px; padding: 9px; }
+.pip-flame { width: 42px; height: 42px; padding: 5px; --glow: #ff7a3c; }
+button.pip-flame { cursor: pointer; }
+.portrait-sigil { width: 60px; height: 60px; opacity: 0.75; }
+.coin .glyph { width: 22px; height: 22px; }
+.coin .g-glow { stroke-width: 5; opacity: 0.4; }
+.coin .g-core { stroke-width: 3; }
+.coin-pp .glyph { --glow: #d9e2ea; }
+.coin-gp .glyph { --glow: #f2b33d; }
+.coin-ep .glyph { --glow: #a9d58c; }
+.coin-sp .glyph { --glow: #b8c0c8; }
+.coin-cp .glyph { --glow: #d9784a; }
+
+/* Each kind of item glows in its own colour; rarity stays as the bottom edge */
+.k-weapon { --glow: #ff8a3d; }
+.k-armour { --glow: #6fb7ff; }
+.k-shield { --glow: #f2c94c; }
+.k-potion { --glow: #ff4d6d; }
+.k-scroll { --glow: #e8d8a8; }
+.k-ring { --glow: #c27bff; }
+.k-amulet { --glow: #45e0c8; }
+.k-clothing { --glow: #9aa6ff; }
+.k-tool { --glow: #ffb15c; }
+.k-treasure { --glow: #5ff0a0; }
+.k-misc { --glow: #d6b38a; }
+
+/* Side rail: the outer UI, so it stays Grave Red */
+.dash-rail [role=tab] { --glow: var(--accent); }
+.tile { width: 54px; height: 54px; padding: 6px; opacity: 0.6; transition: opacity 0.2s; }
+[aria-selected=true] .tile, [role=tab]:hover .tile { opacity: 1; outline: 1px solid var(--accent); outline-offset: 1px; }

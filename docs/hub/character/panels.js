@@ -36,9 +36,12 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
     svg.setAttribute("class", cls);
     svg.setAttribute("viewBox", "0 0 48 48");
     svg.setAttribute("aria-hidden", "true");
-    const use = document.createElementNS(NS, "use");
-    use.setAttribute("href", `#i-${name}`);
-    svg.append(use);
+    for (const layer of ["g-glow", "g-core"]) {
+      const use = document.createElementNS(NS, "use");
+      use.setAttribute("class", layer);
+      use.setAttribute("href", `#i-${name}`);
+      svg.append(use);
+    }
     return svg;
   };
   const clip = (v, n) => String(v ?? "").trim().slice(0, n);
@@ -75,7 +78,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
     const rarity = (item.rarity || "common").replace(" ", "-");
     const tile = el("button", {
       type: "button",
-      class: `cell has-item r-${rarity}${index === picked ? " is-picked" : ""}${extra}`,
+      class: `cell stone has-item k-${item.kind || "misc"} r-${rarity}${index === picked ? " is-picked" : ""}${extra}`,
       "data-item": index,
       title: item.name,
     }, icon(KIND_ICON[item.kind] || "pouch"));
@@ -90,7 +93,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
     const slot = ([key, label, glyph]) => {
       const i = bySlot[key];
       const node = i === undefined
-        ? el("div", { class: "cell is-empty", title: `${label}: empty` }, icon(glyph))
+        ? el("div", { class: "cell stone is-empty", title: `${label}: empty` }, icon(glyph))
         : itemTile(d.items[i], i);
       return el("div", { class: `slot slot-${key}` }, node, el("span", { class: "slot-label", text: label }));
     };
@@ -104,7 +107,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
 
     const loose = d.items.map((it, i) => ({ it, i })).filter(({ it }) => !it.slot);
     const cells = loose.map(({ it, i }) => itemTile(it, i));
-    while (cells.length < Math.max(BAG_CELLS, Math.ceil(cells.length / 6) * 6)) cells.push(el("div", { class: "cell" }));
+    while (cells.length < Math.max(BAG_CELLS, Math.ceil(cells.length / 6) * 6)) cells.push(el("div", { class: "cell stone" }));
 
     const weight = d.items.reduce((sum, it) => sum + (Number(it.weight) || 0) * (Number(it.qty) || 1), 0);
     const capacity = strength() * 15;
@@ -120,8 +123,8 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
 
     const item = d.items[picked];
     const card = item
-      ? el("article", { class: `item-card r-${(item.rarity || "common").replace(" ", "-")}` },
-          el("div", { class: "item-card-icon" }, icon(KIND_ICON[item.kind] || "pouch")),
+      ? el("article", { class: `item-card k-${item.kind || "misc"} r-${(item.rarity || "common").replace(" ", "-")}` },
+          el("div", { class: "item-card-icon stone" }, icon(KIND_ICON[item.kind] || "pouch")),
           el("div", {},
             el("h4", { class: "item-name", text: item.name }),
             el("p", { class: "item-meta", text: [
@@ -186,8 +189,8 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
     const pips = el("div", { class: "insp-pips", title: `Inspiration ${d.inspiration} of ${MAX_INSPIRATION}` },
       ...Array.from({ length: MAX_INSPIRATION }, (_, n) =>
         editing
-          ? el("button", { type: "button", class: `pip-flame${n < d.inspiration ? " is-lit" : ""}`, "data-insp": n + 1, "aria-label": `Set inspiration to ${n + 1}` }, icon("flame"))
-          : el("span", { class: `pip-flame${n < d.inspiration ? " is-lit" : ""}` }, icon("flame"))
+          ? el("button", { type: "button", class: `pip-flame stone${n < d.inspiration ? " is-lit" : ""}`, "data-insp": n + 1, "aria-label": `Set inspiration to ${n + 1}` }, icon("flame"))
+          : el("span", { class: `pip-flame stone${n < d.inspiration ? " is-lit" : ""}` }, icon("flame"))
       )
     );
     const head = el("header", { class: "insp-head" },
