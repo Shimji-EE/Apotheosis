@@ -19,16 +19,13 @@
 
   <header class="hub-bar">
     <a class="hub-home" href="../">&larr; Apotheosis</a>
-    <div class="hub-who" id="who" hidden>
-      <a id="who-name" class="hub-home" href="profile/" title="Your profile"></a>
-      <span class="tab" id="who-role"></span>
-      <button class="link-button" id="logout" type="button">Log out</button>
-    </div>
   </header>
 
   <main class="hub-main">
-    <p class="tracked">The Charred Eye</p>
-    <h1 class="hub-title">The Tavern</h1>
+    <div class="door" id="door">
+      <p class="tracked">The Charred Eye</p>
+      <h1 class="hub-title">The Tavern</h1>
+    </div>
     <p class="hub-status" id="status" role="status" aria-live="polite"></p>
 
     <!-- Logged out -->
@@ -51,37 +48,76 @@
       </details>
     </section>
 
-    <!-- Logged in: the scene the DM has live -->
-    <section class="panel scene-panel is-empty" id="scene-panel" hidden>
-      <div class="scene-art" id="scene-art"></div>
-      <div class="scene-body">
-        <p class="tracked">At the table</p>
-        <h2 id="scene-name">The fire is low</h2>
-        <p id="scene-desc"></p>
-        <div class="scene-sound" id="scene-sound" hidden>
-          <p class="scene-track" id="scene-track"></p>
-          <button class="button" id="sound-toggle" type="button">Turn on music</button>
-          <label class="scene-volume">Volume <input id="scene-volume" type="range" min="0" max="1" step="0.05"></label>
+    <!-- Logged in: the lobby. Left column for you, the stage for the whole party. -->
+    <div class="lobby" id="lobby" hidden>
+      <aside class="lobby-rail" aria-label="You">
+        <div class="op-card">
+          <span class="op-crest" id="op-crest" aria-hidden="true"></span>
+          <div class="op-text">
+            <a id="who-name" class="op-name" href="profile/" title="Your profile"></a>
+            <span class="op-role" id="who-role"></span>
+          </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Logged in -->
-    <section class="panel" id="party-panel" hidden>
-      <h2>The party</h2>
-      <p>Open your name to reach your profile and characters.</p>
-      <ul class="roster" id="roster"></ul>
-      <form id="rename-form" class="form form-inline" novalidate>
-        <label>Your display name <input name="display_name" maxlength="40" required></label>
-        <button class="button button-quiet" type="submit">Save</button>
-      </form>
-    </section>
+        <nav class="rail-nav">
+          <section class="rail-group">
+            <h2 class="rail-head" id="chars-head">Characters</h2>
+            <p class="rail-note" id="chars-note">Pick who you bring to the table. The party sees your choice.</p>
+            <ul class="rail-chars" id="my-chars"></ul>
+            <a class="rail-link" id="new-char" href="create/">+ Create a character</a>
+          </section>
 
-    <section class="panel" id="dm-panel" hidden>
-      <h2>Manage the party</h2>
-      <p>Players create their own accounts. Remove anyone you don't want at the table.</p>
-      <ul class="roster" id="manage"></ul>
-    </section>
+          <section class="rail-group">
+            <h2 class="rail-head">You</h2>
+            <a class="rail-link" id="my-profile" href="profile/">Profile</a>
+            <details class="rail-more">
+              <summary class="rail-link">Profile settings</summary>
+              <form id="rename-form" class="form" novalidate>
+                <label>Display name <input name="display_name" maxlength="40" required></label>
+                <button class="button button-quiet" type="submit">Save</button>
+              </form>
+            </details>
+            <details class="rail-more" id="dm-panel" hidden>
+              <summary class="rail-link">Manage the party</summary>
+              <p class="rail-note">Players create their own accounts. Remove anyone you don't want at the table.</p>
+              <ul class="roster" id="manage"></ul>
+            </details>
+            <button class="rail-link link-button" id="logout" type="button">Log out</button>
+          </section>
+        </nav>
+      </aside>
+
+      <section class="lobby-stage" aria-labelledby="lobby-title">
+        <header class="stage-head">
+          <div>
+            <p class="tracked">The Charred Eye</p>
+            <h1 class="stage-title" id="lobby-title">The Tavern</h1>
+          </div>
+          <p class="stage-count" id="lobby-count"></p>
+        </header>
+
+        <ul class="lineup" id="lineup" aria-label="The party"></ul>
+
+        <div class="stage-foot">
+          <ol class="lobby-feed" id="lobby-feed" aria-live="polite"></ol>
+          <button class="ready-button" id="ready" type="button" aria-pressed="false">Ready up</button>
+        </div>
+
+        <section class="panel scene-panel is-empty" id="scene-panel" hidden>
+          <div class="scene-art" id="scene-art"></div>
+          <div class="scene-body">
+            <p class="tracked">At the table</p>
+            <h2 id="scene-name">The fire is low</h2>
+            <p id="scene-desc"></p>
+            <div class="scene-sound" id="scene-sound" hidden>
+              <p class="scene-track" id="scene-track"></p>
+              <button class="button" id="sound-toggle" type="button">Turn on music</button>
+              <label class="scene-volume">Volume <input id="scene-volume" type="range" min="0" max="1" step="0.05"></label>
+            </div>
+          </div>
+        </section>
+      </section>
+    </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
@@ -89,5 +125,6 @@
   <script src="hub.js"></script>
   <script src="scene-audio.js"></script>
   <script src="scene-panel.js"></script>
+  <script src="lobby.js"></script>
 </body>
 </html>

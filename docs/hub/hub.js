@@ -7,7 +7,7 @@
   function say(text, isError = false) {
     status.textContent = text;
     status.classList.toggle("is-error", isError);
-    status.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (text) status.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
   // Check the form ourselves so mistakes show as a message instead of a silent block.
@@ -58,11 +58,14 @@
     const { data } = await db.auth.getSession();
     const session = data.session;
     $("login-panel").hidden = !!session;
-    $("party-panel").hidden = !session;
-    $("who").hidden = !session;
+    $("lobby").hidden = !session;
+    $("door").hidden = !!session;
+    document.body.classList.toggle("in-lobby", !!session);
     if (!session) {
       $("dm-panel").hidden = true;
       me = null;
+      window.Hub.members = null;
+      window.dispatchEvent(new CustomEvent("hub:members", { detail: null }));
       return;
     }
 
@@ -75,8 +78,12 @@
 
     me = profiles.find((p) => p.id === session.user.id);
     $("who-name").textContent = me ? me.display_name : "";
-    $("who-role").textContent = me && me.role === "dm" ? "DM" : "Player";
-    $("who-name").href = me ? `profile/?u=${encodeURIComponent(me.username)}` : "profile/";
+    $("who-role").textContent = me && me.role === "dm" ? "Dungeon Master" : "Player";
+    $("op-crest").textContent = me ? (me.display_name || me.username).slice(0, 1).toUpperCase() : "";
+    const mine = me ? `?u=${encodeURIComponent(me.username)}` : "";
+    $("who-name").href = `profile/${mine}`;
+    $("my-profile").href = `profile/${mine}`;
+    $("new-char").href = `create/${mine}`;
     $("dm-panel").hidden = !(me && me.role === "dm");
     $("rename-form").display_name.value = me ? me.display_name : "";
 
@@ -116,23 +123,8 @@
       manage.append(li);
     }
 
-    const roster = $("roster");
-    roster.replaceChildren(
-      ...profiles.map((p) => {
-        const li = document.createElement("li");
-        const name = document.createElement("a");
-        name.href = `profile/?u=${encodeURIComponent(p.username)}`;
-        name.textContent = p.display_name;
-        const handle = document.createElement("span");
-        handle.className = "handle";
-        handle.textContent = `@${p.username}`;
-        const role = document.createElement("span");
-        role.className = "tab";
-        role.textContent = p.role === "dm" ? "DM" : "Player";
-        li.append(name, handle, role);
-        return li;
-      })
-    );
+    window.Hub.members = { me, profiles }; // for scripts that load after this first render
+    window.dispatchEvent(new CustomEvent("hub:members", { detail: { me, profiles } }));
   }
 
   $("login-form").addEventListener("submit", (e) => {
