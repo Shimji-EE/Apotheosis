@@ -30,16 +30,16 @@
     fontlower        = \DndFontSidebarBody,
     sharp~corners,
     parbox           = false,
-    borderline~north = {1pt} {-0.5pt} {black},
-    borderline~south = {1pt} {-0.5pt} {black},
+    borderline~north = {1pt} {-0.5pt} {sidebarrule},
+    borderline~south = {1pt} {-0.5pt} {sidebarrule},
     coltitle         = black,
     fuzzy~shadow     = {0mm} {-3.5pt} {-0.5pt} {0.4mm} {black!60!white},
     overlay          =
       {
-        \fill [black] ( frame.south~west ) -- ++ (  7pt, 0 ) -- ++ ( 0, -5pt ) -- cycle;
-        \fill [black] ( frame.north~west ) -- ++ (  7pt, 0 ) -- ++ ( 0,  5pt ) -- cycle;
-        \fill [black] ( frame.north~east ) -- ++ ( -7pt, 0 ) -- ++ ( 0,  5pt ) -- cycle;
-        \fill [black] ( frame.south~east ) -- ++ ( -7pt, 0 ) -- ++ ( 0, -5pt ) -- cycle;
+        \fill [sidebarrule] ( frame.south~west ) -- ++ (  7pt, 0 ) -- ++ ( 0, -5pt ) -- cycle;
+        \fill [sidebarrule] ( frame.north~west ) -- ++ (  7pt, 0 ) -- ++ ( 0,  5pt ) -- cycle;
+        \fill [sidebarrule] ( frame.north~east ) -- ++ ( -7pt, 0 ) -- ++ ( 0,  5pt ) -- cycle;
+        \fill [sidebarrule] ( frame.south~east ) -- ++ ( -7pt, 0 ) -- ++ ( 0, -5pt ) -- cycle;
       },
     after~skip       = 14pt plus 4pt minus 4pt,
     #1,
