@@ -42,7 +42,7 @@
     }
   }
 
-  async function createMember(values, withSession) {
+  async function callMembers(values, withSession) {
     const headers = { "Content-Type": "application/json", apikey: SUPABASE_KEY };
     if (withSession) {
       const { data } = await db.auth.getSession();
@@ -85,6 +85,42 @@
     $("dm-panel").hidden = !(me && me.role === "dm");
     $("rename-form").display_name.value = me ? me.display_name : "";
 
+    const manage = $("manage");
+    manage.replaceChildren(
+      ...(me && me.role === "dm" ? profiles.filter((p) => p.id !== me.id) : []).map((p) => {
+        const li = document.createElement("li");
+        const name = document.createElement("span");
+        name.textContent = p.display_name;
+        const handle = document.createElement("span");
+        handle.className = "handle";
+        handle.textContent = `@${p.username}`;
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "link-button remove";
+        remove.textContent = "Remove";
+        remove.addEventListener("click", async () => {
+          if (!confirm(`Remove ${p.display_name} (@${p.username}) from the party? Their account is deleted.`)) return;
+          remove.disabled = true;
+          try {
+            await callMembers({ action: "remove", id: p.id }, true);
+            say(`Removed @${p.username}.`);
+            await render();
+          } catch (err) {
+            say(err.message, true);
+            remove.disabled = false;
+          }
+        });
+        li.append(name, handle, remove);
+        return li;
+      })
+    );
+    if (!manage.children.length) {
+      const li = document.createElement("li");
+      li.className = "handle";
+      li.textContent = "No players yet. Share the Tavern link so they can sign up.";
+      manage.append(li);
+    }
+
     const roster = $("roster");
     roster.replaceChildren(
       ...profiles.map((p) => {
@@ -121,27 +157,11 @@
     const form = e.currentTarget;
     busy(form, async () => {
       const values = checkMember(formValues(form), true);
-      say("Claiming the DM seat…");
-      try {
-        await createMember(values, false);
-      } catch (err) {
-        if (/log in as the dm/i.test(err.message)) throw new Error("The DM seat is already taken. Sign in instead.");
-        throw err;
-      }
+      say("Creating your account…");
+      const result = await callMembers(values, false);
       await db.auth.signInWithPassword({ email: toEmail(values.username), password: values.password });
       form.reset();
-      say("The DM seat is yours.");
-      await render();
-    });
-  });
-
-  $("add-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    busy(form, async () => {
-      const result = await createMember(checkMember(formValues(form), true), true);
-      form.reset();
-      say(`Added @${result.username}. Send them their username and password.`);
+      say(result.role === "dm" ? "Welcome. The DM seat is yours." : "Welcome to the Tavern.");
       await render();
     });
   });
