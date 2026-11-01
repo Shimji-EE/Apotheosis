@@ -29,7 +29,7 @@ Where that rot spreads, monsters follow. Wolves that walk like men drag shepherd
 
 Older than any crown or creed, other hungers stir. Fishermen haul up nets heavy with eyes, and whole villages wake to black water in the wells and children muttering in tongues no priest can read. These things dwell past the edge of the maps and the reach of prayer, and they turn the wheels of this world as surely as the seasons, feeding on every mortal who tries to climb.
 
-For that is the oldest sin of all: apotheosis, the dream of ascending to sit upon the throne of heaven. Kings have bled whole provinces dry for it, saints have starved themselves to bone, and beasts have devoured their own kind, and the land is littered with what remained of them: husks rotting in iron gibbets, cathedrals burned to their footings, names scratched from every record. That throne belongs to God alone, and what becomes of those who forget it is for the table to find out.
+For that is the oldest sin of all: apotheosis, the dream of ascending to sit upon the throne of heaven. Kings have bled whole provinces dry for it, saints have starved themselves to bone, and beasts have devoured their own kind, and the land is littered with what remained of them: husks rotting in iron gibbets, cathedrals burned to their footings, names scratched from every record. That throne was never made for mortal or beast. It belongs to the One who lit the stars, and what becomes of those who forget it is for the table to find out.
 
 <p align="center">
   <img src="assets/readme/black-knight.jpg" alt="The Black Knight" width="31%">
