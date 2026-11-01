@@ -687,3 +687,53 @@ a.seat-char:hover { color: var(--accent-bright); }
 /* A rail tab drawn from a pack icon instead of a line glyph (Inspiration: the red Inspiring Leader swords). */
 .tile-img { padding: 3px; }
 .tile-img img { width: 100%; height: 100%; object-fit: contain; }
+
+/* Character creator: the steps on the left, a sticky running summary on the right. */
+.creator { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 1.4rem; align-items: start; margin-top: 1rem; }
+.creator-steps { display: grid; gap: 1.2rem; min-width: 0; }
+.creator section { max-width: none; margin: 0; padding: 0; }
+.cstep { padding: 1.2rem clamp(1rem, 3vw, 1.6rem) 1.4rem !important; background: rgba(21, 19, 15, 0.86); border-top: 2px solid var(--accent); display: grid; gap: 1rem; }
+.cstep-title { display: flex; align-items: center; gap: 0.8rem; margin: 0; font: 600 1.35rem var(--display); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); }
+.cstep-n {
+  display: grid; place-items: center; width: 34px; height: 38px; font-size: 1rem; color: var(--ink);
+  background: #0b0a08; border: 2px solid var(--accent);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+.cfield { display: grid; gap: 0.35rem; min-width: 0; }
+.cfield > span, .cchecks legend {
+  font: 500 0.78rem var(--display); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-dim);
+}
+.cfield small, .cnote { color: var(--ink-dim); font-size: 0.9rem; font-style: italic; }
+.creator input:not([type=checkbox]):not([type=radio]), .creator select {
+  width: 100%; padding: 0.6rem 0.7rem; background: var(--bg); border: 1px solid var(--line); color: var(--ink);
+  font: 400 1.02rem var(--body);
+}
+.creator select { cursor: pointer; }
+.creator input:focus, .creator select:focus { outline: 1px solid var(--accent); border-color: var(--accent); }
+.creator input[type=checkbox], .creator input[type=radio] { accent-color: var(--accent); }
+.crow { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; align-items: start; }
+.cseg { display: inline-flex; border: 1px solid var(--line); justify-self: start; }
+.cseg label { display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1rem; cursor: pointer; font: 500 0.9rem var(--display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-dim); }
+.cseg label:has(input:checked) { background: rgba(208, 49, 63, 0.14); color: var(--ink); box-shadow: inset 0 -2px 0 var(--accent); }
+.cseg input { position: absolute; opacity: 0; pointer-events: none; }
+.cchecks { margin: 0; padding: 0.8rem 1rem; border: 1px solid var(--line); display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0.4rem 1rem; }
+.cchecks legend { padding: 0 0.4rem; }
+.cchecks label, .ccheck { display: flex; align-items: center; gap: 0.5rem; color: var(--ink); cursor: pointer; }
+.cchecks label:has(input:disabled) { opacity: 0.45; cursor: default; }
+.cabilities { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); background: #120f0c; border: 1px solid var(--line); }
+.cabilities .ability { gap: 0.3rem; padding: 0.7rem 0.4rem; }
+.cabilities select, .cabilities .mini { text-align: center; padding: 0.35rem 0.2rem !important; }
+.ability-score { font: 500 0.8rem var(--display); letter-spacing: 0.12em; color: var(--ink-dim); }
+.creator-summary { position: sticky; top: 1rem; display: grid; gap: 0.6rem; padding: 1.2rem 1.2rem 1.4rem; }
+.creator-summary .sheet-name { font-size: 1.9rem; overflow-wrap: anywhere; }
+.csum { display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 0.9rem; margin: 0.6rem 0 0; padding-top: 0.8rem; border-top: 1px solid var(--line); }
+.csum dt { font: 500 0.72rem/1.6 var(--display); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-dim); }
+.csum dd { margin: 0; color: var(--ink); }
+.cproblems { margin: 0.4rem 0 0; padding-left: 1.1rem; color: var(--accent-bright); font-size: 0.92rem; display: grid; gap: 0.25rem; }
+.creator-summary .button { justify-self: stretch; margin-top: 0.6rem; background: none; cursor: pointer; text-align: center; }
+.creator-summary .button:disabled { opacity: 0.45; cursor: not-allowed; }
+@media (max-width: 900px) {
+  .creator { grid-template-columns: 1fr; }
+  .creator-summary { position: static; }
+  .cabilities { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

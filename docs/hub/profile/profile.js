@@ -17,6 +17,7 @@
   $("profile-handle").textContent = `@${owner.username} · ${owner.role === "dm" ? "DM" : "Player"}`;
   const canEdit = me.id === owner.id || me.role === "dm";
   $("create-panel").hidden = !canEdit;
+  $("create-link").href = `../create/?u=${encodeURIComponent(owner.username)}`;
 
   async function load() {
     const { data, error } = await db
@@ -38,24 +39,6 @@
     );
     if (!data.length) list.append(el("li", { class: "handle", text: canEdit ? "No characters yet. Create one below." : "No characters yet." }));
   }
-
-  $("create-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const v = Object.fromEntries(new FormData(form).entries());
-    const name = (v.name || "").trim();
-    if (!name) return say("Give your character a name.", true);
-    const level = Math.min(20, Math.max(1, parseInt(v.level, 10) || 1));
-    form.querySelector("button").disabled = true;
-    const { data, error } = await db
-      .from("characters")
-      .insert({ owner_id: owner.id, name, species: v.species.trim() || null, class: v.class.trim() || null, level })
-      .select("id")
-      .single();
-    form.querySelector("button").disabled = false;
-    if (error) return say(error.message, true);
-    location.href = `../character/?id=${data.id}`;
-  });
 
   load();
 })();

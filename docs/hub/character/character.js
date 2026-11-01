@@ -92,7 +92,10 @@
   const KIND_POWER = { feature: "darkvision", action: "main hand attack", bonus: "dash", reaction: "opportunity attack" };
   const keyOf = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
   function powerKey(f) {
-    for (const k of [keyOf(f.icon), keyOf(f.name)]) {
+    const name = String(f.name || "");
+    // "Channel Divinity (1/rest)" → "channel divinity"; "Channel Divinity: Turn Undead" → "turn undead".
+    const bare = name.replace(/\(.*?\)/g, "");
+    for (const k of [keyOf(f.icon), keyOf(name), keyOf(bare), keyOf(bare.split(":").pop()), keyOf(bare.split(":")[0])]) {
       if (!k) continue;
       if (POWERS[k]) return k;
       // A feature that is itself a pool (Channel Divinity, Wild Shape, Rage…) uses its BG3 resource

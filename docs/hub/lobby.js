@@ -95,11 +95,11 @@
       const title = c ? el("a", { class: "seat-char", href: `character/?id=${c.id}`, text: c.name })
         : el("span", { class: "seat-char", text: dm ? "Dungeon Master" : "No character" });
       return el("li", { class: cls.filter(Boolean).join(" ") },
-        art(el("div", { class: "seat-art", "aria-hidden": "true" }), c, dm ? "◉" : initial(p.display_name)),
+        art(el("div", { class: "seat-art", "aria-hidden": "true" }), c, dm ? "◉" : initial(c ? c.name : p.display_name)),
         c && c.level ? el("span", { class: "seat-level", title: `Level ${c.level}`, text: String(c.level) }) : "",
         el("div", { class: "seat-plate" },
           title,
-          el("span", { class: "seat-sub", text: c ? subLine(c) : dm ? "Runs the table" : "" }),
+          el("span", { class: "seat-sub", text: c ? [c.species, c.class].filter(Boolean).join(" · ") : dm ? "Runs the table" : "" }),
           el("a", { class: "seat-player", href: `profile/?u=${encodeURIComponent(p.username)}` },
             el("span", { text: p.display_name }), el("span", { class: "handle", text: ` @${p.username}` }))),
         el("span", { class: "seat-status", text: isReady ? "Ready" : here ? "In the tavern" : "Away" }));
