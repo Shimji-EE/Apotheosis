@@ -1,0 +1,102 @@
+
+\documentclass[letterpaper,twocolumn,openany,nodeprecatedcode,breakable,skins,xparse,most]{dndbook}
+\usepackage{apotheosis-gravered} % Grave Red bars, rules and box tints (fonts unchanged)
+
+% Use babel or polyglossia to automatically redefine macros for terms
+% Armor Class, Level, etc...
+% Default output is in English; captions are located in lib/dndstring-captions.sty.
+% If no captions exist for a language, English will be used.
+%1. To load a language with babel:
+%	\usepackage[<lang>]{babel}
+%2. To load a language with polyglossia:
+%	\usepackage{polyglossia}
+%	\setdefaultlanguage{<lang>}
+\usepackage[english]{babel}
+%\usepackage[italian]{babel}
+% For further options (multilanguage documents, hypenations, language environments...)
+% please refer to babel/polyglossia's documentation.
+
+\usepackage{float}
+\usepackage[utf8]{inputenc}
+\usepackage[singlelinecheck=false]{caption}
+\usepackage{lipsum}
+\usepackage{listings}
+\usepackage{shortvrb}
+\usepackage{stfloats}
+\usepackage[toc,page]{appendix}
+\usepackage{graphicx}
+\usepackage{subcaption}
+
+
+\captionsetup[table]{labelformat=empty,font={sf,sc,bf,},skip=0pt}
+
+
+% --- Appendix links -------------------------------------------------------
+% \appendixlink{label}{Appendix I}{Purgeflame Spells} in the main text, and
+% \backlink{label}{Purgeflame} under the appendix heading. Both are banners
+% in the book's colours that jump to the other end when clicked.
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\usepackage{amssymb}
+\providecolor{titlered}{HTML}{58180D}
+\newsavebox{\apolinkbox}
+\newcommand{\apolinkbanner}[3]{% target, small label, title
+  \par\addvspace{4pt}\noindent
+  \sbox{\apolinkbox}{\begin{tcolorbox}[enhanced, unbreakable, sharp corners, boxrule=0pt,
+      frame hidden, colback=titlered!8, left=6pt, right=6pt, top=3pt, bottom=3pt,
+      borderline west={2.5pt}{0pt}{titlered}, nobeforeafter, width=\linewidth]
+    {\sffamily\scshape\footnotesize\color{titlered}#2\hfill p.~\pageref{#1}}\par
+    {\sffamily\bfseries\small #3~\textcolor{titlered}{$\blacktriangleright$}}
+  \end{tcolorbox}}%
+  \hyperref[#1]{\usebox{\apolinkbox}}\par\addvspace{4pt}}
+\newcommand{\appendixlink}[3]{\apolinkbanner{app:#1}{See #2}{#3}}
+\newcommand{\backlink}[2]{\apolinkbanner{main:#1}{Back to the main text}{#2}}
+
+\MakeShortVerb{|}
+
+\lstset{%
+  basicstyle=\ttfamily,
+  language=[LaTeX]{TeX},
+  breaklines=true,
+}
+
+\title{Apotheosis \\
+\large A homebrew campaign}
+\author{by "The Charred Eye"}
+
+\begin{document}
+
+\frontmatter
+
+\tableofcontents
+
+\input{sections/01-base-game/00-intro}
+\input{sections/01-base-game/01-homebrew-rules}
+
+\input{sections/02-species-backgrounds/00-intro}
+\input{sections/02-species-backgrounds/01-species}
+\input{sections/02-species-backgrounds/02-half-blood-species}
+\input{sections/02-species-backgrounds/03-variant-species}
+
+\input{sections/03-religions/00-intro}
+\input{sections/03-religions/01-alignment-belief}
+
+\input{sections/04-effects-afflictions/00-intro}
+\input{sections/04-effects-afflictions/01-diseases}
+\input{sections/04-effects-afflictions/02-effects}
+
+\input{sections/05-factions-guilds/00-intro}
+
+\input{sections/06-magic/00-intro}
+
+\input{sections/07-feats-backgrounds/00-intro}
+
+\input{sections/08-appendices/00-intro}
+\input{sections/08-appendices/01-purgeflame}
+\input{sections/08-appendices/02-red-rot}
+\input{sections/08-appendices/03-carlislean-lycanthrope-monster-class}
+\input{sections/08-appendices/04-red-lyrium-enemies}
+\input{sections/08-appendices/05-appendix-v}
+
+
+\end{document}
