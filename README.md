@@ -23,9 +23,11 @@
 
 ## ✦ Part I · The World
 
-Apotheosis is a hard, cold land of muddy roads, burning villages and church bells that toll too often. Lords squabble over borders, priests sell salvation by the coin, and in the forests past the last fence, things older than any crown still hunt.
+Apotheosis is a hard, cold land of muddy roads, burning villages and church bells that toll too often. Lords squabble over borders while the faithful kneel to an old church that sells salvation by the coin, and beneath the incense and gold leaf, something has long since begun to rot.
 
-Here monsters wear faces as often as fangs, every bargain is paid in blood or silver, and an honest choice is rarely a clean one. Those who walk these roads come back scarred, if they come back at all, and what they become is for the table to find out.
+Where that rot spreads, monsters follow. Some wear fangs and some wear faces, and many were neighbours once. Under ruined temples and barrow hills lie relics and riches beyond counting, and every hand that reaches for them pays in blood, silver, or something harder to name.
+
+Older than any crown or creed, other hungers stir. They are patient things that dwell past the edge of the maps and the reach of prayer, and they turn the wheels of this world as surely as the seasons. Few who glimpse them stay whole, and what becomes of those who try is for the table to find out.
 
 <p align="center">
   <img src="assets/readme/black-knight.jpg" alt="The Black Knight" width="31%">
