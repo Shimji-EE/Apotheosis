@@ -23,9 +23,9 @@
 
 ## ✦ Part I · The World
 
-Apotheosis is a world of old faiths and older hungers. Its light is real but borrowed, and everything held holy was built on top of something that would rather not be remembered.
+Apotheosis is a hard, cold land of muddy roads, burning villages and church bells that toll too often. Lords squabble over borders, priests sell salvation by the coin, and in the forests past the last fence, things older than any crown still hunt.
 
-It is a place of cold roads and candlelit halls, where power always asks for something back and the line between saint and monster is thinner than anyone admits. Those who survive it are never quite the same, and what they become is for the table to find out.
+Here monsters wear faces as often as fangs, every bargain is paid in blood or silver, and an honest choice is rarely a clean one. Those who walk these roads come back scarred, if they come back at all, and what they become is for the table to find out.
 
 <p align="center">
   <img src="assets/readme/black-knight.jpg" alt="The Black Knight" width="31%">
