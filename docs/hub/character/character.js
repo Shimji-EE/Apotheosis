@@ -95,16 +95,21 @@
     for (const k of [keyOf(f.icon), keyOf(f.name)]) {
       if (!k) continue;
       if (POWERS[k]) return k;
+      // A feature that is itself a pool (Channel Divinity, Wild Shape, Rage…) uses its BG3 resource
+      // icon, so "channel divinity" never picks a subclass option such as "… touch of death".
+      const pool = [k, `${k} charges`, `${k} resource`].find((r) => RESOURCES[r] && !ECONOMY[r]);
+      if (pool) return `res:${pool}`;
       const close = Object.keys(POWERS).find((p) => p.startsWith(`${k} `)); // "spiritual weapon" → "spiritual weapon greatsword"
       if (close) return close;
     }
     return POWERS[KIND_POWER[f.kind]] ? KIND_POWER[f.kind] : null;
   }
   function powerIcon(f) {
-    const key = powerKey(f);
-    const p = POWERS[key];
+    const key = powerKey(f) || "";
+    const isRes = key.startsWith("res:");
+    const p = isRes ? RESOURCES[key.slice(4)] : POWERS[key];
     return el("span", { class: `ficon power${p && p.stone ? " has-stone" : ""}`, title: p ? p.label : "" },
-      p ? el("img", { src: `../icons/powers/${p.file}`, alt: "", loading: "lazy" }) : "");
+      p ? el("img", { src: `../icons/${isRes ? "resources" : "powers"}/${p.file}`, alt: "", loading: "lazy" }) : "");
   }
   // Look a name up in the SRD, preferring the kinds that fit where it is listed.
   const PREFER = {
