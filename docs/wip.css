@@ -1,0 +1,5 @@
+/* Work-in-progress pages: a single centred notice in the Grave Red theme. */
+.wip { min-height: 100vh; min-height: 100svh; display: grid; place-items: center; text-align: center; padding: 4rem 16px; position: relative; z-index: 1; }
+.wip-inner { max-width: 34rem; display: flex; flex-direction: column; align-items: center; }
+.wip h1 { margin: 1rem 0 0.8rem; font-family: var(--display); font-weight: 600; font-size: clamp(2.2rem, 7vw, 3.4rem); line-height: 1; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); }
+.wip p { margin: 1.4rem 0 2rem; font-family: var(--prose); font-size: 1.2rem; color: var(--ink-dim); }
