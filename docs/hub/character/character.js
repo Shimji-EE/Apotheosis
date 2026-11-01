@@ -121,10 +121,24 @@
     else if (name.startsWith("channel divinity")) keys.push("channel divinity charges");
     else if (name.startsWith("channel oath") || name.includes("sacred weapon")) keys.push("channel oath");
     else if (rule && rule.t === "spell" && rule.lv > 0) keys.push("spell slot");
-    return keys.filter((k) => k && RESOURCES[k]);
+    return keys.filter((k) => k && (RESOURCES[k] || ECONOMY[k]));
   }
-  const resourceIcon = (k) =>
-    el("img", { class: "res", src: `../icons/resources/${RESOURCES[k].file}`, alt: RESOURCES[k].label, title: RESOURCES[k].label });
+  // Action economy markers (Charl's design): action a bright green circle, bonus action a
+  // triangle in the same green, reaction an inverted triangle a little smaller.
+  const ECONOMY = {
+    action: ["Action", '<circle cx="12" cy="12" r="8"/>'],
+    "bonus action": ["Bonus action", '<path d="M12 3.5 21 19.5H3z"/>'],
+    reaction: ["Reaction", '<path d="M12 18 4.5 5h15z"/>'],
+  };
+  function resourceIcon(k) {
+    if (ECONOMY[k]) {
+      const [label, shape] = ECONOMY[k];
+      const span = el("span", { class: `res econ econ-${k.replace(" ", "-")}`, title: label, role: "img", "aria-label": label });
+      span.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${shape}</svg>`; // fixed markup, no user text
+      return span;
+    }
+    return el("img", { class: "res", src: `../icons/resources/${RESOURCES[k].file}`, alt: RESOURCES[k].label, title: RESOURCES[k].label });
+  }
 
   // One shared list of icon names for the edit field's suggestions.
   document.body.append(el("datalist", { id: "power-list" },
@@ -217,7 +231,7 @@
         if (!editing && !rows.length) return "";
         const table = el("div", { class: "ftable" },
           el("div", { class: "frow fhead" },
-            el("span", { class: "fhead-name" }, KIND_RESOURCE[kind] && RESOURCES[KIND_RESOURCE[kind]] ? resourceIcon(KIND_RESOURCE[kind]) : "", label),
+            el("span", { class: "fhead-name" }, KIND_RESOURCE[kind] ? resourceIcon(KIND_RESOURCE[kind]) : "", label),
             el("span", { text: "Uses" }), el("span", { text: "Roll" }), el("span", { text: "Formula" })
           ),
           ...rows.flatMap(({ f, i }) => {
