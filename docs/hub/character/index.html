@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Character · The Tavern</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0b0a08">
+  <link rel="icon" href="../../assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow+Semi+Condensed:ital,wght@0,300;0,400;0,500;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../hub.css">
+</head>
+<body class="hub">
+  <div class="haze" aria-hidden="true"></div>
+
+  <!-- Line-art icons on dark tiles: drawn with strokes only, glowing red -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-sheet" viewBox="0 0 48 48"><path d="M14 8h20v32H14zM14 8c-3 0-4 2-4 4s1 4 4 4M34 40c3 0 4-2 4-4s-1-4-4-4M19 16h10M19 22h10M19 28h7M24 34l2-2 2 2-2 2z"/></symbol>
+    <symbol id="i-pack" viewBox="0 0 48 48"><path d="M16 14c0-5 3-8 8-8s8 3 8 8M11 18h26l-2 22H13zM11 18c0-2 2-4 5-4h16c3 0 5 2 5 4M19 26h10v6H19zM24 26v-3"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 48 48"><path d="M24 6c2 7 10 11 10 21a10 10 0 0 1-20 0c0-5 3-8 5-10 0 4 2 6 4 6-2-6 0-12 1-17zM24 40c-3 0-5-2-5-5 0-3 3-5 5-8 2 3 5 5 5 8 0 3-2 5-5 5zM8 20l3 2M40 20l-3 2M24 2v2"/></symbol>
+    <symbol id="i-journal" viewBox="0 0 48 48"><path d="M8 12c6-2 11-1 16 3 5-4 10-5 16-3v26c-6-2-11-1-16 3-5-4-10-5-16-3zM24 15v26M30 6l8 2-10 18-3 1 1-3z"/></symbol>
+  </svg>
+
+  <header class="hub-bar">
+    <a class="hub-home" id="back" href="../">&larr; The Tavern</a>
+    <div class="hub-who">
+      <button class="link-button" id="edit-toggle" type="button" hidden>Edit</button>
+      <button class="button button-quiet" id="save" type="button" hidden>Save</button>
+    </div>
+  </header>
+
+  <main class="hub-main sheet-main">
+    <p class="hub-status" id="status" role="status" aria-live="polite"></p>
+
+    <div class="sheet-frame">
+      <div class="sheet">
+        <!-- Header: portrait with level, HP and AC; name; abilities -->
+        <header class="sheet-head">
+          <div class="portrait-block">
+            <div class="portrait" id="portrait"><svg class="portrait-sigil" viewBox="0 0 48 48"><use href="#i-sheet"/></svg></div>
+            <span class="badge-prof" id="prof" title="Proficiency bonus">+2</span>
+            <span class="badge-level" id="level" title="Level">1</span>
+            <div class="hp" title="Hit points">
+              <div class="hp-bar"><span class="hp-fill" id="hp-fill"></span><span class="hp-text" id="hp-text">0 / 0</span></div>
+              <div class="hp-sub"><span id="hp-temp">TMP</span><span>MAX</span></div>
+            </div>
+          </div>
+          <div class="sheet-title">
+            <div class="title-row">
+              <div>
+                <h1 class="sheet-name" id="char-name">&hellip;</h1>
+                <p class="sheet-line" id="char-line"></p>
+                <p class="sheet-owner" id="char-owner"></p>
+              </div>
+              <div class="ac" title="Armour class"><span class="ac-label">AC</span><span id="ac">10</span></div>
+            </div>
+            <div class="abilities" id="abilities"></div>
+          </div>
+        </header>
+
+        <div class="sheet-body">
+          <aside class="sheet-side" id="side"></aside>
+
+          <div class="sheet-content">
+            <section class="dash-panel" data-panel="sheet">
+              <div class="feature-search"><input id="search" type="search" placeholder="Search features" aria-label="Search features"></div>
+              <div id="tables"></div>
+              <section class="edit-only" id="basics" hidden>
+                <h3 class="table-head">Details</h3>
+                <form class="form sheet-form" id="basics-form" novalidate></form>
+                <button class="link-button remove" id="delete" type="button">Delete this character</button>
+              </section>
+            </section>
+            <section class="dash-panel" data-panel="inventory" hidden>
+              <h3 class="table-head">Inventory</h3>
+              <p class="placeholder">A grid of carried items, equipment slots and coin. Coming soon.</p>
+            </section>
+            <section class="dash-panel" data-panel="inspiration" hidden>
+              <h3 class="table-head">Inspiration</h3>
+              <p class="placeholder">Background goals that earn inspiration when fulfilled. Coming soon.</p>
+            </section>
+            <section class="dash-panel" data-panel="journal" hidden>
+              <h3 class="table-head">Journal</h3>
+              <p class="placeholder">Quests, leads and notes, kept per character. Coming soon.</p>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <nav class="dash-rail" role="tablist" aria-label="Character dashboard">
+        <button role="tab" aria-selected="true" data-tab="sheet" title="Character sheet"><svg class="tile"><use href="#i-sheet"/></svg></button>
+        <button role="tab" aria-selected="false" data-tab="inventory" title="Inventory"><svg class="tile"><use href="#i-pack"/></svg></button>
+        <button role="tab" aria-selected="false" data-tab="inspiration" title="Inspiration"><svg class="tile"><use href="#i-flame"/></svg></button>
+        <button role="tab" aria-selected="false" data-tab="journal" title="Journal"><svg class="tile"><use href="#i-journal"/></svg></button>
+      </nav>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="../common.js"></script>
+  <script src="character.js"></script>
+</body>
+</html>

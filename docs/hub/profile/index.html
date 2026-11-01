@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile · The Tavern</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0b0a08">
+  <link rel="icon" href="../../assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow+Semi+Condensed:ital,wght@0,300;0,400;0,500;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../hub.css">
+</head>
+<body class="hub">
+  <div class="haze" aria-hidden="true"></div>
+
+  <header class="hub-bar">
+    <a class="hub-home" href="../">&larr; The Tavern</a>
+  </header>
+
+  <main class="hub-main">
+    <p class="tracked" id="profile-handle">Profile</p>
+    <h1 class="hub-title" id="profile-name">&hellip;</h1>
+    <p class="hub-status" id="status" role="status" aria-live="polite"></p>
+
+    <section class="panel">
+      <h2>Characters</h2>
+      <ul class="char-grid" id="characters"></ul>
+    </section>
+
+    <section class="panel" id="create-panel" hidden>
+      <h2>New character</h2>
+      <form id="create-form" class="form" novalidate>
+        <label>Name <input name="name" maxlength="60" required></label>
+        <label>Species <input name="species" maxlength="40"></label>
+        <label>Class <input name="class" maxlength="40"></label>
+        <label>Level <input name="level" type="number" min="1" max="20" value="1"></label>
+        <button class="button button-quiet" type="submit">Create character</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="../common.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>

@@ -1,13 +1,7 @@
 (() => {
-  // Public values only: the publishable key is safe in the browser, and row level
-  // security in the database decides what each signed-in member can see or change.
-  const SUPABASE_URL = "https://aagtsdqgleopualsallg.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_Q-DgGy_SToy1bpobL5UoJw_8piwAcA2";
+  const { SUPABASE_URL, SUPABASE_KEY, db, $ } = window.Hub;
   // Usernames map to a hidden email, so players only ever see username + password.
   const EMAIL_DOMAIN = "members.apotheosis.invalid";
-
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  const $ = (id) => document.getElementById(id);
   const status = $("status");
 
   function say(text, isError = false) {
@@ -82,6 +76,7 @@
     me = profiles.find((p) => p.id === session.user.id);
     $("who-name").textContent = me ? me.display_name : "";
     $("who-role").textContent = me && me.role === "dm" ? "DM" : "Player";
+    $("who-name").href = me ? `profile/?u=${encodeURIComponent(me.username)}` : "profile/";
     $("dm-panel").hidden = !(me && me.role === "dm");
     $("rename-form").display_name.value = me ? me.display_name : "";
 
@@ -125,7 +120,8 @@
     roster.replaceChildren(
       ...profiles.map((p) => {
         const li = document.createElement("li");
-        const name = document.createElement("span");
+        const name = document.createElement("a");
+        name.href = `profile/?u=${encodeURIComponent(p.username)}`;
         name.textContent = p.display_name;
         const handle = document.createElement("span");
         handle.className = "handle";
