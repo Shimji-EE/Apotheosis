@@ -13,6 +13,8 @@ Commands
   sheet WORDS... -o F  Make a contact sheet (PNG) of the matches, to pick from by eye.
   powers               Publish every skill, power and effect icon to docs/hub/icons/powers/
                        with manifest.json. The dashboard matches feature names against it.
+  items                Publish every item's painted art to docs/hub/icons/items/ with manifest.json.
+                       Items on the sheet find their texture by name.
   publish CAT --to DIR Publish a whole pack category, e.g. "publish Resource --to resources"
                        (action, bonus action, reaction, Channel Divinity charge, spell slot…).
   add ID [--to DIR] [--name N]
@@ -97,10 +99,12 @@ def read_many(path, names):
             for n in names:
                 out[n] = Image.open(io.BytesIO(z.read(n))).convert("RGBA")
         return out
+    import tempfile
     import py7zr
-    with py7zr.SevenZipFile(path) as z:
-        for n, bio in z.read(targets=list(names)).items():
-            out[n] = Image.open(bio).convert("RGBA")
+    with tempfile.TemporaryDirectory() as tmp, py7zr.SevenZipFile(path) as z:
+        z.extract(path=tmp, targets=list(names))
+        for n in names:
+            out[n] = Image.open(Path(tmp) / n).convert("RGBA")
     return out
 
 
@@ -256,6 +260,42 @@ def cmd_publish(args):
     print(f"published {len(manifest)} icons to {out_dir.relative_to(ROOT)}")
 
 
+def item_label(rel):
+    stem = Path(rel).stem
+    stem = re.sub(r"_Unfaded(_Icon)?$|_Icon$", "", stem)
+    stem = re.sub(r"^(Item_)?[A-Z]{2,4}_", "", stem)            # POT_, ELX_, WPN_ …
+    for word, n in (("PlusOne", "+1"), ("PlusTwo", "+2"), ("PlusThree", "+3")):
+        stem = stem.replace(word, n)
+    stem = re.sub(r"_\d+$", "", stem)                            # Chain_Mail_2 → Chain Mail
+    return re.sub(r"_+", " ", stem).strip()
+
+
+def cmd_items(args):
+    """Publish every item's painted art (the 144 px version) as item textures, with a manifest."""
+    chosen = {}
+    for icon_id, cat, unfaded, label in load_catalogue():
+        rel = icon_id.split(":", 1)[1]
+        if not icon_id.startswith("all:") or cat != "Item" or rel.endswith("_Icon.png") or rel.endswith("_Icon.webp"):
+            continue
+        name = item_label(rel)
+        k = key_of(name)
+        if k and (k not in chosen or len(rel) < len(chosen[k][0])):
+            chosen[k] = (rel, icon_id, name, "/".join(rel.split("/")[1:-1]))
+    imgs = load_icons([v[1] for v in chosen.values()], args.packs)
+    out_dir = SITE_ICONS / "items"
+    manifest = {}
+    for k, (rel, icon_id, name, group) in sorted(chosen.items()):
+        file = f"{slug(name)}.webp"
+        img = imgs[icon_id]
+        img = img.resize((args.size, args.size), Image.LANCZOS)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        img.save(out_dir / file, "WEBP", quality=80, method=4)
+        manifest[k] = {"label": name, "file": file, "group": group}
+    (out_dir / "manifest.json").write_text(json.dumps(manifest, separators=(",", ":")))
+    total = sum(p.stat().st_size for p in out_dir.glob("*.webp"))
+    print(f"published {len(manifest)} item textures to {out_dir.relative_to(ROOT)} ({total // 1024} KB)")
+
+
 def cmd_add(args):
     img = load_icons([args.id], args.packs)[args.id]
     name = args.name or slug(clean_name(args.id.split(":", 1)[1]))
@@ -321,6 +361,7 @@ def main():
     p = sub.add_parser("sheet"); p.add_argument("words", nargs="+"); p.add_argument("--cat"); p.add_argument("--unfaded", action="store_true"); p.add_argument("--limit", type=int, default=48); p.add_argument("-o", "--out", default="icon-sheet.png"); p.set_defaults(fn=cmd_sheet)
     sub.add_parser("powers").set_defaults(fn=cmd_powers)
     p = sub.add_parser("publish"); p.add_argument("cat"); p.add_argument("--to", required=True); p.add_argument("--size", type=int); p.set_defaults(fn=cmd_publish)
+    p = sub.add_parser("items"); p.add_argument("--size", type=int, default=96); p.set_defaults(fn=cmd_items)
     p = sub.add_parser("add"); p.add_argument("id"); p.add_argument("--to", default="items"); p.add_argument("--name"); p.add_argument("--size", type=int); p.set_defaults(fn=cmd_add)
     p = sub.add_parser("custom"); p.add_argument("recipe"); p.set_defaults(fn=cmd_custom)
     args = ap.parse_args()

@@ -54,7 +54,20 @@
     isEditing: () => editing,
     collectAll: () => collect(),
     strength: () => d.abilities.str,
+    canEdit: () => canEdit,
+    isDM: () => me.role === "dm",
+    persist: () => persist(),
   });
+
+  // Save the character as it stands (used by drag and drop in the inventory).
+  async function persist() {
+    const { error } = await db
+      .from("characters")
+      .update({ name: c.name, species: c.species, class: c.class, level: c.level, data: d })
+      .eq("id", c.id);
+    say(error ? error.message : "Saved.", !!error);
+    return !error;
+  }
 
   const mod = (score) => Math.floor((score - 10) / 2);
   const signed = (n) => (n >= 0 ? `+${n}` : `${n}`);
@@ -69,10 +82,12 @@
   // A feature shows the icon it names, else the icon whose name matches it, else one for its kind.
   // Resource icons (action, bonus action, reaction, Channel Divinity charge…) and official SRD rules text.
   const getJSON = (url) => fetch(url).then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
-  const [POWERS, RESOURCES, SRD] = await Promise.all([
+  const [POWERS, RESOURCES, SRD, ITEMS, BACKGROUNDS] = await Promise.all([
     getJSON("../icons/powers/manifest.json"),
     getJSON("../icons/resources/manifest.json"),
     getJSON("../srd.json"),
+    getJSON("../icons/items/manifest.json"),
+    getJSON("../icons/backgrounds/manifest.json"),
   ]);
   const KIND_POWER = { feature: "darkvision", action: "main hand attack", bonus: "dash", reaction: "opportunity attack" };
   const keyOf = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -80,16 +95,21 @@
     for (const k of [keyOf(f.icon), keyOf(f.name)]) {
       if (!k) continue;
       if (POWERS[k]) return k;
+      // A feature that is itself a pool (Channel Divinity, Wild Shape, Rage…) uses its BG3 resource
+      // icon, so "channel divinity" never picks a subclass option such as "… touch of death".
+      const pool = [k, `${k} charges`, `${k} resource`].find((r) => RESOURCES[r] && !ECONOMY[r]);
+      if (pool) return `res:${pool}`;
       const close = Object.keys(POWERS).find((p) => p.startsWith(`${k} `)); // "spiritual weapon" → "spiritual weapon greatsword"
       if (close) return close;
     }
     return POWERS[KIND_POWER[f.kind]] ? KIND_POWER[f.kind] : null;
   }
   function powerIcon(f) {
-    const key = powerKey(f);
-    const p = POWERS[key];
+    const key = powerKey(f) || "";
+    const isRes = key.startsWith("res:");
+    const p = isRes ? RESOURCES[key.slice(4)] : POWERS[key];
     return el("span", { class: `ficon power${p && p.stone ? " has-stone" : ""}`, title: p ? p.label : "" },
-      p ? el("img", { src: `../icons/powers/${p.file}`, alt: "", loading: "lazy" }) : "");
+      p ? el("img", { src: `../icons/${isRes ? "resources" : "powers"}/${p.file}`, alt: "", loading: "lazy" }) : "");
   }
   // Look a name up in the SRD, preferring the kinds that fit where it is listed.
   const PREFER = {
@@ -103,7 +123,7 @@
     const order = PREFER[kind] || PREFER.action;
     return [...list].sort((a, b) => order.indexOf(a.t) - order.indexOf(b.t))[0];
   }
-  window.Rules = { srd, keyOf, SRD_NOTE: "SRD 5.1, CC-BY-4.0" };
+  window.Rules = { srd, keyOf, ITEMS, BACKGROUNDS, SRD_NOTE: "SRD 5.1, CC-BY-4.0" };
 
   const KIND_RESOURCE = { action: "action", bonus: "bonus action", reaction: "reaction" };
   function resourceKey(name) {
