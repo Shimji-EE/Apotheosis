@@ -74,9 +74,36 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
 
   /* ---------- Inventory ---------- */
 
-  // An item shows its own texture when it has one, otherwise a line-art stand-in.
+  // Item art: a texture link, else the pack's painted art for the item (by the texture
+  // field or the item's name), else the pack art for its kind, else a line-art stand-in.
+  const KIND_ART = {
+    weapon: "longsword", armour: "chain mail", shield: "iron banded shield 1", potion: "potion of healing",
+    scroll: "scroll of bless", ring: "ring a simple gold", amulet: "amulet necklace a silver a", clothing: "cloth armour",
+    tool: "thieves tools", treasure: "gold ingot", misc: "backpack a",
+  };
+  function packArt(name) {
+    const items = (window.Rules && window.Rules.ITEMS) || {};
+    const k = window.Rules ? window.Rules.keyOf(name) : "";
+    if (!k) return null;
+    if (items[k]) return items[k];
+    const close = Object.keys(items).find((p) => p.startsWith(`${k} `));
+    if (close) return items[close];
+    // "Mace of the Tithe" → "mace": the longest pack name the item's name starts with.
+    const words = k.split(" ");
+    for (let n = words.length - 1; n > 0; n--) {
+      const head = words.slice(0, n).join(" ");
+      if (items[head]) return items[head];
+    }
+    return null;
+  }
+  function itemSrc(item) {
+    if (/^(https:\/\/|\.\.\/icons\/)/i.test(item.image || "")) return item.image;
+    const art = packArt(item.image) || packArt(item.name) || packArt(KIND_ART[item.kind]);
+    return art ? `../icons/items/${art.file}` : null;
+  }
   function itemArt(item) {
-    if (item.image) return el("img", { class: "item-art", src: item.image, alt: "", loading: "lazy" });
+    const src = itemSrc(item);
+    if (src) return el("img", { class: "item-art", src, alt: "", loading: "lazy" });
     return icon(KIND_ICON[item.kind] || "pouch");
   }
 
@@ -167,6 +194,10 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
   }
 
   function renderInventoryEdit(wrap) {
+    if (!$("item-art-list")) {
+      document.body.append(el("datalist", { id: "item-art-list" },
+        ...Object.values((window.Rules && window.Rules.ITEMS) || {}).map((a) => el("option", { value: a.label }))));
+    }
     wrap.append(
       el("h4", { class: "sub-head", text: "Coin" }),
       el("div", { class: "purse is-edit" },
@@ -185,7 +216,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
           select({ "data-i": "rarity", "aria-label": "Rarity" }, RARITIES.map((r) => [r, r]), it.rarity),
           select({ "data-i": "slot", "aria-label": "Equipped slot" }, [["", "In pack"], ...SLOTS.map(([k, l]) => [k, k.startsWith("ring") ? `Ring ${k.slice(-1)}` : l])], it.slot || ""),
           el("button", { type: "button", class: "link-button remove", "data-remove-item": i, title: "Remove", text: "×" }),
-          el("input", { "data-i": "image", value: it.image || "", type: "url", placeholder: "Texture: https://… or ../icons/items/… (optional)", "aria-label": "Texture image link", class: "irow-notes" }),
+          el("input", { "data-i": "image", value: it.image || "", type: "url", list: "item-art-list", placeholder: "Texture: pack item name, or an https:// link (optional, else matched by name)", "aria-label": "Texture image link", class: "irow-notes" }),
           textarea({ "data-i": "notes", rows: "2", placeholder: "Description, properties, charges", "aria-label": "Notes", class: "irow-notes" }, it.notes)
         )
       ),
@@ -353,7 +384,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
       Object.assign(it, {
         name: clip(v("name"), 60), kind: v("kind"), rarity: v("rarity"), slot: v("slot") || null,
         qty: Math.round(num(v("qty"), 0, 9999, 1)), weight: num(v("weight"), 0, 9999, 0), notes: clip(v("notes"), 1000),
-        image: /^(https:\/\/|\.\.\/icons\/)/i.test(v("image").trim()) ? clip(v("image").trim(), 500) : null,
+        image: clip(v("image"), 500) || null,
       });
       if (!it.image) delete it.image;
     });
