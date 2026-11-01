@@ -121,6 +121,21 @@
     };
   }
 
+  // Draw each glow once and stamp it, instead of building gradients every frame.
+  function sprite(stops) {
+    const size = 64;
+    const c = document.createElement("canvas");
+    c.width = c.height = size;
+    const g = c.getContext("2d");
+    const grad = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+    for (const [at, color] of stops) grad.addColorStop(at, color);
+    g.fillStyle = grad;
+    g.fillRect(0, 0, size, size);
+    return c;
+  }
+  const emberSprite = sprite([[0, "rgba(255, 120, 80, 0.8)"], [0.35, "rgba(200, 40, 58, 0.3)"], [1, "rgba(200, 40, 58, 0)"]]);
+  const dustSprite = sprite([[0, "rgba(226, 216, 200, 0.4)"], [0.35, "rgba(160, 150, 136, 0.12)"], [1, "rgba(160, 150, 136, 0)"]]);
+
   function frame() {
     ctx.clearRect(0, 0, width, height);
     for (let i = 0; i < embers.length; i++) {
@@ -130,21 +145,12 @@
       e.x += Math.sin(e.sway) * 0.25;
       if (e.y < -10) embers[i] = spawn(false);
       const fade = Math.min(1, e.y / (height * 0.5)) * e.life;
-      const glow = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.r * 4);
-      if (e.ember) {
-        glow.addColorStop(0, `rgba(255, 120, 80, ${0.8 * fade})`);
-        glow.addColorStop(0.35, `rgba(200, 40, 58, ${0.3 * fade})`);
-        glow.addColorStop(1, "rgba(200, 40, 58, 0)");
-      } else {
-        glow.addColorStop(0, `rgba(226, 216, 200, ${0.4 * fade})`);
-        glow.addColorStop(0.35, `rgba(160, 150, 136, ${0.12 * fade})`);
-        glow.addColorStop(1, "rgba(160, 150, 136, 0)");
-      }
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(e.x, e.y, e.r * 4, 0, Math.PI * 2);
-      ctx.fill();
+      if (fade <= 0) continue;
+      const size = e.r * 8;
+      ctx.globalAlpha = fade;
+      ctx.drawImage(e.ember ? emberSprite : dustSprite, e.x - size / 2, e.y - size / 2, size, size);
     }
+    ctx.globalAlpha = 1;
     requestAnimationFrame(frame);
   }
 
