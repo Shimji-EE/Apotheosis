@@ -130,3 +130,5 @@
 @media (max-width: 560px) {
   .form-inline { grid-template-columns: 1fr; }
 }
+.roster .remove { margin-left: auto; color: var(--accent); }
+.roster .remove:hover { color: var(--accent-bright); }
