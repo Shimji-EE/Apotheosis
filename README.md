@@ -23,9 +23,9 @@
 
 ## ✦ Part I · The World
 
-Apotheosis is a dark fantasy world built on fifth edition, where faith is load-bearing. The Church of Romulon claims its prayers hold up the very structure of reality, rival faiths each stake their gods on a different pillar of it, and few who kneel ask what lies beneath.
+Apotheosis is a world of old faiths and older hungers. Its light is real but borrowed, and everything held holy was built on top of something that would rather not be remembered.
 
-Magic flows from four sources, synthetic, occult, divine and natural, and none of it comes free. Lyrium, red rot, lycanthropy and vampirism mark those who reach too far, and the old peoples of the world remember things the faithful would rather keep buried. Every campaign set here walks a different road through the same world, and what lies at the end of it is for the table to find out.
+It is a place of cold roads and candlelit halls, where power always asks for something back and the line between saint and monster is thinner than anyone admits. Those who survive it are never quite the same, and what they become is for the table to find out.
 
 <p align="center">
   <img src="assets/readme/black-knight.jpg" alt="The Black Knight" width="31%">
