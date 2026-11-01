@@ -1,28 +1,39 @@
 % apotheosis-gravered.sty
-% Grave Red accents for the Apotheosis Manual.
-% Recolours the dndbook bars, rules, ribbons and box tints to the shared
-% Grave Red palette (/website-theme/grave-red.md). Fonts and layout are not
-% touched. Load it right after \documentclass{dndbook}.
+% Grave Red look for the Apotheosis Manual (dndbook).
+%
+% Colours, rules, boxes and art in the shared Grave Red style
+% (/website-theme/grave-red.md), drawn with the recap book's ornaments:
+% lozenge-ended rules with a pointed centre, the four-point star, and a
+% left-hand hairline with a short heavy bar. Fonts are not touched.
+%
+% Load it right after \documentclass{dndbook}. Removing that one line gives
+% the plain dndbook look back. The previous version of this file is kept in
+% backups/style-v1-maroon/.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{apotheosis-gravered}[2026/11/01 Grave Red accents for Apotheosis]
+\ProvidesPackage{apotheosis-gravered}[2026/11/01 v2 Grave Red look for Apotheosis]
 \RequirePackage{xcolor}
+\RequirePackage{tikz}
+\usetikzlibrary{fadings}
 
-% Grave Red palette
+%% ========================================================================
+%% PALETTE
+%% ========================================================================
 \definecolor{graveRed}{HTML}{D0313F}     % accent red
-\definecolor{graveRedDeep}{HTML}{8E1F29} % darker red, for type on the footer scroll
+\definecolor{graveRedDeep}{HTML}{8E1F29} % darker red
 \definecolor{graveAsh}{HTML}{8C867B}     % secondary grey
 \definecolor{graveMaroon}{HTML}{6E1420}  % maroon, for outlines, bars and rules
 \definecolor{graveSoot}{HTML}{0B0A08}    % near-black
-\colorlet{graveTint}{white}             % box backgrounds
+\definecolor{graveBone}{HTML}{D8D2C6}    % bone
+\colorlet{graveTint}{white}              % box backgrounds
 
-% Headings, title rules and red bars
-\colorlet{titlered}{graveRed}        % chapter/section titles, link banners, stat block frames
-\colorlet{titlegold}{graveMaroon}       % rule under section titles
-\colorlet{rulered}{graveMaroon}       % tapered rule in stat blocks
-\colorlet{statblockribbon}{graveAsh} % inner stat block ribbon
-\colorlet{sidebarrule}{graveMaroon}   % sidebar top/bottom bars and corner tabs
-\colorlet{readaloudrule}{graveMaroon} % read-aloud side bars and corner dots
-\colorlet{pagegold}{graveRedDeep}    % footer text and page numbers
+% Headings, title rules and bars
+\colorlet{titlered}{graveRed}           % chapter/section titles, stat block frames
+\colorlet{titlegold}{graveMaroon}       % rule under subsection titles
+\colorlet{rulered}{graveMaroon}         % tapered rule in stat blocks
+\colorlet{statblockribbon}{graveAsh}    % inner stat block ribbon
+\colorlet{sidebarrule}{graveMaroon}     % sidebar rules and ornaments
+\colorlet{readaloudrule}{graveMaroon}   % read-aloud bar
+\colorlet{pagegold}{graveMaroon}        % footer text and page numbers
 
 % Box tints: sidebars, comments and even table rows
 \colorlet{PhbMauve}{graveTint}
@@ -31,5 +42,252 @@
 \colorlet{commentcolor}{graveTint}
 \colorlet{sidebarcolor}{graveTint}
 \colorlet{tablecolor}{graveTint}
+
+%% ========================================================================
+%% ORNAMENTS (from the recap book)
+%% ========================================================================
+\tikzset{
+  pics/apohead/.style={code={% small lozenge
+    \fill (-.25,0) to[out=-20,in=135] (0,-.125) to[out=45,in=200] (.25,0)
+          to[out=160,in=-45] (0,.125) to[out=-135,in=20] cycle;}},
+  pics/apotip/.style={code={% long pointed centre
+    \fill (-0.5,0) to[out=0,in=135] (0,-.15) to[out=45,in=180] (0.5,0)
+          to[out=180,in=-45] (0,.15) to[out=-135,in=0] cycle;}},
+  pics/apostar/.style={code={% curved four-point star
+    \fill (-.25,0) to[out=25,in=245] (0,.25) to[out=295,in=155] (.25,0)
+          to[out=205,in=65] (0,-.25) to[out=115,in=335] cycle;}},
+}
+
+% \graverule[width]: a maroon rule with lozenge ends and a pointed centre.
+\newcommand{\graverule}[1][\linewidth]{%
+  \begin{tikzpicture}[baseline=-.5ex, x=1cm, y=1cm]
+    \useasboundingbox (0,-.09) rectangle (#1,.09);
+    \fill[graveMaroon] (.12,-.6pt) rectangle ({#1-.12cm},.6pt);
+    \pic[fill=graveMaroon, scale=.55] at (.12,0) {apohead};
+    \pic[fill=graveMaroon, scale=.55] at ({#1-.12cm},0) {apohead};
+    \pic[fill=graveMaroon, scale=.7] at ({.5*#1},0) {apotip};
+  \end{tikzpicture}}
+
+%% ========================================================================
+%% HEADINGS
+%% ========================================================================
+% Chapters get a full Grave Red rule underneath; subsections keep their
+% single rule, now ornamented.
+\titleformat{\chapter}
+  {\DndFontChapter}
+  {\chaptertitlename\ \thechapter:}
+  {\wordsep}
+  {}
+  [\vspace{.2ex}\titleline{\graverule}]
+\titleformat{\subsection}
+  {\DndFontSubsection}
+  {\thesubsection}
+  {1em}
+  {\nopagebreak}
+  [\vspace{-.3ex}\titleline{\graverule}]
+
+%% ========================================================================
+%% BOXES
+%% ========================================================================
+\ExplSyntaxOn
+
+% Sidebar: white panel, maroon rules top and bottom with lozenge ends, a
+% pointed tip at the foot and the four-point star over the title.
+\DeclareTColorBox {__dnd_sidebar} {o}
+  {
+    before~upper     =
+      {
+        \bool_if:NT \l__dnd_layout_bool
+          {
+            \bool_if:NF \l__dnd_justified_bool
+              {\RaggedRight}
+          }
+      },
+    code={\linespread{.9}},
+    frame~hidden,
+    boxrule          = 0pt,
+    enhanced,
+    before~skip      = 15pt plus 4pt minus 4pt,
+    toptitle         = 5pt,
+    boxsep           = 3pt,
+    left             = 7pt,
+    right            = 7pt,
+    top              = 0pt,
+    bottom           = 5pt,
+    fonttitle        = \DndFontSidebarTitle,
+    fontupper        = \DndFontSidebarBody,
+    fontlower        = \DndFontSidebarBody,
+    sharp~corners,
+    parbox           = false,
+    coltitle         = graveMaroon,
+    fuzzy~shadow     = {0mm} {-2pt} {-0.5pt} {0.6mm} {black!35!white},
+    overlay          =
+      {
+        \fill [sidebarrule] ([xshift=4pt,yshift=-.6pt]frame.north~west)
+          rectangle ([xshift=-4pt,yshift=.6pt]frame.north~east);
+        \fill [sidebarrule] ([xshift=4pt,yshift=-.6pt]frame.south~west)
+          rectangle ([xshift=-4pt,yshift=.6pt]frame.south~east);
+        \pic [fill=sidebarrule, scale=.6] at ([xshift=4pt]frame.north~west) {apohead};
+        \pic [fill=sidebarrule, scale=.6] at ([xshift=-4pt]frame.north~east) {apohead};
+        \pic [fill=sidebarrule, scale=.6] at ([xshift=4pt]frame.south~west) {apohead};
+        \pic [fill=sidebarrule, scale=.6] at ([xshift=-4pt]frame.south~east) {apohead};
+        \pic [fill=sidebarrule, scale=.8] at (frame.south) {apotip};
+        \pic [fill=sidebarrule, scale=.5] at (frame.north) {apostar};
+      },
+    after~skip       = 16pt plus 4pt minus 4pt,
+    #1,
+  }
+
+% Read-aloud text: Grave Red column divider on the left, a 0.6pt hairline
+% the full height with a short heavy bar at the top.
+\DeclareTColorBox {__dnd_read_aloud} {o}
+  {
+    before~upper    =
+      {
+        \bool_if:NT \l__dnd_layout_bool
+          {
+            \bool_if:NF \l__dnd_justified_bool
+              {\RaggedRight}
+          }
+      },
+    code            = {\linespread {1.1} },
+    enhanced~jigsaw,
+    frame~hidden,
+    boxrule         = 0pt,
+    breakable,
+    enhanced,
+    before~skip     = 13pt plus 4pt minus 4pt,
+    boxsep          = 8pt,
+    top             = 0pt,
+    left            = 3pt,
+    right           = 0pt,
+    bottom          = 0pt,
+    sharp~corners,
+    parbox          = false,
+    fontupper       = \DndFontReadAloud,
+    fontlower       = \DndFontReadAloud,
+    overlay         =
+      {
+        \fill [readaloudrule] ([xshift=-.3pt]frame.north~west)
+          rectangle ([xshift=.3pt]frame.south~west);
+        \fill [readaloudrule] (frame.north~west)
+          rectangle ([xshift=3pt,yshift=-1.2cm]frame.north~west);
+      },
+    after~skip      = 13pt plus 4pt minus 4pt,
+    #1,
+  }
+
+\ExplSyntaxOff
+
+% Appendix link banners (defined in Apotheosis.tex): no pink fill, the same
+% left divider as read-aloud text, maroon label.
+\AtBeginDocument{%
+  \@ifundefined{apolinkbanner}{}{%
+    \renewcommand{\apolinkbanner}[3]{%
+      \par\addvspace{4pt}\noindent
+      \sbox{\apolinkbox}{\begin{tcolorbox}[enhanced, unbreakable, sharp corners, boxrule=0pt,
+          frame hidden, opacityback=0, left=7pt, right=6pt, top=3pt, bottom=3pt,
+          nobeforeafter, width=\linewidth,
+          overlay={%
+            \fill[graveMaroon] ([xshift=-.3pt]frame.north west) rectangle ([xshift=.3pt]frame.south west);
+            \fill[graveMaroon] (frame.north west) rectangle ([xshift=2.5pt,yshift=-.45cm]frame.north west);
+            \fill[graveMaroon!35] ([xshift=7pt]frame.south west) rectangle ([yshift=.4pt]frame.south east);}]
+        {\sffamily\scshape\footnotesize\color{graveMaroon}#2\hfill p.~\pageref{#1}}\par
+        {\sffamily\bfseries\small #3~\textcolor{graveMaroon}{$\blacktriangleright$}}
+      \end{tcolorbox}}%
+      \hyperref[#1]{\usebox{\apolinkbox}}\par\addvspace{4pt}}}}
+
+%% ========================================================================
+%% ART THAT BLENDS INTO THE PAGE
+%% ========================================================================
+% Every \includegraphics inside a figure is drawn with soft edges that
+% dissolve into the paper, like the art in the official books. Use
+% \plainart{...} (same arguments as \includegraphics) for an image that
+% should keep hard edges.
+%
+% \fadedart[keys]{file} can also be used directly:
+%   width=<len>   height=<len>   fade=soft|all|bottom|top|sides|none
+%   top/bottom/left/right=<0..0.5>   focus=<0..1>   opacity=<0..1>
+\let\apo@includegraphics\includegraphics
+\newcommand{\plainart}{\apo@includegraphics}
+\pgfdeclareverticalshading{apo@edge}{100bp}{%
+  color(0bp)=(white); color(25bp)=(white);
+  color(37.5bp)=(black!16); color(50bp)=(black!50);
+  color(62.5bp)=(black!84); color(75bp)=(black); color(100bp)=(black)}
+\pgfkeys{/apo/art/.is family, /apo/art,
+  width/.store in=\apo@aw, height/.store in=\apo@ah,
+  top/.store in=\apo@ft, bottom/.store in=\apo@fb,
+  left/.store in=\apo@fl, right/.store in=\apo@fr,
+  focus/.store in=\apo@focus, opacity/.store in=\apo@aop,
+  fade/.is choice,
+  fade/none/.style   ={top=0, bottom=0, left=0, right=0},
+  fade/soft/.style   ={top=.14, bottom=.18, left=.14, right=.14},
+  fade/all/.style    ={top=.28, bottom=.3, left=.28, right=.28},
+  fade/bottom/.style ={top=0, bottom=.5, left=0, right=0},
+  fade/top/.style    ={top=.5, bottom=0, left=0, right=0},
+  fade/sides/.style  ={top=0, bottom=0, left=.25, right=.25},
+  reset/.style={width=\linewidth, height=, fade=soft, focus=.5, opacity=1},
+}
+% Build (once) a 10cm square soft mask for a set of edge depths.
+\newcommand{\apo@makefading}[1]{%
+  \ifcsname apo@fading@#1\endcsname\else
+    \expandafter\gdef\csname apo@fading@#1\endcsname{}%
+    \begin{tikzfadingfrompicture}[name=#1]
+      \fill[white] (-5cm,-5cm) rectangle (5cm,5cm);
+      \begin{scope}[blend mode=multiply]
+        \ifdim\apo@ft pt>0pt
+          \shade[shading=apo@edge] (-5cm,5cm) rectangle (5cm,{5cm-10cm*\apo@ft});\fi
+        \ifdim\apo@fb pt>0pt
+          \shade[shading=apo@edge,shading angle=180] (-5cm,-5cm) rectangle (5cm,{-5cm+10cm*\apo@fb});\fi
+        \ifdim\apo@fl pt>0pt
+          \shade[shading=apo@edge,shading angle=90] (-5cm,-5cm) rectangle ({-5cm+10cm*\apo@fl},5cm);\fi
+        \ifdim\apo@fr pt>0pt
+          \shade[shading=apo@edge,shading angle=270] ({5cm-10cm*\apo@fr},-5cm) rectangle (5cm,5cm);\fi
+      \end{scope}
+    \end{tikzfadingfrompicture}%
+  \fi}
+\newsavebox{\apo@artbox}
+\newlength{\apo@W}\newlength{\apo@H}
+\NewDocumentCommand{\fadedart}{O{} m}{%
+  \begingroup
+  \pgfkeys{/apo/art/.cd, reset,#1}%
+  \sbox\apo@artbox{\apo@includegraphics{#2}}%
+  \setlength{\apo@W}{\apo@aw}%
+  \ifx\apo@ah\@empty
+    \setlength{\apo@H}{\dimexpr\apo@W*\ht\apo@artbox/\wd\apo@artbox\relax}%
+  \else
+    \setlength{\apo@H}{\apo@ah}%
+  \fi
+  \pgfmathsetmacro{\apo@sc}{max(\apo@W/\wd\apo@artbox, \apo@H/\ht\apo@artbox)}%
+  \pgfmathsetmacro{\apo@iw}{\wd\apo@artbox*\apo@sc}%
+  \pgfmathsetmacro{\apo@ih}{\ht\apo@artbox*\apo@sc}%
+  \pgfmathsetmacro{\apo@dy}{(\apo@ih-\apo@H)*(\apo@focus-.5)}%
+  \edef\apo@fname{apofade-\apo@ft-\apo@fb-\apo@fl-\apo@fr}%
+  \expandafter\apo@makefading\expandafter{\apo@fname}%
+  \begin{tikzpicture}[inner sep=0pt]
+    \useasboundingbox (0,0) rectangle (\apo@W,\apo@H);
+    \begin{pgfscope}
+      \pgfsetfading{\apo@fname}{%
+        \pgftransformshift{\pgfpoint{.5\apo@W}{.5\apo@H}}%
+        \pgftransformxscale{\apo@W/10cm}\pgftransformyscale{\apo@H/10cm}}%
+      \pgfsetfillopacity{\apo@aop}%
+      % A transparency group, so PNGs with their own alpha still fade.
+      \begin{pgftransparencygroup}
+        \pgfpathrectangle{\pgfpointorigin}{\pgfpoint{\apo@W}{\apo@H}}%
+        \pgfusepath{clip}%
+        \pgftext[at={\pgfpoint{.5\apo@W}{.5\apo@H+\apo@dy pt}}]{%
+          \apo@includegraphics[width=\apo@iw pt,height=\apo@ih pt]{#2}}%
+      \end{pgftransparencygroup}
+    \end{pgfscope}
+  \end{tikzpicture}%
+  \endgroup}
+% Inside figures, \includegraphics draws a \fadedart at the size it would
+% have had.
+\newcommand{\apo@figart}[2][]{%
+  \sbox\apo@artbox{\apo@includegraphics[#1]{#2}}%
+  \edef\apo@figw{\the\wd\apo@artbox}%
+  \fadedart[width=\apo@figw]{#2}}
+\AddToHook{env/figure/begin}{\let\includegraphics\apo@figart}
+\AddToHook{env/figure*/begin}{\let\includegraphics\apo@figart}
 
 \endinput
