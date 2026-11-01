@@ -23,11 +23,13 @@
 
 ## ✦ Part I · The World
 
-Apotheosis is a hard, cold land of muddy roads, burning villages and church bells that toll too often. Lords squabble over borders while the faithful kneel to an old church that sells salvation by the coin, and beneath the incense and gold leaf, something has long since begun to rot.
+Apotheosis is a hard, cold land of muddy roads, burning villages and church bells that toll too often. Lords squabble over borders while the faithful kneel to an old church that sells salvation by the coin, and beneath the incense and gold leaf, something has long since begun to rot. Everyone in it, from beggar to king, dreams of rising above the mud.
 
-Where that rot spreads, monsters follow. Some wear fangs and some wear faces, and many were neighbours once. Under ruined temples and barrow hills lie relics and riches beyond counting, and every hand that reaches for them pays in blood, silver, or something harder to name.
+Where that rot spreads, monsters follow. Some wear fangs and some wear faces, and many were neighbours once, who reached too high and fell. Under ruined temples and barrow hills lie relics and riches that promise a way up, and every hand that reaches for them pays in blood, silver, or something harder to name.
 
-Older than any crown or creed, other hungers stir. They are patient things that dwell past the edge of the maps and the reach of prayer, and they turn the wheels of this world as surely as the seasons. Few who glimpse them stay whole, and what becomes of those who try is for the table to find out.
+Older than any crown or creed, other hungers stir. They are patient things that dwell past the edge of the maps and the reach of prayer, and they turn the wheels of this world as surely as the seasons, feeding on every mortal who tries to climb.
+
+For that is the oldest sin of all: apotheosis, the dream of ascending to sit upon the throne of heaven. Kings have tried it, saints and beasts have tried it, and the world is littered with what remained of them. That throne belongs to God alone, and what becomes of those who forget it is for the table to find out.
 
 <p align="center">
   <img src="assets/readme/black-knight.jpg" alt="The Black Knight" width="31%">
