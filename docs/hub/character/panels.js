@@ -1,7 +1,7 @@
 // Inventory, Inspiration and Journal tabs of the character dashboard.
 // character.js owns loading, the Edit/Save toggle and saving; this file draws
 // the three panels and reads their edit fields back into the character data.
-window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist }) => {
+window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist, isDM }) => {
   const KINDS = [
     ["weapon", "Weapon"], ["armour", "Armour"], ["shield", "Shield"], ["potion", "Potion"],
     ["scroll", "Scroll"], ["ring", "Ring"], ["amulet", "Amulet"], ["clothing", "Clothing"],
@@ -78,6 +78,12 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist 
   d.traits = Object.assign({ personality: "", ideals: "", bonds: "", flaws: "" }, d.traits);
   d.quests = Array.isArray(d.quests) ? d.quests : [];
   d.notes = d.notes || "";
+  // Quests are written by the DM; players keep their own notes beside each one.
+  const newId = () => Math.random().toString(36).slice(2, 10);
+  // Only the DM's save may add ids (the database refuses quest changes from players).
+  if (isDM()) d.quests.forEach((q) => { q.id = q.id || newId(); });
+  const questKey = (q) => q.id || `t:${q.title}`;
+  d.questNotes = d.questNotes && typeof d.questNotes === "object" ? d.questNotes : {};
 
   /* ---------- Inventory ---------- */
 
@@ -250,14 +256,23 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist 
 
   /* ---------- Inspiration ---------- */
 
+  // The pack's Inspiring Leader glyph, recoloured red (tools/icons: icons/ui/inspiration.webp).
+  const inspirationArt = () => el("img", { class: "insp-art", src: "../icons/ui/inspiration.webp", alt: "" });
+  // A background the pack has an icon for (Acolyte, Soldier…) shows it beside the name.
+  function backgroundArt(name) {
+    const k = window.Rules ? window.Rules.keyOf(`background ${name}`) : "";
+    const b = window.Rules && window.Rules.BACKGROUNDS && window.Rules.BACKGROUNDS[k];
+    return b ? el("img", { class: "bg-art", src: `../icons/backgrounds/${b.file}`, alt: "" }) : "";
+  }
+
   function renderInspiration() {
     const wrap = $("inspiration");
     const editing = isEditing();
     const pips = el("div", { class: "insp-pips", title: `Inspiration ${d.inspiration} of ${MAX_INSPIRATION}` },
       ...Array.from({ length: MAX_INSPIRATION }, (_, n) =>
         editing
-          ? el("button", { type: "button", class: `pip-flame stone${n < d.inspiration ? " is-lit" : ""}`, "data-insp": n + 1, "aria-label": `Set inspiration to ${n + 1}` }, icon("flame"))
-          : el("span", { class: `pip-flame stone${n < d.inspiration ? " is-lit" : ""}` }, icon("flame"))
+          ? el("button", { type: "button", class: `pip-flame stone${n < d.inspiration ? " is-lit" : ""}`, "data-insp": n + 1, "aria-label": `Set inspiration to ${n + 1}` }, inspirationArt())
+          : el("span", { class: `pip-flame stone${n < d.inspiration ? " is-lit" : ""}` }, inspirationArt())
       )
     );
     const head = el("header", { class: "insp-head" },
@@ -265,7 +280,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist 
         el("span", { class: "kicker", text: "Background" }),
         editing
           ? el("input", { class: "line-input", id: "bg-name", value: d.background.name, placeholder: "Acolyte, Soldier, Gravedigger…", maxlength: "60", "aria-label": "Background" })
-          : el("h4", { class: "insp-title", text: d.background.name || "No background yet" })
+          : el("h4", { class: "insp-title" }, backgroundArt(d.background.name), d.background.name || "No background yet")
       ),
       el("div", { class: "insp-count" }, el("span", { class: "kicker", text: "Inspiration" }), pips)
     );
@@ -350,6 +365,9 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist 
           ...paragraphs(q.summary),
           entries.length
             ? el("ol", { class: "jlog" }, ...entries.map((t) => el("li", { text: t })))
+            : "",
+          d.questNotes[questKey(q)]
+            ? el("section", { class: "jmine" }, el("span", { class: "kicker", text: "Player's notes" }), ...paragraphs(d.questNotes[questKey(q)]))
             : ""
         )
       : el("div", { class: "jdetail" });
@@ -358,8 +376,31 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist 
   }
 
   function renderJournalEdit(wrap) {
+    const notes = [
+      el("h4", { class: "sub-head", text: "Notes" }),
+      textarea({ id: "jnotes", rows: "6", class: "wide", placeholder: "Names, debts, rumours. Leave a blank line between paragraphs.", "aria-label": "Notes" }, d.notes),
+    ];
+    if (!isDM()) {
+      // Players read the DM's quests and add their own notes to each.
+      wrap.append(
+        el("h4", { class: "sub-head", text: "Quests" }),
+        el("p", { class: "sub-note", text: "The DM writes the quests. Add your own notes to any of them." }),
+        ...(d.quests.length
+          ? d.quests.map((q) =>
+              el("div", { class: "qedit is-player" },
+                el("div", { class: "qnote-head" },
+                  el("span", { class: `jdot` }), el("strong", { text: q.title || "Untitled" }),
+                  el("small", { text: (STATUS.find(([k]) => k === (q.status || "active")) || STATUS[0])[1] })),
+                textarea({ "data-qnote": questKey(q), rows: "2", placeholder: "Your notes on this quest", "aria-label": `Your notes on ${q.title}` }, d.questNotes[questKey(q)])
+              ))
+          : [el("p", { class: "placeholder", text: "No quests yet. The DM adds them." })]),
+        ...notes
+      );
+      return;
+    }
     wrap.append(
       el("h4", { class: "sub-head", text: "Quests" }),
+      el("p", { class: "sub-note", text: "Only the DM can change quests. The player's notes on each quest show under it." }),
       ...d.quests.map((q, i) =>
         el("div", { class: "qedit", "data-quest-row": i },
           el("div", { class: "qedit-top" },
@@ -373,8 +414,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist 
         )
       ),
       el("button", { type: "button", class: "link-button add-row", "data-add-quest": "", text: "+ Add quest" }),
-      el("h4", { class: "sub-head", text: "Notes" }),
-      textarea({ id: "jnotes", rows: "6", class: "wide", placeholder: "Names, debts, rumours. Leave a blank line between paragraphs.", "aria-label": "Notes" }, d.notes)
+      ...notes
     );
   }
 
@@ -418,7 +458,12 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist 
     });
     document.querySelectorAll("[data-trait]").forEach((t) => (d.traits[t.dataset.trait] = clip(t.value, 1000)));
 
-    document.querySelectorAll("[data-quest-row]").forEach((row) => {
+    document.querySelectorAll("[data-qnote]").forEach((t) => {
+      const v = clip(t.value, 2000);
+      if (v) d.questNotes[t.dataset.qnote] = v;
+      else delete d.questNotes[t.dataset.qnote];
+    });
+    if (isDM()) document.querySelectorAll("[data-quest-row]").forEach((row) => {
       const q = d.quests[row.dataset.questRow];
       const v = (k) => row.querySelector(`[data-q=${k}]`).value;
       Object.assign(q, { title: clip(v("title"), 80), status: v("status"), giver: clip(v("giver"), 60), summary: clip(v("summary"), 2000), log: clip(v("log"), 4000) });
@@ -448,8 +493,8 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist 
     else if ("insp" in ds) d.inspiration = Number(ds.insp) === d.inspiration ? Number(ds.insp) - 1 : Number(ds.insp);
     else if ("addGoal" in ds) d.goals.push({ text: "", done: false });
     else if ("removeGoal" in ds) d.goals.splice(Number(ds.removeGoal), 1);
-    else if ("addQuest" in ds) d.quests.push({ title: "", status: "active", giver: "", summary: "", log: "" });
-    else if ("removeQuest" in ds) d.quests.splice(Number(ds.removeQuest), 1);
+    else if ("addQuest" in ds && isDM()) d.quests.push({ id: newId(), title: "", status: "active", giver: "", summary: "", log: "" });
+    else if ("removeQuest" in ds && isDM()) d.quests.splice(Number(ds.removeQuest), 1);
     else return;
     render();
   }));

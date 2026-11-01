@@ -55,6 +55,7 @@
     collectAll: () => collect(),
     strength: () => d.abilities.str,
     canEdit: () => canEdit,
+    isDM: () => me.role === "dm",
     persist: () => persist(),
   });
 
@@ -81,11 +82,12 @@
   // A feature shows the icon it names, else the icon whose name matches it, else one for its kind.
   // Resource icons (action, bonus action, reaction, Channel Divinity charge…) and official SRD rules text.
   const getJSON = (url) => fetch(url).then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
-  const [POWERS, RESOURCES, SRD, ITEMS] = await Promise.all([
+  const [POWERS, RESOURCES, SRD, ITEMS, BACKGROUNDS] = await Promise.all([
     getJSON("../icons/powers/manifest.json"),
     getJSON("../icons/resources/manifest.json"),
     getJSON("../srd.json"),
     getJSON("../icons/items/manifest.json"),
+    getJSON("../icons/backgrounds/manifest.json"),
   ]);
   const KIND_POWER = { feature: "darkvision", action: "main hand attack", bonus: "dash", reaction: "opportunity attack" };
   const keyOf = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -116,7 +118,7 @@
     const order = PREFER[kind] || PREFER.action;
     return [...list].sort((a, b) => order.indexOf(a.t) - order.indexOf(b.t))[0];
   }
-  window.Rules = { srd, keyOf, ITEMS, SRD_NOTE: "SRD 5.1, CC-BY-4.0" };
+  window.Rules = { srd, keyOf, ITEMS, BACKGROUNDS, SRD_NOTE: "SRD 5.1, CC-BY-4.0" };
 
   const KIND_RESOURCE = { action: "action", bonus: "bonus action", reaction: "reaction" };
   function resourceKey(name) {

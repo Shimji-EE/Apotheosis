@@ -99,10 +99,12 @@ def read_many(path, names):
             for n in names:
                 out[n] = Image.open(io.BytesIO(z.read(n))).convert("RGBA")
         return out
+    import tempfile
     import py7zr
-    with py7zr.SevenZipFile(path) as z:
-        for n, bio in z.read(targets=list(names)).items():
-            out[n] = Image.open(bio).convert("RGBA")
+    with tempfile.TemporaryDirectory() as tmp, py7zr.SevenZipFile(path) as z:
+        z.extract(path=tmp, targets=list(names))
+        for n in names:
+            out[n] = Image.open(Path(tmp) / n).convert("RGBA")
     return out
 
 
