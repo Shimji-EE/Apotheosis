@@ -27,6 +27,8 @@
     <symbol id="g-alchemy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M12 4.5 19 17H5Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><rect x="9.6" y="11.2" width="4.8" height="4.8" fill="none" stroke="currentColor" stroke-width="1.3"/></symbol>
     <symbol id="g-claw" viewBox="0 0 24 24"><path d="M7 3c1.5 6 1 12-2 18M12.5 2.5c1.2 6.5.6 12.5-2.5 19M18 3c1.2 6 .6 12-2.5 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
     <symbol id="g-d20" viewBox="0 0 24 24"><path d="M12 2 20.7 7v10L12 22l-8.7-5V7Z M12 2 7.5 15h9Z M3.3 7l4.2 8L12 22l4.5-7 4.2-8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></symbol>
+    <symbol id="g-socket" viewBox="0 0 100 100"><defs><radialGradient id="socket-fill" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#a3222f"/><stop offset="0.7" stop-color="#5e1219"/><stop offset="1" stop-color="#2a0a0d"/></radialGradient></defs><path d="M50 2 58 10 90 42 98 50 90 58 58 90 50 98 42 90 10 58 2 50 10 42 42 10Z" fill="url(#socket-fill)" stroke="#d0313f" stroke-width="1.2"/><path d="M50 9 91 50 50 91 9 50Z" fill="none" stroke="#e7d8bf" stroke-opacity="0.35" stroke-width="0.8"/><path d="M50 14 86 50 50 86 14 50Z" fill="none" stroke="#e7d8bf" stroke-opacity="0.18" stroke-width="0.6" stroke-dasharray="1.5 2.5"/><circle cx="50" cy="4.5" r="1.3" fill="#e7d8bf" fill-opacity="0.7"/><circle cx="50" cy="95.5" r="1.3" fill="#e7d8bf" fill-opacity="0.7"/><circle cx="4.5" cy="50" r="1.3" fill="#e7d8bf" fill-opacity="0.7"/><circle cx="95.5" cy="50" r="1.3" fill="#e7d8bf" fill-opacity="0.7"/></symbol>
+    <symbol id="g-tankard" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13.5c0-2.2 2-3.6 4.2-3.2 1-2.6 4.5-3.6 6.6-1.6 2.2-1.8 5.8-.9 6.6 1.8 2.4-.3 4.2 1.2 4.2 3.2"/><path d="M12.5 14v24.5c0 1.5 1.3 2.5 3 2.5h15.5c1.7 0 3-1 3-2.5V14"/><path d="M12.5 17.5h21.5M12.5 36h21.5"/><path d="M34 19.5h3.5c2.5 0 4 1.6 4 4v6c0 2.4-1.5 4-4 4H34"/><path d="M34 23h3c.8 0 1.2.4 1.2 1.2v4.6c0 .8-.4 1.2-1.2 1.2h-3"/><path d="M17 21v12M22 21v12M27 21v12M31 21v12" stroke-width="0.7" stroke-opacity="0.6"/><path d="M19 13c.5-1 1.6-1.4 2.6-1M26 12.6c.7-.6 1.7-.7 2.5-.2" stroke-width="0.8"/><circle cx="23.2" cy="26.8" r="2.4" stroke-width="0.9"/><path d="M23.2 23.4v-1.2M23.2 31.4v-1.2M19.8 26.8h-1.2M27.8 26.8h-1.2" stroke-width="0.8"/></g></symbol>
   </svg>
 
   <canvas id="dust" aria-hidden="true"></canvas>
@@ -38,7 +40,7 @@
       <a href="#world"><svg class="glyph"><use href="#g-star"/></svg><span>The World</span></a>
       <a href="#inside"><svg class="glyph"><use href="#g-alchemy"/></svg><span>What's Inside</span></a>
       <a href="#playing"><svg class="glyph"><use href="#g-d20"/></svg><span>Playing</span></a>
-      <a href="hub/"><svg class="glyph"><use href="#g-moon"/></svg><span>Hub</span></a>
+      <a href="hub/"><svg class="glyph"><use href="#g-tankard"/></svg><span>Tavern</span></a>
     </div>
   </nav>
 
@@ -66,6 +68,19 @@
   </header>
 
   <main>
+    <section class="tavern reveal" id="tavern" aria-labelledby="tavern-title">
+      <a class="tarot tarot-left" href="hub/" tabindex="-1" aria-hidden="true"><img src="assets/tavern-toast.jpg" alt="" width="720" height="951" loading="lazy"></a>
+      <div class="tavern-text">
+        <a class="emblem" href="hub/" aria-label="Enter the Tavern"><svg class="emblem-socket"><use href="#g-socket"/></svg><svg class="emblem-icon"><use href="#g-tankard"/></svg></a>
+        <span class="tab">Campaign Hub</span>
+        <h2 id="tavern-title">The Tavern</h2>
+        <span class="rule rule-short" aria-hidden="true"></span>
+        <p>Pull up a chair. The party gathers here between adventures: sign in to find your companions, and soon your sheets, coin purse, quests and the living map.</p>
+        <a class="button" href="hub/">Enter the Tavern</a>
+      </div>
+      <a class="tarot tarot-right" href="hub/" tabindex="-1" aria-hidden="true"><img src="assets/tavern-board.jpg" alt="" width="720" height="970" loading="lazy"></a>
+    </section>
+
     <section class="quote reveal" id="quote">
       <blockquote>
         <p>&ldquo;You're the greatest project you will ever work on&hellip;&rdquo;</p>
@@ -94,21 +109,6 @@
         </article>
       </div>
       <p class="premise reveal">A priest with a secret mission, a rogue with a voice inside her head, and a stranger with a blade drawn from his own blood are about to meet in a tavern at the edge of the first snow. What they are looking for, and what is looking for them, is for the table to find out.</p>
-    </section>
-
-    <section class="gallery" aria-label="Artwork">
-      <figure class="card reveal" data-parallax="-0.06">
-        <div class="card-frame"><img src="assets/black-knight.jpg" alt="The Black Knight" width="400" height="600" loading="lazy"></div>
-        <figcaption>The Black Knight</figcaption>
-      </figure>
-      <figure class="card reveal" data-parallax="0.04">
-        <div class="card-frame"><img src="assets/dread-wolf.jpg" alt="The Dread Wolf" width="400" height="600" loading="lazy"></div>
-        <figcaption>The Dread Wolf</figcaption>
-      </figure>
-      <figure class="card reveal" data-parallax="-0.06">
-        <div class="card-frame"><img src="assets/dhampir.jpg" alt="A Dhampir" width="400" height="600" loading="lazy"></div>
-        <figcaption>A Dhampir</figcaption>
-      </figure>
     </section>
 
     <section class="inside" id="inside">
