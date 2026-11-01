@@ -26,45 +26,77 @@
 
   <header class="hub-bar">
     <a class="hub-home" id="back" href="../">&larr; The Tavern</a>
+    <div class="hub-who">
+      <button class="link-button" id="edit-toggle" type="button" hidden>Edit</button>
+      <button class="button button-quiet" id="save" type="button" hidden>Save</button>
+    </div>
   </header>
 
-  <main class="hub-main">
-    <p class="tracked" id="char-owner">Character</p>
-    <h1 class="hub-title" id="char-name">&hellip;</h1>
-    <p class="char-line" id="char-line"></p>
+  <main class="hub-main sheet-main">
     <p class="hub-status" id="status" role="status" aria-live="polite"></p>
 
-    <nav class="dash-tabs" role="tablist" aria-label="Character dashboard">
-      <button role="tab" aria-selected="true" data-tab="sheet"><svg class="tile"><use href="#i-sheet"/></svg><span>Character sheet</span></button>
-      <button role="tab" aria-selected="false" data-tab="inventory"><svg class="tile"><use href="#i-pack"/></svg><span>Inventory</span></button>
-      <button role="tab" aria-selected="false" data-tab="inspiration"><svg class="tile"><use href="#i-flame"/></svg><span>Inspiration</span></button>
-      <button role="tab" aria-selected="false" data-tab="journal"><svg class="tile"><use href="#i-journal"/></svg><span>Journal</span></button>
-    </nav>
+    <div class="sheet-frame">
+      <div class="sheet">
+        <!-- Header: portrait with level, HP and AC; name; abilities -->
+        <header class="sheet-head">
+          <div class="portrait-block">
+            <div class="portrait" id="portrait"><svg class="portrait-sigil" viewBox="0 0 48 48"><use href="#i-sheet"/></svg></div>
+            <span class="badge-prof" id="prof" title="Proficiency bonus">+2</span>
+            <span class="badge-level" id="level" title="Level">1</span>
+            <div class="hp" title="Hit points">
+              <div class="hp-bar"><span class="hp-fill" id="hp-fill"></span><span class="hp-text" id="hp-text">0 / 0</span></div>
+              <div class="hp-sub"><span id="hp-temp">TMP</span><span>MAX</span></div>
+            </div>
+          </div>
+          <div class="sheet-title">
+            <div class="title-row">
+              <div>
+                <h1 class="sheet-name" id="char-name">&hellip;</h1>
+                <p class="sheet-line" id="char-line"></p>
+                <p class="sheet-owner" id="char-owner"></p>
+              </div>
+              <div class="ac" title="Armour class"><span class="ac-label">AC</span><span id="ac">10</span></div>
+            </div>
+            <div class="abilities" id="abilities"></div>
+          </div>
+        </header>
 
-    <section class="panel dash-panel" data-panel="sheet">
-      <h2>Character sheet</h2>
-      <p>Ability scores, skills, hit points and features will live here.</p>
-      <form id="edit-form" class="form" novalidate hidden>
-        <label>Name <input name="name" maxlength="60" required></label>
-        <label>Species <input name="species" maxlength="40"></label>
-        <label>Class <input name="class" maxlength="40"></label>
-        <label>Level <input name="level" type="number" min="1" max="20"></label>
-        <button class="button button-quiet" type="submit">Save</button>
-      </form>
-      <button class="link-button remove" id="delete" type="button" hidden>Delete this character</button>
-    </section>
-    <section class="panel dash-panel" data-panel="inventory" hidden>
-      <h2>Inventory</h2>
-      <p>A grid of carried items, equipment slots and coin. Coming soon.</p>
-    </section>
-    <section class="panel dash-panel" data-panel="inspiration" hidden>
-      <h2>Inspiration</h2>
-      <p>Background goals that earn inspiration when fulfilled. Coming soon.</p>
-    </section>
-    <section class="panel dash-panel" data-panel="journal" hidden>
-      <h2>Journal</h2>
-      <p>Quests, leads and notes, kept per character. Coming soon.</p>
-    </section>
+        <div class="sheet-body">
+          <aside class="sheet-side" id="side"></aside>
+
+          <div class="sheet-content">
+            <section class="dash-panel" data-panel="sheet">
+              <div class="feature-search"><input id="search" type="search" placeholder="Search features" aria-label="Search features"></div>
+              <div id="tables"></div>
+              <section class="edit-only" id="basics" hidden>
+                <h3 class="table-head">Details</h3>
+                <form class="form sheet-form" id="basics-form" novalidate></form>
+                <button class="link-button remove" id="delete" type="button">Delete this character</button>
+              </section>
+            </section>
+            <section class="dash-panel" data-panel="inventory" hidden>
+              <h3 class="table-head">Inventory</h3>
+              <p class="placeholder">A grid of carried items, equipment slots and coin. Coming soon.</p>
+            </section>
+            <section class="dash-panel" data-panel="inspiration" hidden>
+              <h3 class="table-head">Inspiration</h3>
+              <p class="placeholder">Background goals that earn inspiration when fulfilled. Coming soon.</p>
+            </section>
+            <section class="dash-panel" data-panel="journal" hidden>
+              <h3 class="table-head">Journal</h3>
+              <p class="placeholder">Quests, leads and notes, kept per character. Coming soon.</p>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <nav class="dash-rail" role="tablist" aria-label="Character dashboard">
+        <button role="tab" aria-selected="true" data-tab="sheet" title="Character sheet"><svg class="tile"><use href="#i-sheet"/></svg></button>
+        <button role="tab" aria-selected="false" data-tab="inventory" title="Inventory"><svg class="tile"><use href="#i-pack"/></svg></button>
+        <button role="tab" aria-selected="false" data-tab="inspiration" title="Inspiration"><svg class="tile"><use href="#i-flame"/></svg></button>
+        <button role="tab" aria-selected="false" data-tab="journal" title="Journal"><svg class="tile"><use href="#i-journal"/></svg></button>
+      </nav>
+    </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
