@@ -7,7 +7,7 @@
   function say(text, isError = false) {
     status.textContent = text;
     status.classList.toggle("is-error", isError);
-    status.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (text) status.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
   // Check the form ourselves so mistakes show as a message instead of a silent block.
@@ -53,193 +53,43 @@
   }
 
   let me = null;
-  let profiles = [];
-  let characters = [];
-  let lobby = null; // the Realtime presence channel
-  let online = {}; // user id -> presence payload
-  let firstSync = true;
-  const { el } = window.Hub;
-  const pickKey = (id) => `tavern.character.${id}`;
-
-  function readPick(id) {
-    try { return localStorage.getItem(pickKey(id)); } catch { return null; }
-  }
-  function writePick(id, charId) {
-    try { localStorage.setItem(pickKey(id), charId); } catch { /* private window: presence still carries it */ }
-  }
-
-  // The character a member brings to the table: their live pick, else their first one.
-  function seatCharacter(userId) {
-    const theirs = characters.filter((c) => c.owner_id === userId);
-    const wanted = online[userId] && online[userId].character_id;
-    return theirs.find((c) => c.id === wanted) || theirs[0] || null;
-  }
-  function myPick() {
-    const theirs = characters.filter((c) => c.owner_id === me.id);
-    const saved = readPick(me.id);
-    return (theirs.find((c) => c.id === saved) || theirs[0] || {}).id || null;
-  }
-
-  async function loadParty() {
-    const [p, c] = await Promise.all([
-      db.from("profiles").select("id, username, display_name, role").order("role").order("display_name"),
-      db.from("characters").select("id, owner_id, name, species, class, level, portrait:data->>portrait").order("created_at"),
-    ]);
-    if (p.error) throw p.error;
-    profiles = p.data;
-    characters = c.error ? [] : c.data;
-  }
-
-  function feed(text) {
-    const list = $("lobby-feed");
-    const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    list.prepend(el("li", {}, el("time", { text: time }), document.createTextNode(text)));
-    while (list.children.length > 5) list.lastChild.remove();
-  }
-
-  function sigil(cls) {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("class", cls);
-    svg.setAttribute("aria-hidden", "true");
-    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-    use.setAttribute("href", "#seat-sigil");
-    svg.append(use);
-    return svg;
-  }
-
-  // The line-up: you first, then whoever is here, then the empty seats of those who aren't.
-  function drawSeats(arrived = new Set()) {
-    if (!me) return;
-    const here = (p) => !!online[p.id];
-    const order = [...profiles].sort((a, b) =>
-      (b.id === me.id) - (a.id === me.id) || here(b) - here(a) || (a.role === "dm" ? -1 : b.role === "dm" ? 1 : 0)
-    );
-    $("seats").replaceChildren(
-      ...order.map((p) => {
-        const c = seatCharacter(p.id);
-        const art = el("div", { class: "seat-art" });
-        if (c && c.portrait && /^https:\/\//i.test(c.portrait)) art.style.backgroundImage = `url("${encodeURI(c.portrait)}")`;
-        else art.append(sigil("seat-sigil"));
-        const tags = el("div", { class: "seat-tags" });
-        if (p.role === "dm") tags.append(el("span", { class: "tab", text: "DM" }));
-        if (p.id === me.id) tags.append(el("span", { class: "tab tab-you", text: "You" }));
-        const seat = el("li", { style: `--i:${order.indexOf(p)}`, class: `seat${here(p) ? " is-here" : ""}${p.role === "dm" ? " is-dm" : ""}${arrived.has(p.id) ? " is-arriving" : ""}` },
-          art,
-          tags,
-          el("div", { class: "seat-body" },
-            el("span", { class: "seat-status", text: here(p) ? "At the table" : "Not here" }),
-            c
-              ? el("a", { class: "seat-char", href: `character/?id=${c.id}`, text: c.name })
-              : el("span", { class: "seat-char is-none", text: p.role === "dm" ? "Dungeon Master" : "No character" }),
-            el("span", { class: "seat-sub", text: c ? [c.species, c.class, `Level ${c.level}`].filter(Boolean).join(" · ") : "" }),
-            el("a", { class: "seat-player", href: `profile/?u=${encodeURIComponent(p.username)}`, text: (online[p.id] && online[p.id].display_name) || p.display_name })
-          )
-        );
-        return seat;
-      })
-    );
-    const count = profiles.filter(here).length;
-    $("stage-count").textContent = `${count} of ${profiles.length} at the table`;
-  }
-
-  function drawRail() {
-    $("rail-name").textContent = me.display_name;
-    $("rail-name").href = `profile/?u=${encodeURIComponent(me.username)}`;
-    $("rail-handle").textContent = `@${me.username} · ${me.role === "dm" ? "DM" : "Player"}`;
-    $("rail-profile").href = $("rail-name").href;
-    $("rail-new-char").href = $("rail-name").href;
-    $("rename-form").display_name.value = me.display_name;
-
-    const mine = characters.filter((c) => c.owner_id === me.id);
-    const picked = myPick();
-    $("rail-chars").replaceChildren(
-      ...mine.map((c) => {
-        const radio = el("input", { type: "radio", name: "seat-char", value: c.id, "aria-label": `Bring ${c.name} to the table` });
-        radio.checked = c.id === picked;
-        radio.addEventListener("change", () => {
-          writePick(me.id, c.id);
-          if (lobby) lobby.track(presencePayload());
-        });
-        return el("li", {},
-          el("label", { class: "rail-char" },
-            radio,
-            el("span", {},
-              el("span", { class: "rail-char-name", text: c.name }),
-              el("span", { class: "rail-char-sub", text: [c.class, `Level ${c.level}`].filter(Boolean).join(" · ") })
-            )
-          ),
-          el("a", { class: "rail-sheet", href: `character/?id=${c.id}`, text: "Sheet" })
-        );
-      })
-    );
-    if (!mine.length) $("rail-chars").append(el("li", { class: "rail-note", text: "No characters yet." }));
-  }
-
-  function presencePayload() {
-    return { user_id: me.id, display_name: me.display_name, character_id: myPick(), at: new Date().toISOString() };
-  }
-
-  // Supabase Realtime presence: everyone in the lobby sees the others arrive and leave.
-  function joinLobby() {
-    firstSync = true;
-    lobby = db.channel("tavern-lobby", { config: { presence: { key: me.id } } });
-    lobby
-      .on("presence", { event: "sync" }, async () => {
-        const state = lobby.presenceState();
-        const next = {};
-        for (const [id, metas] of Object.entries(state)) next[id] = metas[metas.length - 1];
-        const fresh = Object.keys(next).filter((id) => !online[id]);
-        const arrived = new Set(fresh); // on the first sync everyone already here walks in
-        const left = Object.keys(online).filter((id) => !next[id]);
-        online = next;
-        // Someone new signed up since we loaded: fetch the party again.
-        if (Object.keys(next).some((id) => !profiles.find((p) => p.id === id))) await loadParty().catch(() => {});
-        // Their character pick may be one we haven't loaded yet.
-        else if (Object.values(next).some((m) => m.character_id && !characters.find((c) => c.id === m.character_id))) await loadParty().catch(() => {});
-        const name = (id) => (profiles.find((p) => p.id === id) || {}).display_name || "Someone";
-        if (!firstSync) fresh.forEach((id) => id !== me.id && feed(`${name(id)} sat down at the table.`));
-        left.forEach((id) => id !== me.id && feed(`${name(id)} left the Tavern.`));
-        firstSync = false;
-        drawSeats(arrived);
-      })
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") lobby.track(presencePayload());
-      });
-  }
-
-  function leaveLobby() {
-    if (lobby) db.removeChannel(lobby);
-    lobby = null;
-    online = {};
-  }
 
   async function render() {
     const { data } = await db.auth.getSession();
     const session = data.session;
     $("login-panel").hidden = !!session;
     $("lobby").hidden = !session;
-    document.body.classList.toggle("is-lobby", !!session);
+    $("door").hidden = !!session;
+    document.body.classList.toggle("in-lobby", !!session);
     if (!session) {
       $("dm-panel").hidden = true;
       me = null;
-      leaveLobby();
+      window.Hub.members = null;
+      window.dispatchEvent(new CustomEvent("hub:members", { detail: null }));
       return;
     }
 
-    try {
-      await loadParty();
-    } catch (error) {
-      return say(error.message, true);
-    }
+    const { data: profiles, error } = await db
+      .from("profiles")
+      .select("id, username, display_name, role")
+      .order("role")
+      .order("display_name");
+    if (error) return say(error.message, true);
 
     me = profiles.find((p) => p.id === session.user.id);
-    if (!me) return say("Your profile is missing. Ask the DM.", true);
-    $("dm-panel").hidden = me.role !== "dm";
-    drawRail();
+    $("who-name").textContent = me ? me.display_name : "";
+    $("who-role").textContent = me && me.role === "dm" ? "Dungeon Master" : "Player";
+    $("op-crest").textContent = me ? (me.display_name || me.username).slice(0, 1).toUpperCase() : "";
+    const mine = me ? `?u=${encodeURIComponent(me.username)}` : "";
+    $("who-name").href = `profile/${mine}`;
+    $("my-profile").href = `profile/${mine}`;
+    $("new-char").href = `create/${mine}`;
+    $("dm-panel").hidden = !(me && me.role === "dm");
+    $("rename-form").display_name.value = me ? me.display_name : "";
 
     const manage = $("manage");
     manage.replaceChildren(
-      ...(me.role === "dm" ? profiles.filter((p) => p.id !== me.id) : []).map((p) => {
+      ...(me && me.role === "dm" ? profiles.filter((p) => p.id !== me.id) : []).map((p) => {
         const li = document.createElement("li");
         const name = document.createElement("span");
         name.textContent = p.display_name;
@@ -273,9 +123,8 @@
       manage.append(li);
     }
 
-    drawSeats();
-    if (!lobby) joinLobby();
-    else lobby.track(presencePayload());
+    window.Hub.members = { me, profiles }; // for scripts that load after this first render
+    window.dispatchEvent(new CustomEvent("hub:members", { detail: { me, profiles } }));
   }
 
   $("login-form").addEventListener("submit", (e) => {

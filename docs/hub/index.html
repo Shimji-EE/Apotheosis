@@ -21,17 +21,8 @@
     <a class="hub-home" href="../">&larr; Apotheosis</a>
   </header>
 
-  <!-- Wireframe d20 in a circle, the hero sigil, for empty seats and portraits -->
-  <svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute">
-    <symbol id="seat-sigil" viewBox="0 0 400 400">
-      <circle cx="200" cy="200" r="190"/>
-      <path d="M200 30 347.2 115 347.2 285 200 370 52.8 285 52.8 115Z"/>
-      <path d="M200 118 286 266 114 266Z M200 118 200 30 M200 118 52.8 115 M200 118 347.2 115 M286 266 347.2 115 M286 266 347.2 285 M286 266 200 370 M114 266 200 370 M114 266 52.8 285 M114 266 52.8 115"/>
-    </symbol>
-  </svg>
-
-  <main class="hub-main" id="hub-main">
-    <div class="hub-head">
+  <main class="hub-main">
+    <div class="door" id="door">
       <p class="tracked">The Charred Eye</p>
       <h1 class="hub-title">The Tavern</h1>
     </div>
@@ -57,51 +48,61 @@
       </details>
     </section>
 
-    <!-- Logged in: the lobby. Left rail for you, the stage for everyone at the table. -->
+    <!-- Logged in: the lobby. Left column for you, the stage for the whole party. -->
     <div class="lobby" id="lobby" hidden>
-      <aside class="rail" aria-label="You">
-        <div class="rail-card">
-          <svg class="rail-sigil" aria-hidden="true"><use href="#seat-sigil"/></svg>
-          <div>
-            <a class="rail-name" id="rail-name" href="profile/"></a>
-            <span class="rail-handle" id="rail-handle"></span>
+      <aside class="lobby-rail" aria-label="You">
+        <div class="op-card">
+          <span class="op-crest" id="op-crest" aria-hidden="true"></span>
+          <div class="op-text">
+            <a id="who-name" class="op-name" href="profile/" title="Your profile"></a>
+            <span class="op-role" id="who-role"></span>
           </div>
         </div>
 
-        <details class="rail-item" name="rail" open>
-          <summary>Characters</summary>
-          <p class="rail-note">Pick who you bring to the table. The others see them on your seat.</p>
-          <ul class="rail-chars" id="rail-chars"></ul>
-          <a class="rail-link" id="rail-new-char" href="profile/">+ New character</a>
-        </details>
+        <nav class="rail-nav">
+          <section class="rail-group">
+            <h2 class="rail-head" id="chars-head">Characters</h2>
+            <p class="rail-note" id="chars-note">Pick who you bring to the table. The party sees your choice.</p>
+            <ul class="rail-chars" id="my-chars"></ul>
+            <a class="rail-link" id="new-char" href="create/">+ Create a character</a>
+          </section>
 
-        <details class="rail-item" name="rail">
-          <summary>Profile settings</summary>
-          <form id="rename-form" class="form" novalidate>
-            <label>Display name <input name="display_name" maxlength="40" required></label>
-            <button class="button button-quiet" type="submit">Save</button>
-          </form>
-          <a class="rail-link" id="rail-profile" href="profile/">Open your profile</a>
-        </details>
-
-        <details class="rail-item" name="rail" id="dm-panel" hidden>
-          <summary>Manage the party</summary>
-          <p class="rail-note">Players create their own accounts. Remove anyone you don't want at the table.</p>
-          <ul class="roster" id="manage"></ul>
-        </details>
-
-        <button class="rail-item rail-out" id="logout" type="button">Leave the Tavern</button>
+          <section class="rail-group">
+            <h2 class="rail-head">You</h2>
+            <a class="rail-link" id="my-profile" href="profile/">Profile</a>
+            <details class="rail-more">
+              <summary class="rail-link">Profile settings</summary>
+              <form id="rename-form" class="form" novalidate>
+                <label>Display name <input name="display_name" maxlength="40" required></label>
+                <button class="button button-quiet" type="submit">Save</button>
+              </form>
+            </details>
+            <details class="rail-more" id="dm-panel" hidden>
+              <summary class="rail-link">Manage the party</summary>
+              <p class="rail-note">Players create their own accounts. Remove anyone you don't want at the table.</p>
+              <ul class="roster" id="manage"></ul>
+            </details>
+            <button class="rail-link link-button" id="logout" type="button">Log out</button>
+          </section>
+        </nav>
       </aside>
 
-      <div class="stage">
-        <div class="stage-head">
-          <h2>The table</h2>
-          <span class="stage-count" id="stage-count"></span>
-        </div>
-        <ol class="seats" id="seats"></ol>
-        <ol class="lobby-feed" id="lobby-feed" aria-live="polite"></ol>
+      <section class="lobby-stage" aria-labelledby="lobby-title">
+        <header class="stage-head">
+          <div>
+            <p class="tracked">The Charred Eye</p>
+            <h1 class="stage-title" id="lobby-title">The Tavern</h1>
+          </div>
+          <p class="stage-count" id="lobby-count"></p>
+        </header>
 
-        <!-- The scene the DM has live -->
+        <ul class="lineup" id="lineup" aria-label="The party"></ul>
+
+        <div class="stage-foot">
+          <ol class="lobby-feed" id="lobby-feed" aria-live="polite"></ol>
+          <button class="ready-button" id="ready" type="button" aria-pressed="false">Ready up</button>
+        </div>
+
         <section class="panel scene-panel is-empty" id="scene-panel" hidden>
           <div class="scene-art" id="scene-art"></div>
           <div class="scene-body">
@@ -115,7 +116,7 @@
             </div>
           </div>
         </section>
-      </div>
+      </section>
     </div>
   </main>
 
@@ -124,5 +125,6 @@
   <script src="hub.js"></script>
   <script src="scene-audio.js"></script>
   <script src="scene-panel.js"></script>
+  <script src="lobby.js"></script>
 </body>
 </html>

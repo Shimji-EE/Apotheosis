@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Character Creator · The Tavern</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0b0a08">
+  <link rel="icon" href="../../assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow+Semi+Condensed:ital,wght@0,300;0,400;0,500;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../hub.css">
+</head>
+<body class="hub">
+  <div class="haze" aria-hidden="true"></div>
+  <header class="hub-bar">
+    <a class="hub-home" id="back" href="../profile/">&larr; Profile</a>
+  </header>
+
+  <main class="hub-main sheet-main">
+    <h1 class="hub-title">Create a character</h1>
+    <p class="hub-status" id="status" role="status" aria-live="polite"></p>
+
+    <form class="creator" id="creator" novalidate>
+      <div class="creator-steps" id="steps"></div>
+      <aside class="creator-summary sheet" id="summary"></aside>
+    </form>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="../common.js"></script>
+  <script src="options.js"></script>
+  <script src="create.js"></script>
+</body>
+</html>

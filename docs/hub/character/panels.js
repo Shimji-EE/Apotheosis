@@ -256,8 +256,8 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist,
 
   /* ---------- Inspiration ---------- */
 
-  // The pack's Inspiring Leader glyph, recoloured red (tools/icons: icons/ui/inspiration.webp).
-  const inspirationArt = () => el("img", { class: "insp-art", src: "../icons/ui/inspiration.webp", alt: "" });
+  // BG3's own inspiration point, the red star (pack: Resource/Red_Star_Icon).
+  const inspirationArt = () => el("img", { class: "insp-art", src: "../icons/resources/red-star.webp", alt: "" });
   // A background the pack has an icon for (Acolyte, Soldier…) shows it beside the name.
   function backgroundArt(name) {
     const k = window.Rules ? window.Rules.keyOf(`background ${name}`) : "";
