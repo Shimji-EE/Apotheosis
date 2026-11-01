@@ -394,7 +394,7 @@ blockquote cite {
 /* World: an over-arching premise above the atlas links */
 
 .premise {
-  max-width: 760px;
+  max-width: 1040px;
   margin: 0 auto;
   text-align: center;
   font-family: var(--prose);
