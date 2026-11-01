@@ -23,7 +23,7 @@
 
 ## ✦ Part I · The World
 
-Apotheosis is a hard, cold land of muddy roads, burning villages and church bells that toll too often. Lords squabble over borders while the faithful kneel to an old church that sells salvation by the coin, and beneath the incense and gold leaf, something has long since begun to rot. Everyone in it, from beggar to king, dreams of rising above the mud.
+Apotheosis is a land of frozen mud and woodsmoke, of gallows creaking at the crossroads and crows grown fat on what hangs there. Children cough through winters that take the old and the weak, tithe-men carry off the last sack of grain, and the bells ring for the dead more often than for prayer. The faithful still kneel on cold stone before an old church that sells salvation by the coin, but beneath its incense and gold leaf, something has long since begun to rot. And everyone, from the beggar picking lice in the gutter to the king on his gilded chair, dreams of rising above the filth.
 
 Where that rot spreads, monsters follow. Some wear fangs and some wear faces, and many were neighbours once, who reached too high and fell. Under ruined temples and barrow hills lie relics and riches that promise a way up, and every hand that reaches for them pays in blood, silver, or something harder to name.
 
