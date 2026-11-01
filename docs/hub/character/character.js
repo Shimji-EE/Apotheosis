@@ -49,6 +49,13 @@
   const canEdit = me.id === c.owner.id || me.role === "dm";
   let editing = false;
 
+  const panels = window.CharPanels({
+    d, el,
+    isEditing: () => editing,
+    collectAll: () => collect(),
+    strength: () => d.abilities.str,
+  });
+
   const mod = (score) => Math.floor((score - 10) / 2);
   const signed = (n) => (n >= 0 ? `+${n}` : `${n}`);
   const prof = () => 2 + Math.floor((c.level - 1) / 4);
@@ -190,6 +197,7 @@
     renderSide();
     renderTables();
     renderBasics();
+    panels.render();
   }
 
   // Read every edit field back into the character before saving or re-rendering.
@@ -206,6 +214,7 @@
       const f = d.features[row.dataset.index];
       row.querySelectorAll("[data-f]").forEach((i) => (f[i.dataset.f] = i.value.trim().slice(0, 80)));
     });
+    panels.collect();
     const form = $("basics-form");
     if (form.elements.name) {
       c.name = form.elements.name.value.trim() || c.name;
@@ -246,6 +255,7 @@
   $("save").addEventListener("click", async () => {
     collect();
     d.features = d.features.filter((f) => f.name);
+    panels.tidy();
     $("save").disabled = true;
     const { error } = await db
       .from("characters")
