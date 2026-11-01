@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DM Console · Apotheosis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=Barlow+Semi+Condensed:ital,wght@0,300;0,400;0,500;1,300&family=Crimson+Pro:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site/style.css">
+  <link rel="stylesheet" href="/site/hub/hub.css">
+  <link rel="stylesheet" href="console.css">
+</head>
+<body class="hub">
+  <header class="hub-bar">
+    <span class="hub-home">Apotheosis · DM console</span>
+    <div class="hub-who" id="who" hidden>
+      <span id="who-name"></span>
+      <button class="link-button" id="logout" type="button">Sign out</button>
+    </div>
+  </header>
+
+  <main class="hub-main console-main">
+    <p class="hub-status" id="status" role="status" aria-live="polite"></p>
+
+    <section class="panel" id="login-panel" hidden>
+      <h2>Sign in as the DM</h2>
+      <p>Same username and password as the Tavern. The console stays signed in on this laptop.</p>
+      <form id="login-form" class="form" novalidate>
+        <label>Username <input name="username" autocomplete="username" autocapitalize="none" required></label>
+        <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
+        <button class="button" type="submit">Sign in</button>
+      </form>
+    </section>
+
+    <div id="app" hidden>
+      <section class="panel live">
+        <h2>Live at the table</h2>
+        <div class="live-grid">
+          <div class="live-art" id="live-art"></div>
+          <div>
+            <p class="live-scene" id="live-scene">No scene</p>
+            <p class="live-track" id="live-track">Silence</p>
+            <div class="transport">
+              <button class="button button-quiet" id="prev" type="button" title="Previous track">Prev</button>
+              <button class="button" id="playpause" type="button">Play</button>
+              <button class="button button-quiet" id="next" type="button" title="Next track">Next</button>
+              <button class="button button-quiet" id="clear" type="button" title="End the scene for everyone">End scene</button>
+            </div>
+            <label class="slider">Table volume <input id="volume" type="range" min="0" max="1" step="0.05"></label>
+            <label class="check"><input id="hear" type="checkbox"> Hear it on this laptop</label>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Scenes</h2>
+          <button class="button" id="new-scene" type="button">New scene</button>
+        </div>
+        <ul class="scene-list" id="scenes"></ul>
+      </section>
+
+      <section class="panel" id="editor" hidden>
+        <h2 id="editor-title">New scene</h2>
+        <form id="scene-form" class="form form-wide" novalidate>
+          <input type="hidden" name="id">
+          <label>Name <input name="name" maxlength="80" required></label>
+          <label>Description players see <textarea name="description" rows="3"></textarea></label>
+          <label>Art (path in docs/, optional)
+            <input name="image" list="image-files" placeholder="assets/scenes/tavern.webp">
+          </label>
+          <datalist id="image-files"></datalist>
+          <label>Order <input name="sort" type="number" step="1" value="0"></label>
+          <fieldset class="tracks">
+            <legend>Tracks (play in this order, then loop)</legend>
+            <ol class="picked" id="picked"></ol>
+            <div id="library"></div>
+          </fieldset>
+          <div class="form-actions">
+            <button class="button" type="submit">Save scene</button>
+            <button class="button button-quiet" id="cancel-edit" type="button">Cancel</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script src="/site/hub/scene-audio.js"></script>
+  <script src="console.js"></script>
+</body>
+</html>

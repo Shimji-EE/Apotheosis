@@ -1,0 +1,41 @@
+/* DM console additions on top of the site's Grave Red styles. */
+.console-main { max-width: 1040px; }
+.panel-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.panel-head h2 { margin: 0; }
+
+.live-grid { display: grid; grid-template-columns: 220px 1fr; gap: 1.4rem; align-items: start; }
+.live-art { aspect-ratio: 4 / 3; border: 1px solid var(--line); background: var(--bg-raised) center / cover no-repeat; }
+.live-scene { font: 600 1.6rem/1.1 var(--display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); margin: 0 0 0.3rem; }
+.live-track { font-family: var(--prose); font-style: italic; margin: 0 0 1rem; }
+.transport { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+.transport .button { cursor: pointer; background: none; }
+.slider, .check { display: flex; align-items: center; gap: 0.8rem; color: var(--ink-dim); font-family: var(--display); letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.8rem; margin-bottom: 0.6rem; }
+.slider input { flex: 0 1 220px; accent-color: var(--accent); }
+.check input { accent-color: var(--accent); }
+
+.scene-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+.scene-list li { display: grid; grid-template-columns: 1fr auto; gap: 0.8rem; align-items: center; padding: 0.8rem 1rem; border: 1px solid var(--line); background: var(--bg-raised); }
+.scene-list li.is-live { border-color: var(--accent); }
+.scene-name { font: 600 1.1rem var(--display); letter-spacing: 0.08em; text-transform: uppercase; }
+.scene-meta { color: var(--ink-dim); font-size: 0.9rem; }
+.scene-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.scene-actions .button { cursor: pointer; background: none; padding: 0.4rem 0.8rem; }
+
+.form-wide { max-width: none; }
+.form textarea { width: 100%; background: var(--bg); color: var(--ink); border: 1px solid var(--line); padding: 0.6rem; font: inherit; }
+.form-actions { display: flex; gap: 0.6rem; }
+.tracks { border: 1px solid var(--line); padding: 1rem; }
+.tracks legend { font-family: var(--display); letter-spacing: 0.15em; text-transform: uppercase; font-size: 0.8rem; color: var(--ink-dim); padding: 0 0.4rem; }
+.picked { margin: 0 0 1rem; padding-left: 1.4rem; }
+.picked li { display: flex; gap: 0.5rem; align-items: center; padding: 0.2rem 0; }
+.picked li span { flex: 1; }
+.picked button, .folder button { background: none; border: 1px solid var(--line); color: var(--ink-dim); cursor: pointer; font: inherit; padding: 0 0.5rem; }
+.picked button:hover, .folder button:hover { color: var(--accent-bright); border-color: var(--accent); }
+.folder { margin-bottom: 0.8rem; }
+.folder-head { display: flex; gap: 0.6rem; align-items: center; font-family: var(--display); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); }
+.folder ul { list-style: none; margin: 0.3rem 0 0; padding-left: 1rem; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.empty { color: var(--ink-dim); font-style: italic; }
+
+@media (max-width: 700px) {
+  .live-grid { grid-template-columns: 1fr; }
+}

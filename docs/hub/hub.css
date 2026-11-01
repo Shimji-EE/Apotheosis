@@ -281,6 +281,21 @@
 .sheet input[type=checkbox] { accent-color: var(--accent); }
 .add-row { font: 500 0.85rem var(--display); letter-spacing: 0.12em; text-transform: uppercase; }
 
+/* Tavern: the scene the DM has live, with its music. */
+.scene-panel { display: grid; grid-template-columns: minmax(180px, 280px) 1fr; gap: 1.4rem; align-items: start; }
+.scene-panel[hidden] { display: none; }
+.scene-panel.is-empty { grid-template-columns: 1fr; }
+.scene-panel.is-empty .scene-art { display: none; }
+.scene-art { aspect-ratio: 4 / 3; border: 1px solid var(--line); background: var(--bg-raised) center / cover no-repeat; }
+.scene-body h2 { margin-top: 0.2rem; }
+.scene-track { font-family: var(--prose); font-style: italic; color: var(--ink); }
+.scene-sound { display: flex; flex-wrap: wrap; align-items: center; gap: 0.8rem 1.2rem; }
+.scene-sound[hidden] { display: none; }
+.scene-sound .scene-track { flex-basis: 100%; margin: 0; }
+.scene-sound .button { background: none; cursor: pointer; }
+.scene-volume { display: flex; align-items: center; gap: 0.6rem; color: var(--ink-dim); font-family: var(--display); letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.8rem; }
+.scene-volume input { width: 140px; accent-color: var(--accent); }
+@media (max-width: 640px) { .scene-panel { grid-template-columns: 1fr; } }
 /* ---------- Inventory, Inspiration and Journal tabs ---------- */
 .sub-head { margin: 1.4rem 0 0.5rem; font: 600 0.8rem var(--display); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-dim); }
 .sub-note { margin: -0.3rem 0 0.6rem; font-size: 0.85rem; color: var(--ink-dim); font-style: italic; }
