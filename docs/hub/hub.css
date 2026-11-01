@@ -132,3 +132,78 @@
 }
 .roster .remove { margin-left: auto; color: var(--accent); }
 .roster .remove:hover { color: var(--accent-bright); }
+
+/* Profile: character cards */
+.char-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.char-card {
+  display: grid;
+  gap: 0.3rem;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  background: var(--bg);
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.char-card:hover { border-color: var(--accent); background: rgba(208, 49, 63, 0.06); }
+.char-name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.char-sub, .char-line { color: var(--ink-dim); font-size: 0.95rem; }
+.char-line { margin: 0 0 0.4rem; font-family: var(--display); letter-spacing: 0.14em; text-transform: uppercase; }
+
+/* Character dashboard: glowing line-art tiles as tabs */
+.dash-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+.dash-tabs [role=tab] {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 0.4rem;
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--ink-dim);
+  font: 500 0.8rem var(--display);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.dash-tabs [role=tab][aria-selected=true] { border-color: var(--accent); color: var(--ink); }
+.dash-tabs [role=tab]:hover { color: var(--ink); }
+.tile {
+  width: 64px;
+  height: 64px;
+  padding: 8px;
+  background: radial-gradient(circle at 50% 40%, #1d1712, #0b0a08 75%);
+  border: 1px solid #2a221b;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 3px rgba(236, 74, 86, 0.55));
+  opacity: 0.7;
+  transition: opacity 0.2s, stroke 0.2s;
+}
+[aria-selected=true] .tile, [role=tab]:hover .tile { opacity: 1; stroke: var(--accent-bright); }
+.dash-panel .form { margin-top: 1.5rem; }
+.dash-panel #delete { margin-top: 1.5rem; }
+@media (max-width: 640px) {
+  .dash-tabs { grid-template-columns: repeat(2, 1fr); }
+}

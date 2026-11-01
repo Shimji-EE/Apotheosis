@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Character · The Tavern</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0b0a08">
+  <link rel="icon" href="../../assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow+Semi+Condensed:ital,wght@0,300;0,400;0,500;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../hub.css">
+</head>
+<body class="hub">
+  <div class="haze" aria-hidden="true"></div>
+
+  <!-- Line-art icons on dark tiles: drawn with strokes only, glowing red -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-sheet" viewBox="0 0 48 48"><path d="M14 8h20v32H14zM14 8c-3 0-4 2-4 4s1 4 4 4M34 40c3 0 4-2 4-4s-1-4-4-4M19 16h10M19 22h10M19 28h7M24 34l2-2 2 2-2 2z"/></symbol>
+    <symbol id="i-pack" viewBox="0 0 48 48"><path d="M16 14c0-5 3-8 8-8s8 3 8 8M11 18h26l-2 22H13zM11 18c0-2 2-4 5-4h16c3 0 5 2 5 4M19 26h10v6H19zM24 26v-3"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 48 48"><path d="M24 6c2 7 10 11 10 21a10 10 0 0 1-20 0c0-5 3-8 5-10 0 4 2 6 4 6-2-6 0-12 1-17zM24 40c-3 0-5-2-5-5 0-3 3-5 5-8 2 3 5 5 5 8 0 3-2 5-5 5zM8 20l3 2M40 20l-3 2M24 2v2"/></symbol>
+    <symbol id="i-journal" viewBox="0 0 48 48"><path d="M8 12c6-2 11-1 16 3 5-4 10-5 16-3v26c-6-2-11-1-16 3-5-4-10-5-16-3zM24 15v26M30 6l8 2-10 18-3 1 1-3z"/></symbol>
+  </svg>
+
+  <header class="hub-bar">
+    <a class="hub-home" id="back" href="../">&larr; The Tavern</a>
+  </header>
+
+  <main class="hub-main">
+    <p class="tracked" id="char-owner">Character</p>
+    <h1 class="hub-title" id="char-name">&hellip;</h1>
+    <p class="char-line" id="char-line"></p>
+    <p class="hub-status" id="status" role="status" aria-live="polite"></p>
+
+    <nav class="dash-tabs" role="tablist" aria-label="Character dashboard">
+      <button role="tab" aria-selected="true" data-tab="sheet"><svg class="tile"><use href="#i-sheet"/></svg><span>Character sheet</span></button>
+      <button role="tab" aria-selected="false" data-tab="inventory"><svg class="tile"><use href="#i-pack"/></svg><span>Inventory</span></button>
+      <button role="tab" aria-selected="false" data-tab="inspiration"><svg class="tile"><use href="#i-flame"/></svg><span>Inspiration</span></button>
+      <button role="tab" aria-selected="false" data-tab="journal"><svg class="tile"><use href="#i-journal"/></svg><span>Journal</span></button>
+    </nav>
+
+    <section class="panel dash-panel" data-panel="sheet">
+      <h2>Character sheet</h2>
+      <p>Ability scores, skills, hit points and features will live here.</p>
+      <form id="edit-form" class="form" novalidate hidden>
+        <label>Name <input name="name" maxlength="60" required></label>
+        <label>Species <input name="species" maxlength="40"></label>
+        <label>Class <input name="class" maxlength="40"></label>
+        <label>Level <input name="level" type="number" min="1" max="20"></label>
+        <button class="button button-quiet" type="submit">Save</button>
+      </form>
+      <button class="link-button remove" id="delete" type="button" hidden>Delete this character</button>
+    </section>
+    <section class="panel dash-panel" data-panel="inventory" hidden>
+      <h2>Inventory</h2>
+      <p>A grid of carried items, equipment slots and coin. Coming soon.</p>
+    </section>
+    <section class="panel dash-panel" data-panel="inspiration" hidden>
+      <h2>Inspiration</h2>
+      <p>Background goals that earn inspiration when fulfilled. Coming soon.</p>
+    </section>
+    <section class="panel dash-panel" data-panel="journal" hidden>
+      <h2>Journal</h2>
+      <p>Quests, leads and notes, kept per character. Coming soon.</p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="../common.js"></script>
+  <script src="character.js"></script>
+</body>
+</html>

@@ -20,7 +20,7 @@
   <header class="hub-bar">
     <a class="hub-home" href="../">&larr; Apotheosis</a>
     <div class="hub-who" id="who" hidden>
-      <span id="who-name"></span>
+      <a id="who-name" class="hub-home" href="profile/" title="Your profile"></a>
       <span class="tab" id="who-role"></span>
       <button class="link-button" id="logout" type="button">Log out</button>
     </div>
@@ -54,6 +54,7 @@
     <!-- Logged in -->
     <section class="panel" id="party-panel" hidden>
       <h2>The party</h2>
+      <p>Open your name to reach your profile and characters.</p>
       <ul class="roster" id="roster"></ul>
       <form id="rename-form" class="form form-inline" novalidate>
         <label>Your display name <input name="display_name" maxlength="40" required></label>
@@ -69,6 +70,7 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="common.js"></script>
   <script src="hub.js"></script>
 </body>
 </html>
