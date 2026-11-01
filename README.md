@@ -23,16 +23,9 @@
 
 ## ✦ Part I · The World
 
-**Romulon** · *The golden domes*<br>
-The known world turns on its golden domes, seat of the high elves and heart of the Church. Its faith claims to hold up the very structure of reality, and few who kneel there ask what lies beneath it.
+Apotheosis is a dark fantasy world built on fifth edition, where faith is load-bearing. The Church of Romulon claims its prayers hold up the very structure of reality, rival faiths each stake their gods on a different pillar of it, and few who kneel ask what lies beneath.
 
-**Forgelight** · *The snowbound north*<br>
-Far from that light, in the snowbound north, a hamlet clings to the ruins of an ancient snow-elven temple, digging into a past that was buried for a reason.
-
-**Black Iron** · *The king's roads*<br>
-And on the king's roads between them, a host in black iron marches, burning everything in its path.
-
-A priest with a secret mission, a rogue with a voice inside her head, and a stranger with a blade drawn from his own blood are about to meet in a tavern at the edge of the first snow. What they are looking for, and what is looking for them, is for the table to find out.
+Magic flows from four sources, synthetic, occult, divine and natural, and none of it comes free. Lyrium, red rot, lycanthropy and vampirism mark those who reach too far, and the old peoples of the world remember things the faithful would rather keep buried. Every campaign set here walks a different road through the same world, and what lies at the end of it is for the table to find out.
 
 <p align="center">
   <img src="assets/readme/black-knight.jpg" alt="The Black Knight" width="31%">
@@ -65,7 +58,7 @@ The campaign uses a **hybrid of the 2014 and 2024 Player's Handbooks**. Players 
 
 ## Repository
 
-The campaign book and session recaps are typeset in LaTeX with a clean, minimalist dark fantasy look, and will be published here as they reach a playable state. Art lives in the `assets/` folder.
+The campaign book is typeset in LaTeX with a clean, minimalist dark fantasy look, and will be published here as they reach a playable state. Art lives in the `assets/` folder.
 
 ## Credits & License
 
