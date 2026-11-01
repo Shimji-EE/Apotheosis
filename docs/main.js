@@ -37,6 +37,8 @@
       const offset = rect.top + rect.height / 2 - window.innerHeight / 2;
       const shift = inHero ? y * speed : offset * speed;
       el.style.translate = `0 ${shift.toFixed(1)}px`;
+      // Fade the hero out as it drifts, so it never slides under the next section.
+      if (inHero) el.style.opacity = Math.max(0, 1 - y / (window.innerHeight * 0.75)).toFixed(3);
     }
     ticking = false;
   }
