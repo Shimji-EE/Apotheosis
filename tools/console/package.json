@@ -2,12 +2,12 @@
   "name": "apotheosis-console",
   "version": "0.1.0",
   "private": true,
-  "description": "Local DM console for the Apotheosis campaign hub: scenes and Spotify scene music.",
+  "description": "Local DM console for the Apotheosis campaign hub: scenes and synced scene music.",
   "type": "module",
   "engines": { "node": ">=22" },
   "scripts": {
     "start": "node --env-file-if-exists=.env server.js",
-    "check": "node --check server.js && node --check spotify.js && node --check public/console.js"
+    "check": "node --check server.js && node --check public/console.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.45.4"

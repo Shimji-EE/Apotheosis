@@ -1,13 +1,13 @@
 // Apotheosis DM console: a small local server for Charl's laptop.
 // It serves the console page on 127.0.0.1 only, signs in to Supabase as the DM,
-// manages scenes, drives Spotify, and publishes the live scene and "now playing"
-// to Supabase so every player's browser updates through Realtime.
+// manages scenes, reads the soundtrack and scene art straight from the repo's
+// docs/ folder, and publishes the live scene and music state to Supabase so every
+// player's browser updates through Realtime and plays the same track in sync.
 import http from "node:http";
-import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { join, normalize, extname, dirname } from "node:path";
+import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
+import { join, normalize, extname, dirname, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
-import { Spotify, toSpotifyUri } from "./spotify.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PUBLIC = join(HERE, "public");
@@ -17,7 +17,6 @@ const PORT = Number(process.env.PORT) || 7777;
 const HOST = "127.0.0.1";
 const ORIGIN = `http://${HOST}:${PORT}`;
 const EMAIL_DOMAIN = "members.apotheosis.invalid";
-const POLL_MS = 5000;
 
 const SUPABASE_URL = process.env.SUPABASE_URL || "https://aagtsdqgleopualsallg.supabase.co";
 const SUPABASE_KEY = process.env.SUPABASE_KEY || "sb_publishable_Q-DgGy_SToy1bpobL5UoJw_8piwAcA2";
@@ -47,12 +46,6 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { storage: fileStorage, persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
 });
 
-const spotify = new Spotify({
-  clientId: process.env.SPOTIFY_CLIENT_ID || "",
-  redirectUri: `${ORIGIN}/callback`,
-  dataDir: DATA,
-});
-
 let dm = null; // { id, username, display_name } once signed in as the DM
 
 async function loadDm() {
@@ -70,23 +63,45 @@ function requireDm() {
   if (!dm) throw httpError(401, "Sign in as the DM first.");
 }
 
-function requireSpotify() {
-  if (!spotify.configured) throw httpError(400, "Add SPOTIFY_CLIENT_ID to tools/console/.env, then restart the console.");
-  if (!spotify.linked) throw httpError(400, "Link Spotify first.");
-}
-
 function httpError(status, message) {
   return Object.assign(new Error(message), { status });
 }
 
-const openUrl = (uri) => {
-  const m = String(uri || "").match(/^spotify:(\w+):(\w+)$/);
-  return m ? `https://open.spotify.com/${m[1]}/${m[2]}` : null;
-};
+// ---- Files in the repo: soundtrack and scene art ----
+
+const AUDIO = new Set([".ogg", ".opus", ".mp3", ".m4a", ".wav", ".flac"]);
+const IMAGES = new Set([".webp", ".jpg", ".jpeg", ".png", ".avif"]);
+
+async function walk(dir) {
+  const out = [];
+  let entries = [];
+  try { entries = await readdir(dir, { withFileTypes: true }); } catch { return out; }
+  for (const e of entries) {
+    const full = join(dir, e.name);
+    if (e.isDirectory()) out.push(...(await walk(full)));
+    else out.push(relative(SITE, full).split(sep).join("/"));
+  }
+  return out;
+}
+
+async function listFiles() {
+  const audio = (await walk(join(SITE, "soundtrack"))).filter((f) => AUDIO.has(extname(f).toLowerCase())).sort();
+  const images = (await walk(join(SITE, "assets"))).filter((f) => IMAGES.has(extname(f).toLowerCase())).sort();
+  return { audio, images };
+}
+
+// Track paths must be files under docs/soundtrack/, written as the site sees them.
+function cleanTracks(list) {
+  if (!Array.isArray(list)) return [];
+  return list
+    .map((t) => String(t || "").trim().replace(/^\/+/, ""))
+    .filter((t) => /^soundtrack\/[^\0]+$/.test(t) && !t.includes("..") && AUDIO.has(extname(t).toLowerCase()))
+    .slice(0, 50);
+}
 
 // ---- Scenes and live state ----
 
-const SCENE_COLS = "id, name, description, image, playlist_uri, playlist_name, sort";
+const SCENE_COLS = "id, name, description, image, tracks, sort";
 
 async function listScenes() {
   const { data, error } = await db.from("scenes").select(SCENE_COLS).order("sort").order("name");
@@ -101,8 +116,7 @@ async function saveScene(body) {
     name: name.slice(0, 80),
     description: String(body.description || "").trim() || null,
     image: String(body.image || "").trim() || null,
-    playlist_uri: toSpotifyUri(body.playlist_uri),
-    playlist_name: String(body.playlist_name || "").trim() || null,
+    tracks: cleanTracks(body.tracks),
     sort: Number.isFinite(Number(body.sort)) ? Number(body.sort) : 0,
     updated_at: new Date().toISOString(),
   };
@@ -128,70 +142,46 @@ async function writeState(patch) {
   if (error) throw error;
 }
 
-// Switch the table to a scene: publish it, then start its playlist.
-async function activateScene(id, deviceId) {
+// Switch the table to a scene: publish it and start its tracks from the top.
+async function activateScene(id) {
   const { data: scene, error } = await db.from("scenes").select(SCENE_COLS).eq("id", id).single();
   if (error) throw error;
-  const music = scene.playlist_uri
-    ? { context_uri: scene.playlist_uri, context_url: openUrl(scene.playlist_uri), context_name: scene.playlist_name, playing: true }
-    : { playing: false };
+  const { music: old } = await getState();
+  const music = {
+    tracks: scene.tracks || [],
+    start_index: 0,
+    started_at: Date.now(),
+    playing: (scene.tracks || []).length > 0,
+    paused_offset_ms: 0,
+    volume: old && Number.isFinite(old.volume) ? old.volume : 0.8,
+  };
   await writeState({ scene_id: scene.id, music });
-  lastMusicKey = "";
-
-  let warning = null;
-  if (scene.playlist_uri) {
-    if (!spotify.linked) warning = "Scene is live. Spotify isn't linked, so no music started.";
-    else {
-      try {
-        await spotify.playContext(scene.playlist_uri, deviceId);
-      } catch (err) {
-        warning = `Scene is live, but the music didn't start: ${err.message}`;
-      }
-    }
-  }
-  return { scene, warning };
+  return { scene, music };
 }
 
 async function clearScene() {
-  await writeState({ scene_id: null, music: { playing: false } });
-  lastMusicKey = "";
+  const { music: old } = await getState();
+  await writeState({ scene_id: null, music: { tracks: [], playing: false, volume: old && old.volume } });
 }
 
-// ---- Now playing: the console polls Spotify so players' browsers never have to ----
-
-let lastMusicKey = "";
-let lastNow = null;
-
-async function pollNowPlaying() {
-  if (!dm || !spotify.linked) return;
-  try {
-    const now = await spotify.nowPlaying();
-    lastNow = now;
-    const key = [now.playing, now.track, now.artist, now.context_uri].join("|");
-    if (key === lastMusicKey) return;
-    lastMusicKey = key;
-    const state = await getState();
-    const music = {
-      ...(state.music || {}),
-      playing: now.playing,
-      track: now.track || null,
-      artist: now.artist || null,
-      track_url: now.track_url || null,
-      art: now.art || null,
-    };
-    if (now.context_uri) {
-      music.context_uri = now.context_uri;
-      music.context_url = openUrl(now.context_uri);
-    }
-    await writeState({ music });
-  } catch (err) {
-    lastNow = { playing: false, error: err.message };
-  }
+// Music changes come from the console page, which knows the track lengths.
+// Only these fields are accepted, with sane ranges.
+async function updateMusic(patch) {
+  const { music: old } = await getState();
+  const music = { ...(old || {}) };
+  if ("playing" in patch) music.playing = Boolean(patch.playing);
+  if ("start_index" in patch) music.start_index = Math.max(0, Math.floor(Number(patch.start_index) || 0));
+  if ("started_at" in patch) music.started_at = Math.floor(Number(patch.started_at) || Date.now());
+  if ("paused_offset_ms" in patch) music.paused_offset_ms = Math.max(0, Math.floor(Number(patch.paused_offset_ms) || 0));
+  if ("volume" in patch) music.volume = Math.max(0, Math.min(1, Number(patch.volume) || 0));
+  if ("tracks" in patch) music.tracks = cleanTracks(patch.tracks);
+  await writeState({ music });
+  return music;
 }
 
 // ---- HTTP ----
 
-const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp", ".svg": "image/svg+xml", ".woff2": "font/woff2" };
+const TYPES = { ".ogg": "audio/ogg", ".opus": "audio/ogg", ".mp3": "audio/mpeg", ".m4a": "audio/mp4", ".wav": "audio/wav", ".flac": "audio/flac", ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp", ".svg": "image/svg+xml", ".woff2": "font/woff2" };
 
 async function serveFile(res, root, rel) {
   const path = normalize(join(root, rel));
@@ -237,7 +227,7 @@ async function api(req, res, url) {
   const sceneId = url.pathname.match(/^\/api\/scenes\/([0-9a-f-]{36})(\/activate)?$/);
 
   if (route === "GET /api/status") {
-    return { dm, spotify: { configured: spotify.configured, linked: spotify.linked }, now: lastNow };
+    return { dm };
   }
   if (route === "POST /api/login") {
     const username = String(body.username || "").trim().toLowerCase();
@@ -249,10 +239,6 @@ async function api(req, res, url) {
   if (route === "POST /api/logout") {
     await db.auth.signOut();
     dm = null;
-    return { ok: true };
-  }
-  if (route === "POST /api/spotify/unlink") {
-    await spotify.unlink();
     return { ok: true };
   }
 
@@ -267,17 +253,10 @@ async function api(req, res, url) {
     await deleteScene(sceneId[1]);
     return { ok: true };
   }
-  if (sceneId && sceneId[2] && req.method === "POST") return activateScene(sceneId[1], body.deviceId);
-
-  requireSpotify();
-  if (route === "GET /api/spotify/playlists") return { playlists: await spotify.playlists() };
-  if (route === "GET /api/spotify/devices") return { devices: await spotify.devices() };
-  if (route === "GET /api/spotify/now") return { now: (lastNow = await spotify.nowPlaying()) };
-  if (route === "POST /api/spotify/control") {
-    await spotify.control(String(body.action), { deviceId: body.deviceId, value: body.value });
-    setTimeout(pollNowPlaying, 600);
-    return { ok: true };
-  }
+  if (sceneId && sceneId[2] && req.method === "POST") return activateScene(sceneId[1]);
+  if (route === "GET /api/files") return listFiles();
+  if (route === "GET /api/state") return { state: await getState() };
+  if (route === "POST /api/music") return { music: await updateMusic(body) };
   throw httpError(404, "Not found");
 }
 
@@ -286,18 +265,6 @@ const server = http.createServer(async (req, res) => {
   try {
     guard(req);
     if (url.pathname.startsWith("/api/")) return sendJson(res, 200, await api(req, res, url));
-    if (url.pathname === "/spotify/login") {
-      if (!spotify.configured) throw httpError(400, "Add SPOTIFY_CLIENT_ID to tools/console/.env, then restart the console.");
-      res.writeHead(302, { Location: spotify.loginUrl() });
-      return res.end();
-    }
-    if (url.pathname === "/callback") {
-      const err = url.searchParams.get("error");
-      if (err) throw httpError(400, `Spotify login was cancelled (${err}).`);
-      await spotify.finishLogin(url.searchParams.get("code"), url.searchParams.get("state"));
-      res.writeHead(302, { Location: "/" });
-      return res.end();
-    }
     if (url.pathname.startsWith("/site/")) return await serveFile(res, SITE, decodeURIComponent(url.pathname.slice(6)));
     const rel = url.pathname === "/" ? "index.html" : decodeURIComponent(url.pathname.slice(1));
     return await serveFile(res, PUBLIC, rel);
@@ -310,13 +277,10 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-await spotify.load();
 await loadDm().catch(() => (dm = null));
-setInterval(pollNowPlaying, POLL_MS);
 
 server.listen(PORT, HOST, () => {
   console.log(`Apotheosis DM console: ${ORIGIN}`);
   console.log(dm ? `Signed in as ${dm.display_name}.` : "Not signed in yet. Open the console to sign in.");
-  if (!spotify.configured) console.log("Spotify: add SPOTIFY_CLIENT_ID to .env to enable music.");
   console.log("Leave this window open during the session. Ctrl+C stops the console.");
 });

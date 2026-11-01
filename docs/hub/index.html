@@ -51,6 +51,21 @@
       </details>
     </section>
 
+    <!-- Logged in: the scene the DM has live -->
+    <section class="panel scene-panel is-empty" id="scene-panel" hidden>
+      <div class="scene-art" id="scene-art"></div>
+      <div class="scene-body">
+        <p class="tracked">At the table</p>
+        <h2 id="scene-name">The fire is low</h2>
+        <p id="scene-desc"></p>
+        <div class="scene-sound" id="scene-sound" hidden>
+          <p class="scene-track" id="scene-track"></p>
+          <button class="button" id="sound-toggle" type="button">Turn on music</button>
+          <label class="scene-volume">Volume <input id="scene-volume" type="range" min="0" max="1" step="0.05"></label>
+        </div>
+      </div>
+    </section>
+
     <!-- Logged in -->
     <section class="panel" id="party-panel" hidden>
       <h2>The party</h2>
@@ -72,5 +87,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
   <script src="common.js"></script>
   <script src="hub.js"></script>
+  <script src="scene-audio.js"></script>
+  <script src="scene-panel.js"></script>
 </body>
 </html>
