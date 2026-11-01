@@ -1,7 +1,7 @@
 // Inventory, Inspiration and Journal tabs of the character dashboard.
 // character.js owns loading, the Edit/Save toggle and saving; this file draws
 // the three panels and reads their edit fields back into the character data.
-window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
+window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist, isDM }) => {
   const KINDS = [
     ["weapon", "Weapon"], ["armour", "Armour"], ["shield", "Shield"], ["potion", "Potion"],
     ["scroll", "Scroll"], ["ring", "Ring"], ["amulet", "Amulet"], ["clothing", "Clothing"],
@@ -18,6 +18,13 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
     ["amulet", "Amulet", "amulet"], ["ring1", "Ring", "ring"], ["ring2", "Ring", "ring"],
     ["main", "Main hand", "sword"], ["off", "Off hand", "shield"], ["ranged", "Ranged", "bow"],
   ];
+  // Which kinds of item each equipment slot takes.
+  const WORN = ["clothing", "armour", "misc"];
+  const SLOT_TAKES = {
+    head: WORN, cloak: WORN, armour: ["armour", "clothing"], hands: WORN, feet: WORN,
+    amulet: ["amulet"], ring1: ["ring"], ring2: ["ring"],
+    main: ["weapon", "tool"], off: ["weapon", "shield", "tool"], ranged: ["weapon"],
+  };
   const COINS = [["pp", "Platinum"], ["gp", "Gold"], ["ep", "Electrum"], ["sp", "Silver"], ["cp", "Copper"]];
   const TRAITS = [["personality", "Personality"], ["ideals", "Ideals"], ["bonds", "Bonds"], ["flaws", "Flaws"]];
   const STATUS = [["active", "Active"], ["done", "Completed"], ["failed", "Failed"]];
@@ -71,12 +78,45 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
   d.traits = Object.assign({ personality: "", ideals: "", bonds: "", flaws: "" }, d.traits);
   d.quests = Array.isArray(d.quests) ? d.quests : [];
   d.notes = d.notes || "";
+  // Quests are written by the DM; players keep their own notes beside each one.
+  const newId = () => Math.random().toString(36).slice(2, 10);
+  // Only the DM's save may add ids (the database refuses quest changes from players).
+  if (isDM()) d.quests.forEach((q) => { q.id = q.id || newId(); });
+  const questKey = (q) => q.id || `t:${q.title}`;
+  d.questNotes = d.questNotes && typeof d.questNotes === "object" ? d.questNotes : {};
 
   /* ---------- Inventory ---------- */
 
-  // An item shows its own texture when it has one, otherwise a line-art stand-in.
+  // Item art: a texture link, else the pack's painted art for the item (by the texture
+  // field or the item's name), else the pack art for its kind, else a line-art stand-in.
+  const KIND_ART = {
+    weapon: "longsword", armour: "chain mail", shield: "iron banded shield 1", potion: "potion of healing",
+    scroll: "scroll of bless", ring: "ring a simple gold", amulet: "amulet necklace a silver a", clothing: "cloth armour",
+    tool: "thieves tools", treasure: "gold ingot", misc: "backpack a",
+  };
+  function packArt(name) {
+    const items = (window.Rules && window.Rules.ITEMS) || {};
+    const k = window.Rules ? window.Rules.keyOf(name) : "";
+    if (!k) return null;
+    if (items[k]) return items[k];
+    const close = Object.keys(items).find((p) => p.startsWith(`${k} `));
+    if (close) return items[close];
+    // "Mace of the Tithe" → "mace": the longest pack name the item's name starts with.
+    const words = k.split(" ");
+    for (let n = words.length - 1; n > 0; n--) {
+      const head = words.slice(0, n).join(" ");
+      if (items[head]) return items[head];
+    }
+    return null;
+  }
+  function itemSrc(item) {
+    if (/^(https:\/\/|\.\.\/icons\/)/i.test(item.image || "")) return item.image;
+    const art = packArt(item.image) || packArt(item.name) || packArt(KIND_ART[item.kind]);
+    return art ? `../icons/items/${art.file}` : null;
+  }
   function itemArt(item) {
-    if (item.image) return el("img", { class: "item-art", src: item.image, alt: "", loading: "lazy" });
+    const src = itemSrc(item);
+    if (src) return el("img", { class: "item-art", src, alt: "", loading: "lazy" });
     return icon(KIND_ICON[item.kind] || "pouch");
   }
 
@@ -87,6 +127,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
       class: `cell stone has-item k-${item.kind || "misc"} r-${rarity}${index === picked ? " is-picked" : ""}${extra}`,
       "data-item": index,
       title: item.name,
+      draggable: canEdit() && !isEditing() ? "true" : "false",
     }, itemArt(item));
     if ((item.qty ?? 1) > 1) tile.append(el("span", { class: "qty", text: item.qty }));
     return tile;
@@ -113,6 +154,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
       const node = i === undefined
         ? el("div", { class: "cell stone is-empty", title: `${label}: empty` }, icon(glyph))
         : itemTile(d.items[i], i);
+      node.dataset.dropSlot = key;
       return el("div", { class: `slot slot-${key}` }, node, el("span", { class: "slot-label", text: label }));
     };
 
@@ -123,9 +165,17 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
       el("div", { class: "equip-hands" }, ...SLOTS.slice(8).map(slot))
     );
 
+    // Pack items keep the cell they were dropped in (pos); others fill the first free cells.
     const loose = d.items.map((it, i) => ({ it, i })).filter(({ it }) => !it.slot);
-    const cells = loose.map(({ it, i }) => itemTile(it, i));
-    while (cells.length < Math.max(BAG_CELLS, Math.ceil(cells.length / 6) * 6)) cells.push(el("div", { class: "cell stone" }));
+    const size = Math.max(BAG_CELLS, Math.ceil((loose.length + 1) / 11) * 11, ...loose.map(({ it }) => (it.pos ?? -1) + 1));
+    const grid = new Array(size).fill(null);
+    for (const x of loose) if (Number.isInteger(x.it.pos) && x.it.pos < size && grid[x.it.pos] === null) grid[x.it.pos] = x;
+    for (const x of loose) if (!grid.includes(x)) grid[grid.indexOf(null)] = x;
+    const cells = grid.map((x, n) => {
+      const cell = x ? itemTile(x.it, x.i) : el("div", { class: "cell stone" });
+      cell.dataset.dropCell = n;
+      return cell;
+    });
 
     const weight = d.items.reduce((sum, it) => sum + (Number(it.weight) || 0) * (Number(it.qty) || 1), 0);
     const capacity = strength() * 15;
@@ -167,6 +217,10 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
   }
 
   function renderInventoryEdit(wrap) {
+    if (!$("item-art-list")) {
+      document.body.append(el("datalist", { id: "item-art-list" },
+        ...Object.values((window.Rules && window.Rules.ITEMS) || {}).map((a) => el("option", { value: a.label }))));
+    }
     wrap.append(
       el("h4", { class: "sub-head", text: "Coin" }),
       el("div", { class: "purse is-edit" },
@@ -185,7 +239,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
           select({ "data-i": "rarity", "aria-label": "Rarity" }, RARITIES.map((r) => [r, r]), it.rarity),
           select({ "data-i": "slot", "aria-label": "Equipped slot" }, [["", "In pack"], ...SLOTS.map(([k, l]) => [k, k.startsWith("ring") ? `Ring ${k.slice(-1)}` : l])], it.slot || ""),
           el("button", { type: "button", class: "link-button remove", "data-remove-item": i, title: "Remove", text: "×" }),
-          el("input", { "data-i": "image", value: it.image || "", type: "url", placeholder: "Texture: https://… or ../icons/items/… (optional)", "aria-label": "Texture image link", class: "irow-notes" }),
+          el("input", { "data-i": "image", value: it.image || "", type: "url", list: "item-art-list", placeholder: "Texture: pack item name, or an https:// link (optional, else matched by name)", "aria-label": "Texture image link", class: "irow-notes" }),
           textarea({ "data-i": "notes", rows: "2", placeholder: "Description, properties, charges", "aria-label": "Notes", class: "irow-notes" }, it.notes)
         )
       ),
@@ -202,14 +256,23 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
 
   /* ---------- Inspiration ---------- */
 
+  // The pack's Inspiring Leader glyph, recoloured red (tools/icons: icons/ui/inspiration.webp).
+  const inspirationArt = () => el("img", { class: "insp-art", src: "../icons/ui/inspiration.webp", alt: "" });
+  // A background the pack has an icon for (Acolyte, Soldier…) shows it beside the name.
+  function backgroundArt(name) {
+    const k = window.Rules ? window.Rules.keyOf(`background ${name}`) : "";
+    const b = window.Rules && window.Rules.BACKGROUNDS && window.Rules.BACKGROUNDS[k];
+    return b ? el("img", { class: "bg-art", src: `../icons/backgrounds/${b.file}`, alt: "" }) : "";
+  }
+
   function renderInspiration() {
     const wrap = $("inspiration");
     const editing = isEditing();
     const pips = el("div", { class: "insp-pips", title: `Inspiration ${d.inspiration} of ${MAX_INSPIRATION}` },
       ...Array.from({ length: MAX_INSPIRATION }, (_, n) =>
         editing
-          ? el("button", { type: "button", class: `pip-flame stone${n < d.inspiration ? " is-lit" : ""}`, "data-insp": n + 1, "aria-label": `Set inspiration to ${n + 1}` }, icon("flame"))
-          : el("span", { class: `pip-flame stone${n < d.inspiration ? " is-lit" : ""}` }, icon("flame"))
+          ? el("button", { type: "button", class: `pip-flame stone${n < d.inspiration ? " is-lit" : ""}`, "data-insp": n + 1, "aria-label": `Set inspiration to ${n + 1}` }, inspirationArt())
+          : el("span", { class: `pip-flame stone${n < d.inspiration ? " is-lit" : ""}` }, inspirationArt())
       )
     );
     const head = el("header", { class: "insp-head" },
@@ -217,7 +280,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
         el("span", { class: "kicker", text: "Background" }),
         editing
           ? el("input", { class: "line-input", id: "bg-name", value: d.background.name, placeholder: "Acolyte, Soldier, Gravedigger…", maxlength: "60", "aria-label": "Background" })
-          : el("h4", { class: "insp-title", text: d.background.name || "No background yet" })
+          : el("h4", { class: "insp-title" }, backgroundArt(d.background.name), d.background.name || "No background yet")
       ),
       el("div", { class: "insp-count" }, el("span", { class: "kicker", text: "Inspiration" }), pips)
     );
@@ -302,6 +365,9 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
           ...paragraphs(q.summary),
           entries.length
             ? el("ol", { class: "jlog" }, ...entries.map((t) => el("li", { text: t })))
+            : "",
+          d.questNotes[questKey(q)]
+            ? el("section", { class: "jmine" }, el("span", { class: "kicker", text: "Player's notes" }), ...paragraphs(d.questNotes[questKey(q)]))
             : ""
         )
       : el("div", { class: "jdetail" });
@@ -310,8 +376,31 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
   }
 
   function renderJournalEdit(wrap) {
+    const notes = [
+      el("h4", { class: "sub-head", text: "Notes" }),
+      textarea({ id: "jnotes", rows: "6", class: "wide", placeholder: "Names, debts, rumours. Leave a blank line between paragraphs.", "aria-label": "Notes" }, d.notes),
+    ];
+    if (!isDM()) {
+      // Players read the DM's quests and add their own notes to each.
+      wrap.append(
+        el("h4", { class: "sub-head", text: "Quests" }),
+        el("p", { class: "sub-note", text: "The DM writes the quests. Add your own notes to any of them." }),
+        ...(d.quests.length
+          ? d.quests.map((q) =>
+              el("div", { class: "qedit is-player" },
+                el("div", { class: "qnote-head" },
+                  el("span", { class: `jdot` }), el("strong", { text: q.title || "Untitled" }),
+                  el("small", { text: (STATUS.find(([k]) => k === (q.status || "active")) || STATUS[0])[1] })),
+                textarea({ "data-qnote": questKey(q), rows: "2", placeholder: "Your notes on this quest", "aria-label": `Your notes on ${q.title}` }, d.questNotes[questKey(q)])
+              ))
+          : [el("p", { class: "placeholder", text: "No quests yet. The DM adds them." })]),
+        ...notes
+      );
+      return;
+    }
     wrap.append(
       el("h4", { class: "sub-head", text: "Quests" }),
+      el("p", { class: "sub-note", text: "Only the DM can change quests. The player's notes on each quest show under it." }),
       ...d.quests.map((q, i) =>
         el("div", { class: "qedit", "data-quest-row": i },
           el("div", { class: "qedit-top" },
@@ -325,8 +414,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
         )
       ),
       el("button", { type: "button", class: "link-button add-row", "data-add-quest": "", text: "+ Add quest" }),
-      el("h4", { class: "sub-head", text: "Notes" }),
-      textarea({ id: "jnotes", rows: "6", class: "wide", placeholder: "Names, debts, rumours. Leave a blank line between paragraphs.", "aria-label": "Notes" }, d.notes)
+      ...notes
     );
   }
 
@@ -353,7 +441,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
       Object.assign(it, {
         name: clip(v("name"), 60), kind: v("kind"), rarity: v("rarity"), slot: v("slot") || null,
         qty: Math.round(num(v("qty"), 0, 9999, 1)), weight: num(v("weight"), 0, 9999, 0), notes: clip(v("notes"), 1000),
-        image: /^(https:\/\/|\.\.\/icons\/)/i.test(v("image").trim()) ? clip(v("image").trim(), 500) : null,
+        image: clip(v("image"), 500) || null,
       });
       if (!it.image) delete it.image;
     });
@@ -370,7 +458,12 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
     });
     document.querySelectorAll("[data-trait]").forEach((t) => (d.traits[t.dataset.trait] = clip(t.value, 1000)));
 
-    document.querySelectorAll("[data-quest-row]").forEach((row) => {
+    document.querySelectorAll("[data-qnote]").forEach((t) => {
+      const v = clip(t.value, 2000);
+      if (v) d.questNotes[t.dataset.qnote] = v;
+      else delete d.questNotes[t.dataset.qnote];
+    });
+    if (isDM()) document.querySelectorAll("[data-quest-row]").forEach((row) => {
       const q = d.quests[row.dataset.questRow];
       const v = (k) => row.querySelector(`[data-q=${k}]`).value;
       Object.assign(q, { title: clip(v("title"), 80), status: v("status"), giver: clip(v("giver"), 60), summary: clip(v("summary"), 2000), log: clip(v("log"), 4000) });
@@ -400,11 +493,66 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
     else if ("insp" in ds) d.inspiration = Number(ds.insp) === d.inspiration ? Number(ds.insp) - 1 : Number(ds.insp);
     else if ("addGoal" in ds) d.goals.push({ text: "", done: false });
     else if ("removeGoal" in ds) d.goals.splice(Number(ds.removeGoal), 1);
-    else if ("addQuest" in ds) d.quests.push({ title: "", status: "active", giver: "", summary: "", log: "" });
-    else if ("removeQuest" in ds) d.quests.splice(Number(ds.removeQuest), 1);
+    else if ("addQuest" in ds && isDM()) d.quests.push({ id: newId(), title: "", status: "active", giver: "", summary: "", log: "" });
+    else if ("removeQuest" in ds && isDM()) d.quests.splice(Number(ds.removeQuest), 1);
     else return;
     render();
   }));
+
+  /* ---------- Drag and drop in the inventory (owner or DM, outside Edit mode) ---------- */
+  const inv = $("inventory");
+  let dragging = null;
+  const fits = (item, slot) => (SLOT_TAKES[slot] || []).includes(item.kind || "misc");
+  inv.addEventListener("dragstart", (e) => {
+    const tile = e.target.closest("[data-item]");
+    if (!tile || tile.getAttribute("draggable") !== "true") return;
+    dragging = Number(tile.dataset.item);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", String(dragging));
+    tile.classList.add("is-dragging");
+  });
+  inv.addEventListener("dragend", () => {
+    dragging = null;
+    inv.querySelectorAll(".is-dragging, .is-over, .is-refused").forEach((n) => n.classList.remove("is-dragging", "is-over", "is-refused"));
+  });
+  const target = (e) => e.target.closest("[data-drop-slot], [data-drop-cell]");
+  inv.addEventListener("dragover", (e) => {
+    const t = target(e);
+    if (dragging === null || !t) return;
+    const ok = t.dataset.dropSlot ? fits(d.items[dragging], t.dataset.dropSlot) : true;
+    inv.querySelectorAll(".is-over, .is-refused").forEach((n) => n !== t && n.classList.remove("is-over", "is-refused"));
+    t.classList.toggle("is-over", ok);
+    t.classList.toggle("is-refused", !ok);
+    if (ok) e.preventDefault();
+  });
+  inv.addEventListener("drop", async (e) => {
+    const t = target(e);
+    if (dragging === null || !t) return;
+    e.preventDefault();
+    const item = d.items[dragging];
+    const from = { slot: item.slot || null, pos: item.pos };
+    if (t.dataset.dropSlot) {
+      const slot = t.dataset.dropSlot;
+      if (!fits(item, slot)) return;
+      const other = d.items.find((it) => it !== item && it.slot === slot);
+      if (other) Object.assign(other, from.slot && fits(other, from.slot) ? { slot: from.slot } : { slot: null, pos: from.slot ? undefined : from.pos });
+      item.slot = slot;
+      delete item.pos;
+    } else {
+      const pos = Number(t.dataset.dropCell);
+      const other = d.items.find((it) => it !== item && !it.slot && it.pos === pos);
+      if (other) {
+        if (from.slot && fits(other, from.slot)) { other.slot = from.slot; delete other.pos; }
+        else other.pos = from.slot ? undefined : from.pos;
+      }
+      item.slot = null;
+      item.pos = pos;
+    }
+    picked = dragging;
+    dragging = null;
+    renderInventory();
+    await persist();
+  });
 
   return { render, collect, tidy };
 };

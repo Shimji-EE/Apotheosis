@@ -598,3 +598,22 @@ a.seat-char:hover { color: var(--accent-bright); }
   .seat { min-height: 0; }
   .seat-char { font-size: 1.1rem; }
 }
+/* Inventory drag and drop */
+.cell[draggable=true] { cursor: grab; }
+.cell.is-dragging { opacity: 0.4; }
+.cell.is-over { outline: 2px solid #3dff6e; outline-offset: 1px; }
+.cell.is-refused { outline: 2px solid var(--accent); outline-offset: 1px; cursor: not-allowed; }
+
+/* Journal: the DM's quests, the player's notes */
+.jmine { margin-top: 1rem; padding: 0.7rem 0.9rem; border-left: 2px solid var(--accent); background: rgba(208, 49, 63, 0.05); }
+.jmine .prose { font-size: 1rem; color: var(--ink-dim); }
+.qnote-head { display: flex; align-items: center; gap: 0.6rem; }
+.qnote-head strong { font: 600 1.05rem var(--prose); color: var(--ink); }
+.qnote-head small { margin-left: auto; font: 500 0.7rem var(--display); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-dim); }
+
+/* Inspiration: the red pack glyph; unlit points are dark and grey */
+.insp-art { width: 100%; height: 100%; object-fit: contain; }
+.pip-flame:has(.insp-art) { padding: 1px; }
+.pip-flame:not(.is-lit) .insp-art { filter: grayscale(1) brightness(0.35); }
+.insp-title { display: flex; align-items: center; gap: 0.6rem; }
+.bg-art { width: 44px; height: 44px; object-fit: contain; }
