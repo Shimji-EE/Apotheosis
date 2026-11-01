@@ -13,6 +13,8 @@ Commands
   sheet WORDS... -o F  Make a contact sheet (PNG) of the matches, to pick from by eye.
   powers               Publish every skill, power and effect icon to docs/hub/icons/powers/
                        with manifest.json. The dashboard matches feature names against it.
+  publish CAT --to DIR Publish a whole pack category, e.g. "publish Resource --to resources"
+                       (action, bonus action, reaction, Channel Divinity charge, spell slot…).
   add ID [--to DIR] [--name N]
                        Copy one catalogue icon (any pack, any kind, e.g. an item) into the site
                        as .webp and print the path to use.
@@ -240,6 +242,20 @@ def cmd_powers(args):
     print(f"published {len(manifest)} icons to {out_dir.relative_to(ROOT)} ({total // 1024} KB)")
 
 
+def cmd_publish(args):
+    """Publish a whole pack category (e.g. Resource) to docs/hub/icons/<to>/ with a manifest."""
+    hits = [h for h in load_catalogue() if h[0].startswith("all:") and h[1] == args.cat]
+    imgs = load_icons([h[0] for h in hits], args.packs)
+    out_dir = SITE_ICONS / args.to
+    manifest = {}
+    for icon_id, cat, unfaded, label in hits:
+        file = f"{slug(label)}.webp"
+        save_webp(imgs[icon_id], out_dir / file, args.size)
+        manifest[key_of(label)] = {"label": label, "file": file, "cat": cat, "stone": bool(unfaded)}
+    (out_dir / "manifest.json").write_text(json.dumps(manifest, separators=(",", ":")))
+    print(f"published {len(manifest)} icons to {out_dir.relative_to(ROOT)}")
+
+
 def cmd_add(args):
     img = load_icons([args.id], args.packs)[args.id]
     name = args.name or slug(clean_name(args.id.split(":", 1)[1]))
@@ -304,6 +320,7 @@ def main():
     p = sub.add_parser("find"); p.add_argument("words", nargs="+"); p.add_argument("--cat"); p.add_argument("--limit", type=int, default=40); p.set_defaults(fn=cmd_find)
     p = sub.add_parser("sheet"); p.add_argument("words", nargs="+"); p.add_argument("--cat"); p.add_argument("--unfaded", action="store_true"); p.add_argument("--limit", type=int, default=48); p.add_argument("-o", "--out", default="icon-sheet.png"); p.set_defaults(fn=cmd_sheet)
     sub.add_parser("powers").set_defaults(fn=cmd_powers)
+    p = sub.add_parser("publish"); p.add_argument("cat"); p.add_argument("--to", required=True); p.add_argument("--size", type=int); p.set_defaults(fn=cmd_publish)
     p = sub.add_parser("add"); p.add_argument("id"); p.add_argument("--to", default="items"); p.add_argument("--name"); p.add_argument("--size", type=int); p.set_defaults(fn=cmd_add)
     p = sub.add_parser("custom"); p.add_argument("recipe"); p.set_defaults(fn=cmd_custom)
     args = ap.parse_args()

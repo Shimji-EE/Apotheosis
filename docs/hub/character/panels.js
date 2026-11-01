@@ -92,6 +92,18 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
     return tile;
   }
 
+  // The item's own notes, else the official SRD text when its name matches a weapon, armour or magic item.
+  function itemText(item) {
+    if (item.notes) return paragraphs(item.notes, "item-notes");
+    const rule = window.Rules && window.Rules.srd(item.name, "item");
+    if (!rule) return [];
+    return [
+      el("p", { class: "fdesc-meta", text: rule.m }),
+      ...paragraphs(rule.d, "item-notes"),
+      el("p", { class: "fdesc-src", text: `Official rules text, ${window.Rules.SRD_NOTE}` }),
+    ];
+  }
+
   function renderInventoryView(wrap) {
     const bySlot = {};
     d.items.forEach((it, i) => { if (it.slot) bySlot[it.slot] = i; });
@@ -140,7 +152,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
               item.weight ? `${item.weight} lb` : "",
               item.slot ? `Equipped: ${SLOTS.find(([k]) => k === item.slot)[1].toLowerCase()}` : "",
             ].filter(Boolean).join(" · ") }),
-            ...paragraphs(item.notes, "item-notes")
+            ...itemText(item)
           )
         )
       : el("p", { class: "item-hint", text: d.items.length ? "Choose an item to read it." : "The pack is empty." });
