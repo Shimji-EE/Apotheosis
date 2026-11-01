@@ -34,16 +34,16 @@
     <!-- Logged out -->
     <section class="panel" id="login-panel" hidden>
       <h2>Sign in</h2>
-      <form id="login-form" class="form">
-        <label>Username <input name="username" autocomplete="username" required></label>
+      <form id="login-form" class="form" novalidate>
+        <label>Username <input name="username" autocomplete="username" autocapitalize="none" required></label>
         <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
         <button class="button" type="submit">Enter</button>
       </form>
       <details class="setup">
         <summary>First time setup (DM only)</summary>
         <p>The first account ever made becomes the DM. After that, the DM adds players from inside the hub.</p>
-        <form id="setup-form" class="form">
-          <label>Username <input name="username" autocomplete="username" required pattern="[a-z0-9_]{3,24}" title="3 to 24 lowercase letters, numbers or underscores"></label>
+        <form id="setup-form" class="form" novalidate>
+          <label>Username <input name="username" autocomplete="username" autocapitalize="none" required></label>
           <label>Display name <input name="display_name" maxlength="40"></label>
           <label>Password <input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
           <button class="button button-quiet" type="submit">Claim the DM seat</button>
@@ -55,7 +55,7 @@
     <section class="panel" id="party-panel" hidden>
       <h2>The party</h2>
       <ul class="roster" id="roster"></ul>
-      <form id="rename-form" class="form form-inline">
+      <form id="rename-form" class="form form-inline" novalidate>
         <label>Your display name <input name="display_name" maxlength="40" required></label>
         <button class="button button-quiet" type="submit">Save</button>
       </form>
@@ -64,8 +64,8 @@
     <section class="panel" id="dm-panel" hidden>
       <h2>Add a player</h2>
       <p>Pick their username and a starting password, then send both to them privately.</p>
-      <form id="add-form" class="form">
-        <label>Username <input name="username" required pattern="[a-z0-9_]{3,24}" title="3 to 24 lowercase letters, numbers or underscores"></label>
+      <form id="add-form" class="form" novalidate>
+        <label>Username <input name="username" autocapitalize="none" required></label>
         <label>Display name <input name="display_name" maxlength="40"></label>
         <label>Starting password <input name="password" type="text" minlength="8" required autocomplete="off"></label>
         <button class="button" type="submit">Add player</button>

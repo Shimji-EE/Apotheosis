@@ -13,6 +13,18 @@
   function say(text, isError = false) {
     status.textContent = text;
     status.classList.toggle("is-error", isError);
+    status.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  // Check the form ourselves so mistakes show as a message instead of a silent block.
+  function checkMember(values, isNew) {
+    values.username = (values.username || "").trim().toLowerCase();
+    if (!/^[a-z0-9_]{3,24}$/.test(values.username)) {
+      throw new Error("Usernames are 3 to 24 letters, numbers or underscores, with no spaces.");
+    }
+    if (isNew && (values.password || "").length < 8) throw new Error("Passwords need at least 8 characters.");
+    if (!values.password) throw new Error("Enter a password.");
+    return values;
   }
 
   const formValues = (form) => Object.fromEntries(new FormData(form).entries());
@@ -95,7 +107,7 @@
     e.preventDefault();
     const form = e.currentTarget;
     busy(form, async () => {
-      const { username, password } = formValues(form);
+      const { username, password } = checkMember(formValues(form), false);
       const { error } = await db.auth.signInWithPassword({ email: toEmail(username), password });
       if (error) throw new Error("That username and password don't match.");
       form.reset();
@@ -108,7 +120,8 @@
     e.preventDefault();
     const form = e.currentTarget;
     busy(form, async () => {
-      const values = formValues(form);
+      const values = checkMember(formValues(form), true);
+      say("Claiming the DM seat…");
       try {
         await createMember(values, false);
       } catch (err) {
@@ -126,7 +139,7 @@
     e.preventDefault();
     const form = e.currentTarget;
     busy(form, async () => {
-      const result = await createMember(formValues(form), true);
+      const result = await createMember(checkMember(formValues(form), true), true);
       form.reset();
       say(`Added @${result.username}. Send them their username and password.`);
       await render();
