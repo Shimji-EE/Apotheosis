@@ -54,7 +54,19 @@
     isEditing: () => editing,
     collectAll: () => collect(),
     strength: () => d.abilities.str,
+    canEdit: () => canEdit,
+    persist: () => persist(),
   });
+
+  // Save the character as it stands (used by drag and drop in the inventory).
+  async function persist() {
+    const { error } = await db
+      .from("characters")
+      .update({ name: c.name, species: c.species, class: c.class, level: c.level, data: d })
+      .eq("id", c.id);
+    say(error ? error.message : "Saved.", !!error);
+    return !error;
+  }
 
   const mod = (score) => Math.floor((score - 10) / 2);
   const signed = (n) => (n >= 0 ? `+${n}` : `${n}`);

@@ -1,7 +1,7 @@
 // Inventory, Inspiration and Journal tabs of the character dashboard.
 // character.js owns loading, the Edit/Save toggle and saving; this file draws
 // the three panels and reads their edit fields back into the character data.
-window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
+window.CharPanels = ({ d, el, isEditing, collectAll, strength, canEdit, persist }) => {
   const KINDS = [
     ["weapon", "Weapon"], ["armour", "Armour"], ["shield", "Shield"], ["potion", "Potion"],
     ["scroll", "Scroll"], ["ring", "Ring"], ["amulet", "Amulet"], ["clothing", "Clothing"],
@@ -18,6 +18,13 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
     ["amulet", "Amulet", "amulet"], ["ring1", "Ring", "ring"], ["ring2", "Ring", "ring"],
     ["main", "Main hand", "sword"], ["off", "Off hand", "shield"], ["ranged", "Ranged", "bow"],
   ];
+  // Which kinds of item each equipment slot takes.
+  const WORN = ["clothing", "armour", "misc"];
+  const SLOT_TAKES = {
+    head: WORN, cloak: WORN, armour: ["armour", "clothing"], hands: WORN, feet: WORN,
+    amulet: ["amulet"], ring1: ["ring"], ring2: ["ring"],
+    main: ["weapon", "tool"], off: ["weapon", "shield", "tool"], ranged: ["weapon"],
+  };
   const COINS = [["pp", "Platinum"], ["gp", "Gold"], ["ep", "Electrum"], ["sp", "Silver"], ["cp", "Copper"]];
   const TRAITS = [["personality", "Personality"], ["ideals", "Ideals"], ["bonds", "Bonds"], ["flaws", "Flaws"]];
   const STATUS = [["active", "Active"], ["done", "Completed"], ["failed", "Failed"]];
@@ -114,6 +121,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
       class: `cell stone has-item k-${item.kind || "misc"} r-${rarity}${index === picked ? " is-picked" : ""}${extra}`,
       "data-item": index,
       title: item.name,
+      draggable: canEdit() && !isEditing() ? "true" : "false",
     }, itemArt(item));
     if ((item.qty ?? 1) > 1) tile.append(el("span", { class: "qty", text: item.qty }));
     return tile;
@@ -140,6 +148,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
       const node = i === undefined
         ? el("div", { class: "cell stone is-empty", title: `${label}: empty` }, icon(glyph))
         : itemTile(d.items[i], i);
+      node.dataset.dropSlot = key;
       return el("div", { class: `slot slot-${key}` }, node, el("span", { class: "slot-label", text: label }));
     };
 
@@ -150,9 +159,17 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
       el("div", { class: "equip-hands" }, ...SLOTS.slice(8).map(slot))
     );
 
+    // Pack items keep the cell they were dropped in (pos); others fill the first free cells.
     const loose = d.items.map((it, i) => ({ it, i })).filter(({ it }) => !it.slot);
-    const cells = loose.map(({ it, i }) => itemTile(it, i));
-    while (cells.length < Math.max(BAG_CELLS, Math.ceil(cells.length / 6) * 6)) cells.push(el("div", { class: "cell stone" }));
+    const size = Math.max(BAG_CELLS, Math.ceil((loose.length + 1) / 11) * 11, ...loose.map(({ it }) => (it.pos ?? -1) + 1));
+    const grid = new Array(size).fill(null);
+    for (const x of loose) if (Number.isInteger(x.it.pos) && x.it.pos < size && grid[x.it.pos] === null) grid[x.it.pos] = x;
+    for (const x of loose) if (!grid.includes(x)) grid[grid.indexOf(null)] = x;
+    const cells = grid.map((x, n) => {
+      const cell = x ? itemTile(x.it, x.i) : el("div", { class: "cell stone" });
+      cell.dataset.dropCell = n;
+      return cell;
+    });
 
     const weight = d.items.reduce((sum, it) => sum + (Number(it.weight) || 0) * (Number(it.qty) || 1), 0);
     const capacity = strength() * 15;
@@ -436,6 +453,61 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
     else return;
     render();
   }));
+
+  /* ---------- Drag and drop in the inventory (owner or DM, outside Edit mode) ---------- */
+  const inv = $("inventory");
+  let dragging = null;
+  const fits = (item, slot) => (SLOT_TAKES[slot] || []).includes(item.kind || "misc");
+  inv.addEventListener("dragstart", (e) => {
+    const tile = e.target.closest("[data-item]");
+    if (!tile || tile.getAttribute("draggable") !== "true") return;
+    dragging = Number(tile.dataset.item);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", String(dragging));
+    tile.classList.add("is-dragging");
+  });
+  inv.addEventListener("dragend", () => {
+    dragging = null;
+    inv.querySelectorAll(".is-dragging, .is-over, .is-refused").forEach((n) => n.classList.remove("is-dragging", "is-over", "is-refused"));
+  });
+  const target = (e) => e.target.closest("[data-drop-slot], [data-drop-cell]");
+  inv.addEventListener("dragover", (e) => {
+    const t = target(e);
+    if (dragging === null || !t) return;
+    const ok = t.dataset.dropSlot ? fits(d.items[dragging], t.dataset.dropSlot) : true;
+    inv.querySelectorAll(".is-over, .is-refused").forEach((n) => n !== t && n.classList.remove("is-over", "is-refused"));
+    t.classList.toggle("is-over", ok);
+    t.classList.toggle("is-refused", !ok);
+    if (ok) e.preventDefault();
+  });
+  inv.addEventListener("drop", async (e) => {
+    const t = target(e);
+    if (dragging === null || !t) return;
+    e.preventDefault();
+    const item = d.items[dragging];
+    const from = { slot: item.slot || null, pos: item.pos };
+    if (t.dataset.dropSlot) {
+      const slot = t.dataset.dropSlot;
+      if (!fits(item, slot)) return;
+      const other = d.items.find((it) => it !== item && it.slot === slot);
+      if (other) Object.assign(other, from.slot && fits(other, from.slot) ? { slot: from.slot } : { slot: null, pos: from.slot ? undefined : from.pos });
+      item.slot = slot;
+      delete item.pos;
+    } else {
+      const pos = Number(t.dataset.dropCell);
+      const other = d.items.find((it) => it !== item && !it.slot && it.pos === pos);
+      if (other) {
+        if (from.slot && fits(other, from.slot)) { other.slot = from.slot; delete other.pos; }
+        else other.pos = from.slot ? undefined : from.pos;
+      }
+      item.slot = null;
+      item.pos = pos;
+    }
+    picked = dragging;
+    dragging = null;
+    renderInventory();
+    await persist();
+  });
 
   return { render, collect, tidy };
 };
