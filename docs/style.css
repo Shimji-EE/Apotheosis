@@ -405,6 +405,24 @@ blockquote cite {
 
 .premise + .premise { margin-top: 1.4rem; }
 
+/* Two-column lore block: each paragraph stays whole within a column */
+.lore {
+  max-width: 1100px;
+  margin: 0 auto;
+  columns: 2;
+  column-gap: clamp(2rem, 5vw, 4rem);
+}
+.lore .premise {
+  max-width: none;
+  margin: 0 0 1.4rem;
+  text-align: left;
+  font-size: clamp(1.15rem, 1.8vw, 1.35rem);
+  break-inside: avoid;
+}
+@media (max-width: 800px) {
+  .lore { columns: 1; }
+}
+
 
 /* Gallery: dim plates that wake on hover, with red corner brackets */
 
