@@ -49,6 +49,13 @@
   const canEdit = me.id === c.owner.id || me.role === "dm";
   let editing = false;
 
+  const panels = window.CharPanels({
+    d, el,
+    isEditing: () => editing,
+    collectAll: () => collect(),
+    strength: () => d.abilities.str,
+  });
+
   const mod = (score) => Math.floor((score - 10) / 2);
   const signed = (n) => (n >= 0 ? `+${n}` : `${n}`);
   const prof = () => 2 + Math.floor((c.level - 1) / 4);
@@ -57,6 +64,90 @@
     return Number.isNaN(n) ? fallback : Math.min(hi, Math.max(lo, n));
   };
   const input = (props) => el("input", props);
+
+  // Skill, power and effect icons come straight from the icon packs (tools/icons/icons.py powers).
+  // A feature shows the icon it names, else the icon whose name matches it, else one for its kind.
+  // Resource icons (action, bonus action, reaction, Channel Divinity charge…) and official SRD rules text.
+  const getJSON = (url) => fetch(url).then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
+  const [POWERS, RESOURCES, SRD] = await Promise.all([
+    getJSON("../icons/powers/manifest.json"),
+    getJSON("../icons/resources/manifest.json"),
+    getJSON("../srd.json"),
+  ]);
+  const KIND_POWER = { feature: "darkvision", action: "main hand attack", bonus: "dash", reaction: "opportunity attack" };
+  const keyOf = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  function powerKey(f) {
+    for (const k of [keyOf(f.icon), keyOf(f.name)]) {
+      if (!k) continue;
+      if (POWERS[k]) return k;
+      const close = Object.keys(POWERS).find((p) => p.startsWith(`${k} `)); // "spiritual weapon" → "spiritual weapon greatsword"
+      if (close) return close;
+    }
+    return POWERS[KIND_POWER[f.kind]] ? KIND_POWER[f.kind] : null;
+  }
+  function powerIcon(f) {
+    const key = powerKey(f);
+    const p = POWERS[key];
+    return el("span", { class: `ficon power${p && p.stone ? " has-stone" : ""}`, title: p ? p.label : "" },
+      p ? el("img", { src: `../icons/powers/${p.file}`, alt: "", loading: "lazy" }) : "");
+  }
+  // Look a name up in the SRD, preferring the kinds that fit where it is listed.
+  const PREFER = {
+    feature: ["feature", "trait", "feat", "spell", "condition", "item"],
+    action: ["spell", "feature", "trait", "feat", "item"],
+    item: ["item", "spell"],
+  };
+  function srd(name, kind) {
+    const list = SRD[keyOf(name)];
+    if (!Array.isArray(list)) return null;
+    const order = PREFER[kind] || PREFER.action;
+    return [...list].sort((a, b) => order.indexOf(a.t) - order.indexOf(b.t))[0];
+  }
+  window.Rules = { srd, keyOf, SRD_NOTE: "SRD 5.1, CC-BY-4.0" };
+
+  const KIND_RESOURCE = { action: "action", bonus: "bonus action", reaction: "reaction" };
+  function resourceKey(name) {
+    const k = keyOf(name);
+    if (!k) return null;
+    if (RESOURCES[k]) return k;
+    return Object.keys(RESOURCES).find((r) => r.startsWith(k)) || null;
+  }
+  // What a row spends: its kind (action, bonus action, reaction), plus a named resource,
+  // or one read from its name or its SRD entry (Channel Divinity, a spell slot).
+  function costs(f, rule) {
+    const keys = [KIND_RESOURCE[f.kind]];
+    const name = keyOf(f.name);
+    if (f.resource) keys.push(resourceKey(f.resource));
+    else if (name.startsWith("channel divinity")) keys.push("channel divinity charges");
+    else if (name.startsWith("channel oath") || name.includes("sacred weapon")) keys.push("channel oath");
+    else if (rule && rule.t === "spell" && rule.lv > 0) keys.push("spell slot");
+    return keys.filter((k) => k && (RESOURCES[k] || ECONOMY[k]));
+  }
+  // Action economy markers (Charl's design): action a bright green circle, bonus action a
+  // triangle in the same green, reaction an inverted triangle a little smaller.
+  const ECONOMY = {
+    action: ["Action", '<circle cx="12" cy="12" r="8"/>'],
+    "bonus action": ["Bonus action", '<path d="M12 3.5 21 19.5H3z"/>'],
+    reaction: ["Reaction", '<path d="M12 18 4.5 5h15z"/>'],
+  };
+  function resourceIcon(k) {
+    if (ECONOMY[k]) {
+      const [label, shape] = ECONOMY[k];
+      const span = el("span", { class: `res econ econ-${k.replace(" ", "-")}`, title: label, role: "img", "aria-label": label });
+      span.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${shape}</svg>`; // fixed markup, no user text
+      return span;
+    }
+    return el("img", { class: "res", src: `../icons/resources/${RESOURCES[k].file}`, alt: RESOURCES[k].label, title: RESOURCES[k].label });
+  }
+
+  // One shared list of icon names for the edit field's suggestions.
+  document.body.append(el("datalist", { id: "power-list" },
+    ...Object.values(POWERS).map((p) => el("option", { value: p.label }))));
+  const powerSelect = (value) =>
+    input({ "data-f": "icon", value: value || "", list: "power-list", placeholder: "Icon (matches name)", "aria-label": "Icon" });
+  document.body.append(el("datalist", { id: "resource-list" },
+    ...Object.values(RESOURCES).map((r) => el("option", { value: r.label }))));
+  let openRow = null; // feature whose description is open
 
   function renderHead() {
     document.title = `${c.name} · The Tavern`;
@@ -140,24 +231,41 @@
         if (!editing && !rows.length) return "";
         const table = el("div", { class: "ftable" },
           el("div", { class: "frow fhead" },
-            el("span", { text: label }), el("span", { text: "Uses" }), el("span", { text: "Roll" }), el("span", { text: "Formula" })
+            el("span", { class: "fhead-name" }, KIND_RESOURCE[kind] ? resourceIcon(KIND_RESOURCE[kind]) : "", label),
+            el("span", { text: "Uses" }), el("span", { text: "Roll" }), el("span", { text: "Formula" })
           ),
-          ...rows.map(({ f, i }) =>
-            editing
-              ? el("div", { class: "frow is-edit", "data-index": i },
-                  input({ "data-f": "name", value: f.name || "", placeholder: "Name", "aria-label": "Name" }),
-                  input({ "data-f": "uses", value: f.uses || "", placeholder: "–", "aria-label": "Uses" }),
-                  input({ "data-f": "roll", value: f.roll || "", placeholder: "–", "aria-label": "Roll" }),
-                  input({ "data-f": "formula", value: f.formula || "", placeholder: "–", "aria-label": "Formula" }),
-                  el("button", { type: "button", class: "link-button remove", "data-remove": i, title: "Remove", text: "×" })
-                )
-              : el("div", { class: "frow" },
-                  el("span", { class: "fname" }, el("span", { class: "ficon" }), el("span", { text: f.name })),
-                  el("span", { text: f.uses || "–" }),
-                  el("span", { text: f.roll || "–" }),
-                  el("span", { text: f.formula || "–" })
-                )
-          )
+          ...rows.flatMap(({ f, i }) => {
+            if (editing) {
+              return [el("div", { class: "frow is-edit", "data-index": i },
+                input({ "data-f": "name", value: f.name || "", placeholder: "Name", "aria-label": "Name" }),
+                input({ "data-f": "uses", value: f.uses || "", placeholder: "–", "aria-label": "Uses" }),
+                input({ "data-f": "roll", value: f.roll || "", placeholder: "–", "aria-label": "Roll" }),
+                input({ "data-f": "formula", value: f.formula || "", placeholder: "–", "aria-label": "Formula" }),
+                powerSelect(f.icon),
+                el("button", { type: "button", class: "link-button remove", "data-remove": i, title: "Remove", text: "×" }),
+                input({ "data-f": "resource", value: f.resource || "", list: "resource-list", class: "f-resource", placeholder: "Resource used (e.g. Channel Divinity)", "aria-label": "Resource used" }),
+                Object.assign(el("textarea", { "data-f": "desc", rows: "2", class: "f-desc", placeholder: "Description. Leave empty to use the official SRD text when the name matches.", "aria-label": "Description" }), { value: f.desc || "" })
+              )];
+            }
+            const rule = srd(f.name, kind === "feature" ? "feature" : "action");
+            const open = openRow === i;
+            const row = el("div", { class: `frow is-open-able${open ? " is-open" : ""}`, "data-open": i, role: "button", tabindex: "0", "aria-expanded": String(open) },
+              el("span", { class: "fname" }, powerIcon(f), el("span", { text: f.name }),
+                el("span", { class: "fcost" }, ...costs(f, rule).map(resourceIcon))),
+              el("span", { text: f.uses || "–" }),
+              el("span", { text: f.roll || "–" }),
+              el("span", { text: f.formula || "–" })
+            );
+            if (!open) return [row];
+            const desc = f.desc || (rule && rule.d) || "";
+            return [row, el("div", { class: "fdesc" },
+              rule && !f.desc ? el("p", { class: "fdesc-meta", text: rule.m }) : "",
+              ...(desc
+                ? desc.split(/\n\s*\n/).map((t) => el("p", { text: t.trim() }))
+                : [el("p", { class: "placeholder", text: canEdit ? "No description yet. Add one in Edit." : "No description yet." })]),
+              rule && !f.desc ? el("p", { class: "fdesc-src", text: `Official rules text, ${window.Rules.SRD_NOTE}` }) : ""
+            )];
+          })
         );
         if (editing) table.append(el("button", { type: "button", class: "link-button add-row", "data-add": kind, text: `+ Add ${label.toLowerCase().replace(/s$/, "")}` }));
         return table;
@@ -190,6 +298,7 @@
     renderSide();
     renderTables();
     renderBasics();
+    panels.render();
   }
 
   // Read every edit field back into the character before saving or re-rendering.
@@ -204,8 +313,10 @@
     });
     document.querySelectorAll(".frow.is-edit").forEach((row) => {
       const f = d.features[row.dataset.index];
-      row.querySelectorAll("[data-f]").forEach((i) => (f[i.dataset.f] = i.value.trim().slice(0, 80)));
+      row.querySelectorAll("[data-f]").forEach((i) => (f[i.dataset.f] = i.value.trim().slice(0, i.dataset.f === "desc" ? 4000 : 80)));
+      for (const k of ["icon", "resource", "desc"]) if (!f[k]) delete f[k];
     });
+    panels.collect();
     const form = $("basics-form");
     if (form.elements.name) {
       c.name = form.elements.name.value.trim() || c.name;
@@ -219,6 +330,16 @@
   }
 
   $("search").addEventListener("input", renderTables);
+  const toggleRow = (e) => {
+    const row = e.target.closest("[data-open]");
+    if (!row || editing) return;
+    if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") return;
+    e.preventDefault();
+    openRow = openRow === Number(row.dataset.open) ? null : Number(row.dataset.open);
+    renderTables();
+  };
+  $("tables").addEventListener("click", toggleRow);
+  $("tables").addEventListener("keydown", toggleRow);
   render();
 
   if (!canEdit) return;
@@ -246,6 +367,7 @@
   $("save").addEventListener("click", async () => {
     collect();
     d.features = d.features.filter((f) => f.name);
+    panels.tidy();
     $("save").disabled = true;
     const { error } = await db
       .from("characters")
