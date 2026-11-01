@@ -70,11 +70,14 @@
 
   // The character a member brings to the table: their live pick, else their first one.
   function seatCharacter(userId) {
+    const p = profiles.find((x) => x.id === userId);
+    if (p && p.role === "dm") return null; // the DM runs the table and brings no character
     const theirs = characters.filter((c) => c.owner_id === userId);
     const wanted = online[userId] && online[userId].character_id;
     return theirs.find((c) => c.id === wanted) || theirs[0] || null;
   }
   function myPick() {
+    if (me.role === "dm") return null;
     const theirs = characters.filter((c) => c.owner_id === me.id);
     const saved = readPick(me.id);
     return (theirs.find((c) => c.id === saved) || theirs[0] || {}).id || null;
@@ -150,6 +153,13 @@
     $("rail-new-char").href = $("rail-name").href;
     $("rename-form").display_name.value = me.display_name;
 
+    const isDm = me.role === "dm";
+    $("rail-chars-title").textContent = isDm ? "Party sheets" : "Characters";
+    $("rail-chars-note").textContent = isDm
+      ? "Every player's character. Open a sheet to run it from the DM's side."
+      : "Pick who you bring to the table. The others see them on your seat.";
+    $("rail-new-char").hidden = isDm;
+    if (isDm) return drawPartySheets();
     const mine = characters.filter((c) => c.owner_id === me.id);
     const picked = myPick();
     $("rail-chars").replaceChildren(
@@ -173,6 +183,27 @@
       })
     );
     if (!mine.length) $("rail-chars").append(el("li", { class: "rail-note", text: "No characters yet." }));
+  }
+
+  // The DM's rail: every player's characters, grouped by player, each with its sheet.
+  function drawPartySheets() {
+    const players = profiles.filter((p) => p.role !== "dm");
+    const items = [];
+    for (const p of players) {
+      for (const c of characters.filter((x) => x.owner_id === p.id)) {
+        items.push(el("li", {},
+          el("a", { class: "rail-char", href: `character/?id=${c.id}` },
+            el("span", {},
+              el("span", { class: "rail-char-name", text: c.name }),
+              el("span", { class: "rail-char-sub", text: [p.display_name, c.class, `Level ${c.level}`].filter(Boolean).join(" · ") })
+            )
+          ),
+          el("a", { class: "rail-sheet", href: `character/?id=${c.id}`, text: "Sheet" })
+        ));
+      }
+    }
+    $("rail-chars").replaceChildren(...items);
+    if (!items.length) $("rail-chars").append(el("li", { class: "rail-note", text: "No player has made a character yet." }));
   }
 
   function presencePayload() {
