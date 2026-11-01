@@ -239,12 +239,11 @@
 .ftable { margin-top: 1rem; border: 1px solid var(--line); }
 .frow { display: grid; grid-template-columns: 1fr 70px 80px 110px; gap: 0.5rem; align-items: center; padding: 0.55rem 0.8rem; border-top: 1px solid var(--line); color: var(--ink-dim); font-size: 0.95rem; }
 .frow > span:not(.fname) { text-align: center; }
-.frow.is-edit { grid-template-columns: 1fr 70px 80px 110px 24px; }
-.frow.is-edit input { width: 100%; padding: 0.3rem 0.4rem; background: var(--bg); border: 1px solid var(--line); color: var(--ink); font: 0.9rem var(--body); }
+.frow.is-edit { grid-template-columns: 1fr 70px 80px 110px 120px 24px; }
+.frow.is-edit :is(input, select) { width: 100%; padding: 0.3rem 0.4rem; background: var(--bg); border: 1px solid var(--line); color: var(--ink); font: 0.9rem var(--body); }
 .fhead { border-top: 0; background: linear-gradient(90deg, #5a1820, #2a0f12); color: var(--ink); font: 600 0.8rem var(--display); letter-spacing: 0.14em; text-transform: uppercase; }
 .fhead > span:first-child { font-size: 0.95rem; letter-spacing: 0.08em; }
 .fname { display: flex; align-items: center; gap: 0.6rem; color: var(--ink); font-family: var(--prose); font-size: 1.05rem; }
-.ficon { flex: none; width: 26px; height: 26px; border: 1px solid #3a2e24; background: radial-gradient(circle, rgba(208, 49, 63, 0.35), #0b0a08 70%); }
 .add-row { display: block; padding: 0.5rem 0.8rem; color: var(--accent); }
 .table-head { margin: 0 0 0.6rem; font: 600 1rem var(--display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); }
 .edit-only { margin-top: 2rem; }
@@ -270,6 +269,7 @@
   .frow, .frow.is-edit { grid-template-columns: 1fr 50px 60px; }
   .frow > :nth-child(4) { display: none; }
   .frow.is-edit > :nth-child(4) { display: block; grid-column: 1 / -1; }
+  .frow.is-edit > select { grid-column: 1 / -2; }
 }
 .sheet section { max-width: none; margin: 0; padding: 0; min-height: 0; }
 .sheet .chip-group { margin-bottom: 1rem; }
@@ -455,3 +455,20 @@ button.pip-flame { cursor: pointer; }
 .dash-rail [role=tab] { --glow: var(--accent); }
 .tile { width: 54px; height: 54px; padding: 6px; opacity: 0.6; transition: opacity 0.2s; }
 [aria-selected=true] .tile, [role=tab]:hover .tile { opacity: 1; outline: 1px solid var(--accent); outline-offset: 1px; }
+
+/* Skill, power and effect icons: painted neon glyphs (power-icons.js) on lit stone */
+.power {
+  flex: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 4px;
+  color: var(--glow); border: 1px solid #050403; border-radius: 3px;
+  background:
+    radial-gradient(circle at 50% 48%, color-mix(in srgb, var(--glow) 30%, transparent), transparent 65%),
+    var(--stone-tex),
+    linear-gradient(150deg, #3a322b, #241e19 55%, #16120f);
+  box-shadow: var(--stone-bevel);
+}
+.power svg { width: 100%; height: 100%; overflow: visible; }
+.frow { padding-top: 0.45rem; padding-bottom: 0.45rem; }
+
+/* Item textures supplied later replace the line-art stand-ins */
+.item-art { width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
+.cell:has(.item-art), .item-card-icon:has(.item-art) { padding: 2px; }

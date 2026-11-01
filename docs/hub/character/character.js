@@ -65,6 +65,31 @@
   };
   const input = (props) => el("input", props);
 
+  // Skill, power and effect icons (power-icons.js): painted neon glyphs on stone.
+  const POWERS = window.PowerIcons || {};
+  const KIND_POWER = { feature: "rune", action: "slash", bonus: "dash", reaction: "ward" };
+  function powerIcon(name, kind) {
+    const key = POWERS[name] ? name : KIND_POWER[kind] || "rune";
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 100 100");
+    svg.setAttribute("aria-hidden", "true");
+    const use = document.createElementNS(NS, "use");
+    use.setAttribute("href", `#p-${key}`);
+    use.setAttribute("fill", "currentColor");
+    use.setAttribute("filter", "url(#brush)");
+    svg.append(use);
+    const tile = el("span", { class: "ficon power", title: POWERS[key]?.label || "", style: `--glow:${POWERS[key]?.color || "var(--accent)"}` }, svg);
+    return tile;
+  }
+  const powerSelect = (value) => {
+    const s = el("select", { "data-f": "icon", "aria-label": "Icon" },
+      el("option", { value: "", text: "Icon: default" }),
+      ...Object.entries(POWERS).map(([k, v]) => el("option", { value: k, text: v.label })));
+    s.value = value || "";
+    return s;
+  };
+
   function renderHead() {
     document.title = `${c.name} · The Tavern`;
     $("char-name").textContent = c.name;
@@ -156,10 +181,11 @@
                   input({ "data-f": "uses", value: f.uses || "", placeholder: "–", "aria-label": "Uses" }),
                   input({ "data-f": "roll", value: f.roll || "", placeholder: "–", "aria-label": "Roll" }),
                   input({ "data-f": "formula", value: f.formula || "", placeholder: "–", "aria-label": "Formula" }),
+                  powerSelect(f.icon),
                   el("button", { type: "button", class: "link-button remove", "data-remove": i, title: "Remove", text: "×" })
                 )
               : el("div", { class: "frow" },
-                  el("span", { class: "fname" }, el("span", { class: "ficon" }), el("span", { text: f.name })),
+                  el("span", { class: "fname" }, powerIcon(f.icon, f.kind), el("span", { text: f.name })),
                   el("span", { text: f.uses || "–" }),
                   el("span", { text: f.roll || "–" }),
                   el("span", { text: f.formula || "–" })
@@ -213,6 +239,7 @@
     document.querySelectorAll(".frow.is-edit").forEach((row) => {
       const f = d.features[row.dataset.index];
       row.querySelectorAll("[data-f]").forEach((i) => (f[i.dataset.f] = i.value.trim().slice(0, 80)));
+      if (!f.icon) delete f.icon;
     });
     panels.collect();
     const form = $("basics-form");

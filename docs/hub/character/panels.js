@@ -74,6 +74,12 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
 
   /* ---------- Inventory ---------- */
 
+  // An item shows its own texture when it has one, otherwise a line-art stand-in.
+  function itemArt(item) {
+    if (item.image) return el("img", { class: "item-art", src: item.image, alt: "", loading: "lazy" });
+    return icon(KIND_ICON[item.kind] || "pouch");
+  }
+
   function itemTile(item, index, extra = "") {
     const rarity = (item.rarity || "common").replace(" ", "-");
     const tile = el("button", {
@@ -81,7 +87,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
       class: `cell stone has-item k-${item.kind || "misc"} r-${rarity}${index === picked ? " is-picked" : ""}${extra}`,
       "data-item": index,
       title: item.name,
-    }, icon(KIND_ICON[item.kind] || "pouch"));
+    }, itemArt(item));
     if ((item.qty ?? 1) > 1) tile.append(el("span", { class: "qty", text: item.qty }));
     return tile;
   }
@@ -124,7 +130,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
     const item = d.items[picked];
     const card = item
       ? el("article", { class: `item-card k-${item.kind || "misc"} r-${(item.rarity || "common").replace(" ", "-")}` },
-          el("div", { class: "item-card-icon stone" }, icon(KIND_ICON[item.kind] || "pouch")),
+          el("div", { class: "item-card-icon stone" }, itemArt(item)),
           el("div", {},
             el("h4", { class: "item-name", text: item.name }),
             el("p", { class: "item-meta", text: [
@@ -167,6 +173,7 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
           select({ "data-i": "rarity", "aria-label": "Rarity" }, RARITIES.map((r) => [r, r]), it.rarity),
           select({ "data-i": "slot", "aria-label": "Equipped slot" }, [["", "In pack"], ...SLOTS.map(([k, l]) => [k, k.startsWith("ring") ? `Ring ${k.slice(-1)}` : l])], it.slot || ""),
           el("button", { type: "button", class: "link-button remove", "data-remove-item": i, title: "Remove", text: "×" }),
+          el("input", { "data-i": "image", value: it.image || "", type: "url", placeholder: "Texture image link (https://…), optional", "aria-label": "Texture image link", class: "irow-notes" }),
           textarea({ "data-i": "notes", rows: "2", placeholder: "Description, properties, charges", "aria-label": "Notes", class: "irow-notes" }, it.notes)
         )
       ),
@@ -334,7 +341,9 @@ window.CharPanels = ({ d, el, isEditing, collectAll, strength }) => {
       Object.assign(it, {
         name: clip(v("name"), 60), kind: v("kind"), rarity: v("rarity"), slot: v("slot") || null,
         qty: Math.round(num(v("qty"), 0, 9999, 1)), weight: num(v("weight"), 0, 9999, 0), notes: clip(v("notes"), 1000),
+        image: /^https:\/\//i.test(v("image").trim()) ? clip(v("image"), 500) : null,
       });
+      if (!it.image) delete it.image;
     });
     // Only one item per slot: the last one chosen keeps it.
     const taken = {};
