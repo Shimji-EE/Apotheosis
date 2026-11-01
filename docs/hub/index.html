@@ -19,16 +19,22 @@
 
   <header class="hub-bar">
     <a class="hub-home" href="../">&larr; Apotheosis</a>
-    <div class="hub-who" id="who" hidden>
-      <a id="who-name" class="hub-home" href="profile/" title="Your profile"></a>
-      <span class="tab" id="who-role"></span>
-      <button class="link-button" id="logout" type="button">Log out</button>
-    </div>
   </header>
 
-  <main class="hub-main">
-    <p class="tracked">The Charred Eye</p>
-    <h1 class="hub-title">The Tavern</h1>
+  <!-- Wireframe d20 in a circle, the hero sigil, for empty seats and portraits -->
+  <svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute">
+    <symbol id="seat-sigil" viewBox="0 0 400 400">
+      <circle cx="200" cy="200" r="190"/>
+      <path d="M200 30 347.2 115 347.2 285 200 370 52.8 285 52.8 115Z"/>
+      <path d="M200 118 286 266 114 266Z M200 118 200 30 M200 118 52.8 115 M200 118 347.2 115 M286 266 347.2 115 M286 266 347.2 285 M286 266 200 370 M114 266 200 370 M114 266 52.8 285 M114 266 52.8 115"/>
+    </symbol>
+  </svg>
+
+  <main class="hub-main" id="hub-main">
+    <div class="hub-head">
+      <p class="tracked">The Charred Eye</p>
+      <h1 class="hub-title">The Tavern</h1>
+    </div>
     <p class="hub-status" id="status" role="status" aria-live="polite"></p>
 
     <!-- Logged out -->
@@ -51,37 +57,66 @@
       </details>
     </section>
 
-    <!-- Logged in: the scene the DM has live -->
-    <section class="panel scene-panel is-empty" id="scene-panel" hidden>
-      <div class="scene-art" id="scene-art"></div>
-      <div class="scene-body">
-        <p class="tracked">At the table</p>
-        <h2 id="scene-name">The fire is low</h2>
-        <p id="scene-desc"></p>
-        <div class="scene-sound" id="scene-sound" hidden>
-          <p class="scene-track" id="scene-track"></p>
-          <button class="button" id="sound-toggle" type="button">Turn on music</button>
-          <label class="scene-volume">Volume <input id="scene-volume" type="range" min="0" max="1" step="0.05"></label>
+    <!-- Logged in: the lobby. Left rail for you, the stage for everyone at the table. -->
+    <div class="lobby" id="lobby" hidden>
+      <aside class="rail" aria-label="You">
+        <div class="rail-card">
+          <svg class="rail-sigil" aria-hidden="true"><use href="#seat-sigil"/></svg>
+          <div>
+            <a class="rail-name" id="rail-name" href="profile/"></a>
+            <span class="rail-handle" id="rail-handle"></span>
+          </div>
         </div>
+
+        <details class="rail-item" name="rail" open>
+          <summary>Characters</summary>
+          <p class="rail-note">Pick who you bring to the table. The others see them on your seat.</p>
+          <ul class="rail-chars" id="rail-chars"></ul>
+          <a class="rail-link" id="rail-new-char" href="profile/">+ New character</a>
+        </details>
+
+        <details class="rail-item" name="rail">
+          <summary>Profile settings</summary>
+          <form id="rename-form" class="form" novalidate>
+            <label>Display name <input name="display_name" maxlength="40" required></label>
+            <button class="button button-quiet" type="submit">Save</button>
+          </form>
+          <a class="rail-link" id="rail-profile" href="profile/">Open your profile</a>
+        </details>
+
+        <details class="rail-item" name="rail" id="dm-panel" hidden>
+          <summary>Manage the party</summary>
+          <p class="rail-note">Players create their own accounts. Remove anyone you don't want at the table.</p>
+          <ul class="roster" id="manage"></ul>
+        </details>
+
+        <button class="rail-item rail-out" id="logout" type="button">Leave the Tavern</button>
+      </aside>
+
+      <div class="stage">
+        <div class="stage-head">
+          <h2>The table</h2>
+          <span class="stage-count" id="stage-count"></span>
+        </div>
+        <ol class="seats" id="seats"></ol>
+        <ol class="lobby-feed" id="lobby-feed" aria-live="polite"></ol>
+
+        <!-- The scene the DM has live -->
+        <section class="panel scene-panel is-empty" id="scene-panel" hidden>
+          <div class="scene-art" id="scene-art"></div>
+          <div class="scene-body">
+            <p class="tracked">At the table</p>
+            <h2 id="scene-name">The fire is low</h2>
+            <p id="scene-desc"></p>
+            <div class="scene-sound" id="scene-sound" hidden>
+              <p class="scene-track" id="scene-track"></p>
+              <button class="button" id="sound-toggle" type="button">Turn on music</button>
+              <label class="scene-volume">Volume <input id="scene-volume" type="range" min="0" max="1" step="0.05"></label>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
-
-    <!-- Logged in -->
-    <section class="panel" id="party-panel" hidden>
-      <h2>The party</h2>
-      <p>Open your name to reach your profile and characters.</p>
-      <ul class="roster" id="roster"></ul>
-      <form id="rename-form" class="form form-inline" novalidate>
-        <label>Your display name <input name="display_name" maxlength="40" required></label>
-        <button class="button button-quiet" type="submit">Save</button>
-      </form>
-    </section>
-
-    <section class="panel" id="dm-panel" hidden>
-      <h2>Manage the party</h2>
-      <p>Players create their own accounts. Remove anyone you don't want at the table.</p>
-      <ul class="roster" id="manage"></ul>
-    </section>
+    </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
