@@ -28,14 +28,14 @@
     bottom          = 0pt,
     sharp~corners,
     parbox          = false,
-    borderline~west = {1pt} {-0.5pt} {titlered},
-    borderline~east = {1pt} {-0.5pt} {titlered},
+    borderline~west = {1pt} {-0.5pt} {readaloudrule},
+    borderline~east = {1pt} {-0.5pt} {readaloudrule},
     fontupper       = \DndFontReadAloud,
     fontlower       = \DndFontReadAloud,
     overlay         =
       {
         \foreach\n ~ in ~ { north~east, north~west, south~east, south~west }
-        {\draw [ titlered, fill = titlered ] ( frame.\n ) circle (1.5pt); };
+        {\draw [ readaloudrule, fill = readaloudrule ] ( frame.\n ) circle (1.5pt); };
       },
     after~skip      = 13pt plus 4pt minus 4pt,
     #1,
