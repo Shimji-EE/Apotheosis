@@ -23,17 +23,18 @@ window.CreatorCatalogue = (() => {
       subclasses: [], more: ["Order of the Avatar", "Order of the Awakened", "Order of the Immortal", "Order of the Nomad", "Order of the Soul Knife", "Order of the Wu Jen"] },
   };
 
+  // Removed by Charl (2026-11-02): World Tree, Shepherd, Cavalier, Inquisitive, Phantom, Clockwork.
   // Subclasses from other published books, after the notes' own (PHB 2014 and 2024) list.
   const MORE_SUBCLASSES = {
     Barbarian: ["Path of the Ancestral Guardian", "Path of the Beast", "Path of the Giant", "Path of the Storm Herald", "Path of Wild Magic"],
     Bard: ["College of Creation", "College of Eloquence", "College of Spirits", "College of Swords", "College of Whispers"],
     Cleric: ["Arcana Domain", "Death Domain", "Forge Domain", "Grave Domain", "Order Domain", "Peace Domain", "Twilight Domain"],
-    Druid: ["Circle of Dreams", "Circle of the Shepherd", "Circle of Spores", "Circle of Wildfire"],
-    Fighter: ["Arcane Archer", "Cavalier", "Rune Knight", "Samurai"],
+    Druid: ["Circle of Dreams", "Circle of Spores", "Circle of Wildfire"],
+    Fighter: ["Arcane Archer", "Rune Knight", "Samurai"],
     Monk: ["Way of the Ascendant Dragon", "Way of the Astral Self", "Way of the Drunken Master", "Way of the Kensei", "Way of the Long Death", "Way of the Sun Soul"],
     Paladin: ["Oath of Conquest", "Oath of Redemption", "Oath of the Crown", "Oath of the Watchers", "Oathbreaker"],
     Ranger: ["Drakewarden", "Horizon Walker", "Monster Slayer", "Swarmkeeper"],
-    Rogue: ["Inquisitive", "Mastermind", "Phantom", "Scout", "Swashbuckler"],
+    Rogue: ["Mastermind", "Scout", "Swashbuckler"],
     Sorcerer: ["Divine Soul", "Lunar Sorcery", "Shadow Magic", "Storm Sorcery"],
     Warlock: ["Fathomless Patron", "Genie Patron", "Hexblade", "Undead Patron", "Undying Patron"],
     Wizard: ["Bladesinging", "Order of Scribes", "War Magic"],
