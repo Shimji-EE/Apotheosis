@@ -52,8 +52,25 @@ window.Hub = (() => {
   const BOXES = ["list", "info", "tabs", "my-chars", "characters", "abilities", "side", "tables",
     "basics", "inventory", "inspiration", "journal", "manage", "dm-panel"];
   const ITEMS = ".tile-opt, .check-opt, .list-group, li, .feat-row, .frow, .irow, .cell, .slot, .goal, .jquest, .chip, .ability, .char-item";
-  const sigOf = (box) => [...box.children].slice(0, 8).map((c) =>
-    c.dataset.set || c.dataset.tab || c.id || `${c.className}:${(c.textContent || "").slice(0, 32)}`).join("|");
+  // A page can name what a box shows (data-view); otherwise the first children's ids and headings do.
+  // Picks, counts and "is-on" classes are left out, so choosing something never replays the panel.
+  const sigOf = (box) => box.dataset.view || [...box.children].slice(0, 8).map((c) =>
+    c.dataset.set || c.dataset.tab || c.id || `${c.tagName}:${(c.querySelector("h2, h3, .info-head, strong") || c).textContent.slice(0, 32)}`).join("|");
+  // The thing just clicked gets a short pulse once the page has redrawn it.
+  let picked = null;
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest && e.target.closest("[data-set], [data-inherit], [data-skill], [data-feat], .check-opt");
+    if (!b) return;
+    const attr = ["data-set", "data-inherit", "data-skill", "data-feat"].find((a) => b.hasAttribute(a));
+    picked = attr ? `[${attr}="${CSS.escape(b.getAttribute(attr))}"]` : null;
+  }, true);
+  const pulse = () => {
+    if (!picked) return;
+    const n = document.querySelector(picked);
+    picked = null;
+    const t = n && (n.closest(".tile-opt, .check-opt") || n);
+    if (t) { t.classList.remove("m-pick"); void t.offsetWidth; t.classList.add("m-pick"); }
+  };
   function play(box) {
     let n = 0;
     for (const c of box.children) {
@@ -73,6 +90,7 @@ window.Hub = (() => {
     const swap = box.id === "info";
     new MutationObserver(() => {
       const now = sigOf(box);
+      if (box.id === "list") requestAnimationFrame(pulse);
       if (now === last) return;
       last = now;
       if (swap) { box.classList.remove("m-swap"); void box.offsetWidth; box.classList.add("m-swap"); }
