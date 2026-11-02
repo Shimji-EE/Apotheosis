@@ -21,6 +21,10 @@ Commands
                        Copy one catalogue icon (any pack, any kind, e.g. an item) into the site
                        as .webp and print the path to use.
   custom RECIPE.json   Build custom icons from pack glyphs: recolour, scale, rotate, layer.
+  glow MAP.json --to DIR
+                       Turn flat white pack glyphs (class, species, deity…) into the site's
+                       glowing Grave Red emblems: a red-hot core with a soft neon halo. MAP is
+                       {"file-name": "catalogue id"}; writes DIR/manifest.json too.
 
 Examples
   python3 tools/icons/icons.py find sacred flame
@@ -352,6 +356,55 @@ def cmd_custom(args):
     manifest_path.write_text(json.dumps(manifest, separators=(",", ":")))
 
 
+def glow(img, hex_colour="#e0303f", size=128, pad=0.16):
+    """A flat glyph as a glowing emblem: white-hot core, red rim, blurred red halo."""
+    from PIL import ImageFilter
+    r, g, b = (int(hex_colour[i:i + 2], 16) for i in (1, 3, 5))
+    alpha = img.getchannel("A") if img.mode == "RGBA" else ImageOps.grayscale(img)
+    lum = ImageOps.grayscale(img.convert("RGB"))
+    # Glyphs drawn on black (no alpha) take their shape from brightness.
+    if alpha.getextrema()[0] == 255:
+        alpha = lum
+    box = alpha.getbbox() or (0, 0, *img.size)
+    alpha, lum = alpha.crop(box), lum.crop(box)
+    inner = int(size * (1 - 2 * pad))
+    scale = inner / max(alpha.size)
+    dims = (max(1, round(alpha.width * scale)), max(1, round(alpha.height * scale)))
+    alpha, lum = alpha.resize(dims, Image.LANCZOS), lum.resize(dims, Image.LANCZOS)
+    mask = Image.new("L", (size, size))
+    mask.paste(alpha, ((size - dims[0]) // 2, (size - dims[1]) // 2))
+    shade = Image.new("L", (size, size))
+    shade.paste(lum, ((size - dims[0]) // 2, (size - dims[1]) // 2))
+    halo = mask.filter(ImageFilter.GaussianBlur(size / 18)).point(lambda a: min(255, int(a * 1.5)))
+    edge = mask.filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.GaussianBlur(1.2))
+    out = Image.new("RGBA", (size, size), (r, g, b, 0))
+    out.putalpha(halo.point(lambda a: int(a * 0.75)))
+    rim = Image.new("RGBA", (size, size), (r, g, b, 0)); rim.putalpha(edge)
+    out.alpha_composite(rim)
+    # Core: the glyph's own shading, tinted from red (dark) to pale rose (bright).
+    lut = [(min(255, int(r + (255 - r) * t ** 1.6 * 0.85)), min(255, int(g + (235 - g) * t ** 2 * 0.8)),
+            min(255, int(b + (225 - b) * t ** 2 * 0.8))) for t in (v / 255 for v in range(256))]
+    core = Image.new("RGBA", (size, size))
+    core.putdata([lut[v] + (a,) for v, a in zip(shade.getdata(), mask.point(lambda a: int(a * 0.95)).getdata())])
+    out.alpha_composite(core)
+    return out
+
+
+def cmd_glow(args):
+    names = json.loads(Path(args.map).read_text())
+    imgs = load_icons(sorted(set(names.values())), args.packs)
+    out_dir = SITE_ICONS / args.to
+    out_dir.mkdir(parents=True, exist_ok=True)
+    manifest_path = out_dir / "manifest.json"
+    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
+    for name, icon_id in names.items():
+        file = f"{slug(name)}.webp"
+        glow(imgs[icon_id], args.colour, args.size).save(out_dir / file, "WEBP", quality=90)
+        manifest[key_of(name)] = {"label": name, "file": file, "from": icon_id}
+        print(f"glow {file}")
+    manifest_path.write_text(json.dumps(manifest, separators=(",", ":"), ensure_ascii=False))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--packs", help="folder holding the icon pack archives")
@@ -364,6 +417,7 @@ def main():
     p = sub.add_parser("items"); p.add_argument("--size", type=int, default=96); p.set_defaults(fn=cmd_items)
     p = sub.add_parser("add"); p.add_argument("id"); p.add_argument("--to", default="items"); p.add_argument("--name"); p.add_argument("--size", type=int); p.set_defaults(fn=cmd_add)
     p = sub.add_parser("custom"); p.add_argument("recipe"); p.set_defaults(fn=cmd_custom)
+    p = sub.add_parser("glow"); p.add_argument("map"); p.add_argument("--to", required=True); p.add_argument("--colour", default="#e0303f"); p.add_argument("--size", type=int, default=128); p.set_defaults(fn=cmd_glow)
     args = ap.parse_args()
     args.fn(args)
 

@@ -13,25 +13,34 @@
   <link rel="stylesheet" href="../../style.css">
   <link rel="stylesheet" href="../hub.css">
 </head>
-<body class="hub">
+<body class="hub creator-page">
   <div class="haze" aria-hidden="true"></div>
   <header class="hub-bar">
     <a class="hub-home" id="back" href="../profile/">&larr; Profile</a>
+    <span class="hub-home">Create a character</span>
   </header>
 
-  <main class="hub-main sheet-main">
-    <h1 class="hub-title">Create a character</h1>
+  <main class="cc" id="creator">
+    <nav class="cc-tabs" id="tabs" role="tablist" aria-label="Creation steps"></nav>
     <p class="hub-status" id="status" role="status" aria-live="polite"></p>
-
-    <form class="creator" id="creator" novalidate>
-      <div class="creator-steps" id="steps"></div>
-      <aside class="creator-summary sheet" id="summary"></aside>
-    </form>
+    <div class="cc-grid">
+      <section class="cc-list" id="list" aria-label="Options"></section>
+      <section class="cc-stage" id="stage" aria-label="Your character"></section>
+      <aside class="cc-info" id="info" aria-label="Details"></aside>
+    </div>
+    <footer class="cc-foot">
+      <ul class="cc-problems" id="problems"></ul>
+      <div class="cc-nav">
+        <button class="cc-btn" id="prev" type="button">Back</button>
+        <button class="cc-btn cc-next" id="next" type="button">Next</button>
+      </div>
+    </footer>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
   <script src="../common.js"></script>
   <script src="options.js"></script>
+  <script src="catalogue.js"></script>
   <script src="create.js"></script>
 </body>
 </html>
