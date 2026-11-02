@@ -65,5 +65,7 @@
  "background Sage": "all:Background/Background_Sage_Icon.png",
  "background Sailor": "all:Background/Background_Sailor_Icon.png",
  "background Soldier": "all:Background/Background_Soldier_Icon.png",
- "background Urchin": "all:Background/Background_Urchin_Icon.png"
+ "background Urchin": "all:Background/Background_Urchin_Icon.png",
+ "class Blood Hunter": "all:Deity/Bhaal_Icon.png",
+ "class Mystic": "all:Deity/Vlaakith_Icon.png"
 }

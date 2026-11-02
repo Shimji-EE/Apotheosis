@@ -4,16 +4,23 @@
 // fill in where the notes are silent. Left out: species (only the notes' species exist),
 // setting-specific books (Eberron, Ravnica, Theros, Amonkhet, Kaladesh, Strixhaven, Wildemount,
 // Dragonlance, Spelljammer, Planescape, Acquisitions Inc, Adventurers League), Forgotten
-// Realms-only options, Unearthed Arcana and homebrew. Names only: the full rules text of
+// Realms-only options, Battlerager, Banneret and Wildemount. UA and homebrew classes are allowed
+// (Charl, 2026-11-02); UA and homebrew subclasses and feats are still out. Names only: the full rules text of
 // non-SRD options is not ours to copy, so each option links to its wikidot page instead.
 window.CreatorCatalogue = (() => {
   const WIKI = "https://dnd5e.wikidot.com";
   const slug = (s) => s.toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-  // Classes outside the PHB (Tasha's Cauldron of Everything).
+  // Classes outside the PHB. Charl allows Artificer, Blood Hunter, Mystic and the like (2026-11-02).
   const CLASSES = {
     Artificer: { die: 8, saves: ["con", "int"], skills: [2, ["Arcana", "History", "Investigation", "Medicine", "Nature", "Perception", "Sleight of Hand"]], spell: "int",
-      source: "Tasha's Cauldron of Everything", subclasses: [], more: ["Alchemist", "Armorer", "Artillerist", "Battle Smith"] },
+      source: "Tasha's Cauldron of Everything", tag: "Tasha's", subclasses: [], more: ["Alchemist", "Armorer", "Artillerist", "Battle Smith"] },
+    "Blood Hunter": { die: 10, saves: ["dex", "int"], skills: [3, ["Acrobatics", "Arcana", "Athletics", "History", "Insight", "Investigation", "Religion", "Survival"]],
+      source: "Matthew Mercer (homebrew)", tag: "Homebrew", note: "Blood curses and crimson rites run on your Hemocraft modifier.",
+      subclasses: [], more: ["Order of the Ghostslayer", "Order of the Lycan", "Order of the Mutant", "Order of the Profane Soul"] },
+    Mystic: { die: 8, saves: ["int", "wis"], skills: [2, ["Arcana", "History", "Insight", "Medicine", "Nature", "Perception", "Religion"]], spell: "int",
+      source: "Unearthed Arcana", tag: "UA", note: "Psionics rather than spells: psi points, disciplines and talents, powered by Intelligence.",
+      subclasses: [], more: ["Order of the Avatar", "Order of the Awakened", "Order of the Immortal", "Order of the Nomad", "Order of the Soul Knife", "Order of the Wu Jen"] },
   };
 
   // Subclasses from other published books, after the notes' own (PHB 2014 and 2024) list.
@@ -66,12 +73,15 @@ window.CreatorCatalogue = (() => {
   for (const n of ORIGIN) FEATS[n] = FEATS[n] || {};
 
   // Ability score improvements by class level (Fighter 6 and 14, Rogue 10 are the "non-standard" ones).
+  // Custom racial feats: Charl is writing them. Placeholders until then.
+  const RACIAL_WIP = ["Elf", "Dwerfen", "Orq", "Golyath", "Halfling", "Human", "Seraph", "Tiefling"];
+
   const ASI_STANDARD = [4, 8, 12, 16, 19];
   const ASI_EXTRA = { Fighter: [6, 14], Rogue: [10] };
 
   // Lore from the notes (Species & Backgrounds), shortened for the info panel.
   const LORE = {
-    Elf: "Descended from the primordial elves who first walked the known world. Ears like blades and adaptations to their homelands; second only to humans in number. Base traits as in the 2024 PHB; your lineage's spells come at levels 1, 3 and 5.",
+    Elf: "Descended from the primordial elves who first walked the known world. Ears like blades and adaptations to their homelands; second only to humans in number. Base traits from the 2024 or 2014 PHB, your choice; in 2024 your lineage's spells come at levels 1, 3 and 5.",
     "High Elf": "Gladiatorial, Greco-Roman culturalists of decadent design who rule Romulon, the largest kingdom and the world's political and religious nexus. Golden-metallic skin, thick fair hair.",
     "Dark Elf (Drow)": "The deep elves of the underdark, brass and bronze skinned with pale grey or dirty blonde hair, bioluminescent marks and red or purple glowing eyes. Mostly from Latibulus, near the undersea.",
     "Wood Elf (Dryad)": "Primal elves bound by the verdant oath: they may not harm nature by any means. Horns and pale green, marked skin. Their greatest settlement is Kaer Holte, the Hollow Keep, in the Phenozimal Jungle.",
@@ -79,7 +89,7 @@ window.CreatorCatalogue = (() => {
     Dwerfen: "Reclusive, greedy engineers of brass marvels from the Deep Roads, far below even the drow. Elf-like in looks but unrelated, risen from beneath the world's crust. Resistant, not immune, to lyrium.",
     Orq: "Wood elves cursed to savagery: antlers traded for wolven canines and ridged faces, and a hunger for conquest. The Pariah-Folk of desiccated forests and torn-down jungles.",
     Golyath: "Distant descendants of the giants, the primordial race that became the land itself. Each bears the favours of the first giants and can briefly grow toward their size.",
-    Drakeborn: "An oviparous, scaled and curiously hive-minded people with room for individual ambition. Whether humans were cursed or gifted with dragon essence is unknown. They use the abilities of the Forgotten Realms' Dragonborn.",
+    Drakeborn: "Not playable: Drakeborn are NPCs, in the style of the Elder Scrolls' Argonians. An oviparous, scaled and curiously hive-minded people with room for individual ambition. Whether humans were cursed or gifted with dragon essence is unknown.",
     Halfling: "Small folk of the Everglade, an endless spring and autumn meadowland. Kind, unambitious, and watched over by the storied luck of the halflings.",
     Human: "As varied as they are numerous. Their ambition and resourcefulness are commended, respected and feared by all, though one human alone is more a blank canvas than a creature of great power.",
     Seraph: "Mortals carrying a greater spark of the outer deities, who can arc it outward as light, healing and heavenly fury. Their divinity often shows in biblically frightening ways. Seraphs can't be half-bloods.",
@@ -99,5 +109,5 @@ window.CreatorCatalogue = (() => {
     background: (b) => `${WIKI}/background:${slug(b)}`,
   };
 
-  return { CLASSES, MORE_SUBCLASSES, MORE_BACKGROUNDS, FEATS, ORIGIN, ASI_STANDARD, ASI_EXTRA, LORE, link, WIKI };
+  return { RACIAL_WIP, CLASSES, MORE_SUBCLASSES, MORE_BACKGROUNDS, FEATS, ORIGIN, ASI_STANDARD, ASI_EXTRA, LORE, link, WIKI };
 })();
