@@ -6,6 +6,16 @@
   const { db, $, say, el, requireMember } = window.Hub;
   const O = window.CreatorOptions;
   const K = window.CreatorCatalogue;
+  // Every option's description comes first, then its source (Charl, 2026-11-02). The notes' own text wins.
+  const DESC = window.CreatorDescriptions || { SRC: {}, D: {} };
+  const NOTES_TEXT = window.CreatorNotesText || {};
+  function describe(name) {
+    if (!name) return null;
+    const bare = String(name).replace(/\s*\(.*?\)\s*/g, " ").trim();
+    if (NOTES_TEXT[bare]) return { text: NOTES_TEXT[bare], src: DESC.SRC.N };
+    const d = DESC.D[bare] || DESC.D[bare.split(":")[0].trim()];
+    return d ? { text: d[0], src: DESC.SRC[d[1]] || d[1] } : null;
+  }
   const member = await requireMember("../");
   if (!member) return;
   const { me } = member;
@@ -195,11 +205,22 @@
     ];
     if (i.meta) body.push(el("p", { class: "info-meta", text: i.meta }));
     if (i.text) body.push(el("p", { class: "info-text", text: i.text }));
+    const own = i.desc === false ? null : describe(i.desc || i.title);
     const srd = i.srd && srdText(i.srd, i.srdTypes);
-    if (srd) body.push(el("p", { class: "info-text", text: srd.d }), el("p", { class: "info-src", text: "Rules text: SRD 5.1, CC-BY-4.0" }));
+    if (own && !(i.text && i.text.includes(own.text))) body.push(el("p", { class: "info-text info-desc", text: own.text }));
+    if (srd) body.push(el("p", { class: "info-text", text: srd.d }));
+    const srcs = new Set();
+    if (own) srcs.add(own.src);
     if (i.traits && i.traits.length) {
-      body.push(el("ul", { class: "info-traits" }, ...i.traits.map(([n, d, ic]) => el("li", {}, powerImg(ic || n), el("div", {}, el("strong", { text: n }), d ? el("span", { text: d }) : "")))));
+      body.push(el("ul", { class: "info-traits" }, ...i.traits.map(([n, d, ic]) => {
+        const t = d && !/^Level \d+$/.test(d) ? null : describe(n);
+        if (t) srcs.add(t.src);
+        const text = [d, t && t.text].filter(Boolean).join(". ");
+        return el("li", {}, powerImg(ic || n), el("div", {}, el("strong", { text: n }), text ? el("span", { text }) : ""));
+      })));
     }
+    if (srd) srcs.add("SRD 5.1 (CC-BY-4.0) for the rules text");
+    if (srcs.size) body.push(el("p", { class: "info-src", text: `Source: ${[...srcs].join(" · ")}` }));
     if (i.link) body.push(el("a", { class: "info-link", href: i.link, target: "_blank", rel: "noopener", text: i.linkText || "Full rules on dnd5e.wikidot.com ↗" }));
     $("info").replaceChildren(...body);
   }
@@ -337,7 +358,7 @@
       el("div", { class: "row-list" }, ...BACKGROUNDS.map(([n, src], i) => [
         i === 0 || BACKGROUNDS[i - 1][1] !== src ? group(src === "notes" ? "PHB 2014 and 2024 (notes)" : "Other published books") : "",
         tile({ label: n, icon: emblem(`background ${n}`), set: `background=${n}`, on: s.background === n,
-          info: { kind: "Background", title: n, icon: emblem(`background ${n}`, "info-emblem"), meta: fromNotes(src), srd: n, srdTypes: ["background"], link: K.link.background(n) } }),
+          info: { kind: "Background", title: n, desc: DESC.D[`${n} background`] ? `${n} background` : n, icon: emblem(`background ${n}`, "info-emblem"), meta: fromNotes(src), srd: n, srdTypes: ["background"], link: K.link.background(n) } }),
       ]).flat())];
   }
 
@@ -430,7 +451,7 @@
   function listBelief() {
     return [head("Belief", "The religions of the notes, each with its alignment."),
       el("div", { class: "row-list" }, ...O.RELIGIONS.map(([r, al]) => tile({ label: r, sub: al, icon: emblem(`religion ${r}`), set: `religion=${r}`, on: s.religion === r,
-        info: { kind: "Religion (notes)", title: r, icon: emblem(`religion ${r}`, "info-emblem"), meta: al || "", text: r === "Gnocism" ? "The belief in a hidden, uncorrupted supreme being and a flawed demiurge, the palm of creation. The church of Avaticana sits in Romulon; the Pontifex is Father Indorilius." : r === "None" ? "You follow no faith." : "" } }))),
+        info: { kind: "Religion (notes)", title: r, icon: emblem(`religion ${r}`, "info-emblem"), meta: al || "", text: r === "None" ? "You follow no faith." : NOTES_TEXT[r] ? "" : "The notes don't describe this faith yet; ask the DM.", desc: r === "None" ? false : r } }))),
       group("Alignment"),
       el("div", { class: "align-grid" }, ...O.ALIGNMENTS.map((a) => el("button", { type: "button", class: s.alignment === a ? "is-on" : "", "data-set": `alignment=${a}`, text: a })))];
   }
@@ -510,7 +531,7 @@
   function defaultFocus() {
     if (tab === "species") return s.mode === "half" ? { kind: "Species", title: "Half-blood", icon: emblem("species Half-blood", "info-emblem"), text: K.LORE["Half-blood"], traits: O.HALF_BLOOD.base.map(([n, , d]) => [n, d]) } : speciesCard(s.species, O.SPECIES[s.species].sub ? subOf(s.species) : "");
     if (tab === "class") return classCard(s.cls);
-    if (tab === "background") return { kind: "Background", title: s.background, icon: emblem(`background ${s.background}`, "info-emblem"), link: K.link.background(s.background) };
+    if (tab === "background") return { kind: "Background", title: s.background, desc: DESC.D[`${s.background} background`] ? `${s.background} background` : s.background, icon: emblem(`background ${s.background}`, "info-emblem"), link: K.link.background(s.background) };
     if (tab === "feats") return s.originFeat ? featInfo(s.originFeat) : { kind: "Feats", title: "Feats", text: "Pick an origin feat, then for each ASI level either two ability points or a feat. Feats you don't meet the prerequisite for are greyed out." };
     if (tab === "belief") return { kind: "Belief", title: s.religion, icon: emblem(`religion ${s.religion}`, "info-emblem") };
     return { kind: "Abilities", title: "Ability scores", text: "Choose your base scores, then where your background's +2 and +1 go." };
