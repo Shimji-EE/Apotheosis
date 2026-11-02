@@ -90,3 +90,54 @@ window.Hub = (() => {
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
   else start();
 })();
+
+// Living page (Charl, 2026-11-02: "not live enough"): embers rise like the landing page's dust, and
+// cards lean toward the pointer. Off under prefers-reduced-motion.
+(() => {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const go = () => {
+    const cv = document.createElement("canvas");
+    cv.id = "embers"; cv.setAttribute("aria-hidden", "true");
+    let hz = document.querySelector(".haze");
+    if (!hz) { hz = document.createElement("div"); hz.className = "haze"; hz.setAttribute("aria-hidden", "true"); document.body.prepend(hz); }
+    hz.after(cv);
+    const cx = cv.getContext("2d");
+    let w = 0, h = 0;
+    const fit = () => { const d = Math.min(devicePixelRatio || 1, 2); w = innerWidth; h = innerHeight; cv.width = w * d; cv.height = h * d; cx.setTransform(d, 0, 0, d, 0, 0); };
+    fit(); addEventListener("resize", fit);
+    const N = Math.round(Math.min(70, (innerWidth * innerHeight) / 22000));
+    const spawn = (p = {}) => Object.assign(p, { x: Math.random() * w, y: h + Math.random() * h * 0.3, r: 0.6 + Math.random() * 1.8,
+      v: 0.25 + Math.random() * 0.7, sway: Math.random() * 6.28, life: 0, max: 400 + Math.random() * 600, hot: Math.random() < 0.25 });
+    const ps = Array.from({ length: N }, () => { const p = spawn(); p.y = Math.random() * h; return p; });
+    let last = 0;
+    const tick = (t) => {
+      requestAnimationFrame(tick);
+      if (document.hidden || t - last < 30) return;
+      last = t;
+      cx.clearRect(0, 0, w, h);
+      for (const p of ps) {
+        p.life++; p.y -= p.v; p.sway += 0.02; p.x += Math.sin(p.sway) * 0.35;
+        if (p.y < -10 || p.life > p.max) spawn(p);
+        const a = Math.min(1, p.life / 60) * Math.max(0, 1 - p.life / p.max) * (0.55 + 0.45 * Math.sin(p.life * 0.1));
+        cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 6.283);
+        cx.fillStyle = p.hot ? `rgba(255,150,120,${a})` : `rgba(236,74,86,${a * 0.8})`;
+        cx.shadowColor = "rgba(236,74,86,0.9)"; cx.shadowBlur = p.r * 6;
+        cx.fill();
+      }
+    };
+    requestAnimationFrame(tick);
+    if (!matchMedia("(hover: hover)").matches) return;
+    const TILT = ".seat, .tile-opt, .item-card";
+    addEventListener("pointermove", (e) => {
+      const c = e.target.closest && e.target.closest(TILT);
+      document.querySelectorAll(".m-tilt").forEach((x) => { if (x !== c) { x.classList.remove("m-tilt"); x.style.removeProperty("--tx"); x.style.removeProperty("--ty"); } });
+      if (!c) return;
+      const b = c.getBoundingClientRect();
+      const k = c.classList.contains("seat") ? 7 : 9;
+      c.classList.add("m-tilt");
+      c.style.setProperty("--tx", `${(((e.clientX - b.left) / b.width) - 0.5) * k}deg`);
+      c.style.setProperty("--ty", `${(0.5 - ((e.clientY - b.top) / b.height)) * k}deg`);
+    }, { passive: true });
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", go); else go();
+})();
