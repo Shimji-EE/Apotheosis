@@ -52,6 +52,21 @@
     el("span", { class: "rail-char-name", text: c.name }),
     el("span", { class: "rail-char-sub", text: sub }));
 
+  // DM only (Charl, 2026-11-02): delete any character from the rail. The database allows it for the DM.
+  function deleteButton(c) {
+    const b = el("button", { type: "button", class: "rail-open rail-delete", title: `Delete ${c.name}`, text: "Delete" });
+    b.addEventListener("click", async () => {
+      if (!confirm(`Delete ${c.name} (${nameOf(c.owner_id)})? This cannot be undone.`)) return;
+      b.disabled = true;
+      const { error } = await db.from("characters").delete().eq("id", c.id);
+      if (error) { b.disabled = false; alert(error.message); return; }
+      chars = chars.filter((x) => x.id !== c.id);
+      drawRail();
+      drawLineup();
+    });
+    return b;
+  }
+
   function drawRail() {
     const list = $("my-chars");
     // The DM brings no character: their column lists every sheet at the table instead.
@@ -59,8 +74,9 @@
       $("chars-head").textContent = "The party's characters";
       $("chars-note").textContent = "Open any sheet. The DM runs the table and brings no character.";
       const party = chars.filter((c) => (profiles.find((p) => p.id === c.owner_id) || {}).role !== "dm");
-      list.replaceChildren(...party.map((c) => el("li", { class: "is-link" },
-        el("a", { class: "rail-char", href: `character/?id=${c.id}` }, charArt(c), charText(c, `${nameOf(c.owner_id)} · ${subLine(c)}`)))));
+      list.replaceChildren(...party.map((c) => el("li", {},
+        el("a", { class: "rail-char", href: `character/?id=${c.id}` }, charArt(c), charText(c, `${nameOf(c.owner_id)} · ${subLine(c)}`)),
+        deleteButton(c))));
       if (!party.length) list.append(el("li", { class: "rail-note", text: "No player characters yet." }));
       return;
     }
