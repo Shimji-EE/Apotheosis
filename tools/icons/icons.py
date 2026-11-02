@@ -59,6 +59,7 @@ DEFAULT_PACKS = [
 PACKS = {
     "all": "All_Icons.zip*",                    # BG3Icons/<Category>/...  (webp/png)
     "monti": "monti_icon_pack_bg3_v1*.7z",      # Monti Icon Pack BG3: Override/ and Extra/ (tga)
+    "tiles": "Icon_pack-3125*.7z",              # BG3 icon tiles, 64px, unnamed: Icons/cutsprites{,2}/tileNNN.png
 }
 
 # Skill, power and effect categories, in the order a duplicate name is resolved.
@@ -179,7 +180,7 @@ def load_icons(ids, packs_dir=None):
     by_pack = {}
     for icon_id in ids:
         key, rel = icon_id.split(":", 1)
-        prefix = "BG3Icons/" if key == "all" else "Monti Icon Pack BG3 v1.0/"
+        prefix = {"all": "BG3Icons/", "monti": "Monti Icon Pack BG3 v1.0/"}.get(key, "")
         by_pack.setdefault(key, {})[prefix + rel] = icon_id
     out = {}
     for key, names in by_pack.items():
