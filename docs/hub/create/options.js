@@ -13,7 +13,7 @@ window.CreatorOptions = (() => {
   // spell: spellcasting ability; spellAlt: the manual's "Class Divergence" alternatives.
   const CLASSES = {
     Barbarian: { die: 12, saves: ["str", "con"], skills: [2, ["Animal Handling", "Athletics", "Intimidation", "Nature", "Perception", "Survival"]],
-      subclasses: ["Path of the Berserker", "Path of the Totem Warrior", "Path of the Wild Heart", "Path of the World Tree", "Path of the Zealot"] },
+      subclasses: ["Path of the Berserker", "Path of the Totem Warrior", "Path of the Wild Heart", "Path of the Zealot"] },
     Bard: { die: 8, saves: ["dex", "cha"], skills: [3, SKILLS], spell: "cha",
       subclasses: ["College of Dance", "College of Glamour", "College of Lore", "College of Valor"] },
     Cleric: { die: 8, saves: ["wis", "cha"], skills: [2, ["History", "Insight", "Medicine", "Persuasion", "Religion"]], spell: "wis",
@@ -33,14 +33,14 @@ window.CreatorOptions = (() => {
       subclasses: ["Arcane Trickster", "Assassin", "Soulknife", "Thief"] },
     Sorcerer: { die: 6, saves: ["con", "cha"], skills: [2, ["Arcana", "Deception", "Insight", "Intimidation", "Persuasion", "Religion"]],
       spell: "cha", spellAlt: ["con"], spellNote: "Class Divergence: Constitution on request, only if you never multiclass out of sorcerer.",
-      subclasses: ["Aberrant Sorcery", "Clockwork Sorcery", "Draconic Sorcery", "Wild Magic Sorcery"] },
+      subclasses: ["Aberrant Sorcery", "Draconic Sorcery", "Wild Magic Sorcery"] },
     Warlock: { die: 8, saves: ["wis", "cha"], skills: [2, ["Arcana", "Deception", "History", "Intimidation", "Investigation", "Nature", "Religion"]],
       spell: "cha", spellAlt: ["int"], spellNote: "Class Divergence: Intelligence instead, on request.",
       subclasses: ["Archfey Patron", "Celestial Patron", "Fiend Patron", "Great Old One Patron"] },
     Wizard: { die: 6, saves: ["int", "wis"], skills: [2, ["Arcana", "History", "Insight", "Investigation", "Medicine", "Religion"]], spell: "int",
       subclasses: ["Abjurer", "Conjurer", "Diviner", "Enchanter", "Evoker", "Illusionist", "Necromancer", "Transmuter"] },
     "Carlislean Lycanthrope": { die: 10, saves: ["str", "con"], skills: [2, ["Athletics", "Insight", "Intimidation", "Perception", "Stealth", "Survival"]],
-      monster: true, note: "Monster class (Appendix III): only for characters who have reached Stage 5 of Canis Hysteria. DM's approval needed.",
+      monster: true, noStart: true, note: "Monster class (Appendix III): only for characters who have reached Stage 5 of Canis Hysteria. DM's approval needed.",
       subclasses: [],
       features: [
         [1, "Bestial Transformation", "bonus", "Proficiency bonus / long rest"], [1, "Silverbound"], [1, "Mark of the Full Moon"],

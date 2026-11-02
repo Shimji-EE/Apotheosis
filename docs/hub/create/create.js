@@ -294,7 +294,7 @@
       group(s.gestalt ? "First class" : "Class"),
       el("div", { class: "tile-grid" }, ...names.map((n) => {
         const bad = s.mode === "pure" && speciesInfo().sub && (speciesInfo().sub.noClass || []).includes(n);
-        return tile({ label: n, sub: CLASSES[n].monster ? "DM's approval" : CLASSES[n].tag || "", icon: emblem(`class ${n}`), set: `cls=${n}`, on: s.cls === n, off: bad ? "Not open to Abyssal Tieflings" : "", info: classCard(n) });
+        return tile({ label: n, sub: CLASSES[n].noStart ? "Not at creation" : CLASSES[n].tag || "", icon: emblem(`class ${n}`), set: `cls=${n}`, on: s.cls === n, off: CLASSES[n].noStart ? "Reached in play, not chosen at creation" : bad ? "Not open to Abyssal Tieflings" : "", info: classCard(n) });
       }))];
     const subs = subclassesOf(s.cls);
     if (subs.length) {
@@ -316,7 +316,7 @@
     out.push(group(`Class skills: choose ${n} (${s.skills.length} chosen)`), el("div", { class: "check-list check-cols" },
       ...list.map((k) => check(k, { "data-skill": k, ...(s.skills.length >= n && !s.skills.includes(k) ? { disabled: "" } : {}) }, s.skills.includes(k), { kind: `${LABEL[SKILL_AB[k]]} skill`, title: k, text: `A ${LABEL[SKILL_AB[k]]} check you add your proficiency bonus to.` }))));
     if (s.gestalt) {
-      out.push(group("Second class"), el("div", { class: "tile-grid tile-grid-small" }, ...names.filter((x) => x !== s.cls).map((x) =>
+      out.push(group("Second class"), el("div", { class: "tile-grid tile-grid-small" }, ...names.filter((x) => x !== s.cls && !CLASSES[x].noStart).map((x) =>
         tile({ label: x, icon: emblem(`class ${x}`), set: `cls2=${x}`, on: s.cls2 === x, info: classCard(x) }))));
       const subs2 = subclassesOf(s.cls2);
       if (subs2.length) {
@@ -518,6 +518,7 @@
       const [k, ...rest] = t.dataset.set.split("=");
       const v = rest.join("=");
       if (!k) { focus = t._info || null; render(); return; }
+      if ((k === "cls" || k === "cls2") && CLASSES[v] && CLASSES[v].noStart) { focus = t._info || null; render(); return; }
       if (k === "gestaltMode") {
         s.gestalt = v === "on"; s.saves = [];
         if (s.cls2 === s.cls) s.cls2 = Object.keys(CLASSES).find((n) => n !== s.cls);
