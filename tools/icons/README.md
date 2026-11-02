@@ -32,3 +32,23 @@ Custom recipe example (`custom.json`):
   }
 }
 ```
+
+## Making new icons: BG3 Icon Generator
+
+When no pack icon fits (and never by reusing one icon for two things), make a new one in
+`tools/bg3-icon-generator/`, a copy of SpasticPengu's BG3 Icon Generator v0.7.7 (GPL v3, see its
+LICENSE and NOTICE). It builds icons from the game's own strokes, gradients and glow, so they
+match the packs' level of detail.
+
+1. Start it: double-click `tools\bg3-icon-generator\Start.bat` (on Charl's PC:
+   `F:\Projects\Apotheosis\tools\bg3-icon-generator\Start.bat`). The first start downloads its own
+   Python and the game's icon data (about 420 MB, all inside that folder, git-ignored).
+2. Draw or edit the icon, set its **Name in the game** (e.g. `SnowElf`), and **Export** under the
+   mod name `Apotheosis` with PNGs ticked. Exports land in `outputs/editor/Apotheosis/png/`.
+3. Publish it to the site:
+
+       python tools/icons/icons.py generated --to creator --glow --map tools/icons/creator-made.json
+
+   `--glow` makes a Grave Red emblem like the creator's others; leave it off to keep the game
+   colours (for powers and features). The map says which label each export is for, e.g.
+   `{"species Snow Elf": "Apotheosis_Spell_SnowElf"}`. The tool refuses to give one icon two labels.

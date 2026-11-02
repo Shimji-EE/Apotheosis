@@ -26,12 +26,19 @@ Commands
                        Turn flat white pack glyphs (class, species, deity…) into the site's
                        glowing Grave Red emblems: a red-hot core with a soft neon halo. MAP is
                        {"file-name": "catalogue id"}; writes DIR/manifest.json too.
+  generated --to DIR [--mod M] [--map MAP.json] [--glow]
+                       Publish icons made in the BG3 Icon Generator (tools/bg3-icon-generator,
+                       exported under mod name M, default Apotheosis) into docs/hub/icons/DIR.
+                       --glow turns them into Grave Red emblems like the creator's; without it
+                       they keep the game's colours. MAP is {"label": "IconKey"}; without one,
+                       every exported icon is published under its own key.
 
 Examples
   python3 tools/icons/icons.py find sacred flame
   python3 tools/icons/icons.py sheet frost -o /tmp/frost.png
   python3 tools/icons/icons.py add all:Item/Weapon/Mace/WPN_Mace_Unfaded_Icon.png --to items
   python3 tools/icons/icons.py custom tools/icons/custom.json
+  python3 tools/icons/icons.py generated --to creator --glow --map tools/icons/creator-made.json
 """
 import argparse
 import colorsys
@@ -414,6 +421,55 @@ def cmd_glow(args):
     manifest_path.write_text(json.dumps(manifest, separators=(",", ":"), ensure_ascii=False))
 
 
+GEN_OUT = ROOT / "tools" / "bg3-icon-generator" / "outputs" / "editor"
+
+
+def generated_art(mod, key):
+    """The largest transparent export of one generator icon (not the faded tooltip copy)."""
+    png = GEN_OUT / mod / "png"
+    best = None
+    for f in png.glob(f"{key}_*.png"):
+        m = re.fullmatch(re.escape(key) + r"_(\d+)", f.stem)
+        if m and (best is None or int(m.group(1)) > best[0]):
+            best = (int(m.group(1)), f)
+    if not best:
+        sys.exit(f"No export of {key!r} in {png}. Export it from the generator under the mod name {mod!r} first.")
+    return Image.open(best[1]).convert("RGBA")
+
+
+def cmd_generated(args):
+    png = GEN_OUT / args.mod / "png"
+    if args.map:
+        names = json.loads(Path(args.map).read_text())
+    else:
+        keys = sorted({re.sub(r"_(\d+)$", "", f.stem) for f in png.glob("*.png") if re.search(r"_\d+$", f.stem) and not re.search(r"_hotbar_\d+$", f.stem)})
+        names = {k: k for k in keys}
+    if not names:
+        sys.exit(f"Nothing exported yet in {png}.")
+    out_dir = SITE_ICONS / args.to
+    out_dir.mkdir(parents=True, exist_ok=True)
+    manifest_path = out_dir / "manifest.json"
+    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
+    # Charl (2026-11-02): one icon, one meaning.
+    used = {v["from"]: v["label"] for v in manifest.values()}
+    for label, key in names.items():
+        src = f"gen:{args.mod}/{key}"
+        if used.get(src, label) != label:
+            sys.exit(f"{key} is already the icon for {used[src]!r}; make a new one for {label!r}.")
+        used[src] = label
+    for label, key in names.items():
+        art = generated_art(args.mod, key)
+        file = f"{slug(label)}.webp"
+        if args.glow:
+            img = glow(art, args.colour, args.size)
+        else:
+            img = art.resize((args.size, args.size), Image.LANCZOS)
+        img.save(out_dir / file, "WEBP", quality=90)
+        manifest[key_of(label)] = {"label": label, "file": file, "from": f"gen:{args.mod}/{key}"}
+        print(f"{'glow' if args.glow else 'icon'} {args.to}/{file}  <- {key}")
+    manifest_path.write_text(json.dumps(manifest, separators=(",", ":"), ensure_ascii=False))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--packs", help="folder holding the icon pack archives")
@@ -427,6 +483,8 @@ def main():
     p = sub.add_parser("add"); p.add_argument("id"); p.add_argument("--to", default="items"); p.add_argument("--name"); p.add_argument("--size", type=int); p.set_defaults(fn=cmd_add)
     p = sub.add_parser("custom"); p.add_argument("recipe"); p.set_defaults(fn=cmd_custom)
     p = sub.add_parser("glow"); p.add_argument("map"); p.add_argument("--to", required=True); p.add_argument("--colour", default="#e0303f"); p.add_argument("--size", type=int, default=128); p.set_defaults(fn=cmd_glow)
+    p = sub.add_parser("generated"); p.add_argument("--to", required=True); p.add_argument("--mod", default="Apotheosis"); p.add_argument("--map")
+    p.add_argument("--glow", action="store_true"); p.add_argument("--colour", default="#e0303f"); p.add_argument("--size", type=int, default=128); p.set_defaults(fn=cmd_generated)
     args = ap.parse_args()
     args.fn(args)
 
