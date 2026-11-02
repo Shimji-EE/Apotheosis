@@ -1,0 +1,13 @@
+[
+ {"label":"species Snow Elf","to":"creator","style":"glow","layers":[
+   {"icon":"Spell_Illusion_DisguiseSelf_Elf_Female","strokes":[1,2,3,4,5,6,7,8,9,10,12,14],"x":0.5,"y":0.62,"size":0.7},
+   {"icon":"Spell_Evocation_RayOfFrost","strokes":[1],"x":0.5,"y":0.15,"size":0.32}]},
+ {"label":"class Blood Hunter","to":"creator","style":"glow","layers":[
+   {"icon":"Action_PactOfTheBlade_Greatsword","strokes":[1,3,4,8,9,11,13],"x":0.56,"y":0.5,"size":0.84},
+   {"icon":"Action_Mag_Bloodfeeding","strokes":[2,3,4],"x":0.22,"y":0.6,"size":0.3}]},
+ {"label":"variant Reborn","to":"creator","style":"glow","layers":[
+   {"icon":"Spell_Necromancy_CreateUndead","strokes":[1,4],"x":0.5,"y":0.74,"size":0.4},
+   {"icon":"Spell_Necromancy_Revivify","strokes":[2,3,5,6],"x":0.5,"y":0.32,"size":0.54}]},
+ {"label":"variant None","to":"creator","style":"glow","layers":[
+   {"icon":"Spell_Abjuration_MagicCircle","strokes":[1],"x":0.5,"y":0.5,"size":0.74}]}
+]

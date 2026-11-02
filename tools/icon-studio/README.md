@@ -28,3 +28,15 @@ Examples: `Species Snow Elf`, `Class Blood Hunter`, `Variant Reborn`, `Variant N
 Re-exporting the same icon replaces it. One icon has one meaning: the publisher refuses to give an
 export a second label. Two windows stay minimised while you work (the editor and the publisher);
 closing the editor stops both.
+
+## Forge: icons Claude makes without the editor
+
+`forge.py` drives the generator's engine headlessly, so Claude can build icons from the game's own
+line art and publish them. It needs the generator's `data` folder (Charl's `data.zip` in the project
+files, unzipped into the generator folder) and numpy, scipy and Pillow.
+
+    python tools/icon-studio/forge.py find snow                  # game icons by name
+    python tools/icon-studio/forge.py sheet ICON... -o sheet.png # stroke numbers, to pick parts
+    python tools/icon-studio/forge.py make tools/icon-studio/recipes/creator-emblems.json
+
+Recipes in `recipes/` record how each forged icon was built, so it can be remade or adjusted.
