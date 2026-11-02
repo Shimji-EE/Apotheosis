@@ -19,6 +19,20 @@
   $("create-panel").hidden = !canEdit;
   $("create-link").href = `../create/?u=${encodeURIComponent(owner.username)}`;
 
+  // The owner or the DM can delete a character. Asks first: it cannot be undone.
+  function deleteButton(c) {
+    const b = el("button", { type: "button", class: "char-delete", title: `Delete ${c.name}`, text: "Delete" });
+    b.addEventListener("click", async () => {
+      if (!confirm(`Delete ${c.name}? This cannot be undone.`)) return;
+      b.disabled = true;
+      const { error } = await db.from("characters").delete().eq("id", c.id);
+      if (error) { b.disabled = false; return say(error.message, true); }
+      say(`${c.name} was deleted.`);
+      load();
+    });
+    return b;
+  }
+
   async function load() {
     const { data, error } = await db
       .from("characters")
@@ -29,11 +43,12 @@
     const list = $("characters");
     list.replaceChildren(
       ...data.map((c) =>
-        el("li", {},
+        el("li", { class: "char-item" },
           el("a", { class: "char-card", href: `../character/?id=${c.id}` },
             el("span", { class: "char-name", text: c.name }),
             el("span", { class: "char-sub", text: [c.species, c.class, `Level ${c.level}`].filter(Boolean).join(" · ") })
-          )
+          ),
+          canEdit ? deleteButton(c) : ""
         )
       )
     );

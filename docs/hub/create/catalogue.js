@@ -89,7 +89,7 @@ window.CreatorCatalogue = (() => {
     Dwerfen: "Reclusive, greedy engineers of brass marvels from the Deep Roads, far below even the drow. Elf-like in looks but unrelated, risen from beneath the world's crust. Resistant, not immune, to lyrium.",
     Orq: "Wood elves cursed to savagery: antlers traded for wolven canines and ridged faces, and a hunger for conquest. The Pariah-Folk of desiccated forests and torn-down jungles.",
     Golyath: "Distant descendants of the giants, the primordial race that became the land itself. Each bears the favours of the first giants and can briefly grow toward their size.",
-    Drakeborn: "Not playable: Drakeborn are NPCs, in the style of the Elder Scrolls' Argonians. An oviparous, scaled and curiously hive-minded people with room for individual ambition. Whether humans were cursed or gifted with dragon essence is unknown.",
+    Drakeborn: "Argonian-like in look and culture (as in the Elder Scrolls), with the abilities of the Forgotten Realms' Dragonborn. An oviparous, scaled and curiously hive-minded people with room for individual ambition. Whether humans were cursed or gifted with dragon essence is unknown.",
     Halfling: "Small folk of the Everglade, an endless spring and autumn meadowland. Kind, unambitious, and watched over by the storied luck of the halflings.",
     Human: "As varied as they are numerous. Their ambition and resourcefulness are commended, respected and feared by all, though one human alone is more a blank canvas than a creature of great power.",
     Seraph: "Mortals carrying a greater spark of the outer deities, who can arc it outward as light, healing and heavenly fury. Their divinity often shows in biblically frightening ways. Seraphs can't be half-bloods.",

@@ -152,6 +152,11 @@
 
   // A glowing emblem from icons/creator (made with tools/icons/icons.py glow), else a lit initial.
   function emblem(key, cls = "") {
+    // A half-blood shows both parents, split corner to corner.
+    if (key === "species Half-blood" && s.mode === "half") {
+      const half = (sp, side) => { const e = emblem(`species ${sp}`, `split-${side}`); return e; };
+      return el("span", { class: `emblem emblem-split ${cls}` }, half(s.parentA, "a"), half(s.parentB, "b"), el("span", { class: "split-line" }));
+    }
     const e = EMBLEMS[keyOf(key)];
     if (e) return el("img", { class: `emblem ${cls}`, src: `../icons/creator/${e.file}`, alt: "" });
     const b = key.startsWith("background ") && BGICONS[keyOf(key)];
@@ -279,9 +284,14 @@
     return out;
   }
 
+  const GESTALT_INFO = { kind: "Homebrew rule (notes)", title: "Gestalt character", text: "Two classes at every level, with the better of any overlapping feature. Only at the start of the campaign, at the DM's discretion, generally for parties of three or fewer. Hit dice: the larger. Saves: choose two from both classes. Spell slots: the better table, except a warlock keeps Pact Magic beside the other caster's slots. ASIs at 4, 8, 12, 16 and 19 are worth one point each; a feat takes both." };
   function listClass() {
     const names = Object.keys(CLASSES);
     const out = [head("Class", "The notes' classes first. Lore wins any clash, such as the paladin casting with Wisdom."),
+      el("div", { class: "seg" }, ...[["off", "One class"], ["on", "Gestalt (two classes)"]].map(([v, t]) =>
+        Object.assign(el("button", { type: "button", class: (s.gestalt ? "on" : "off") === v ? "is-on" : "", "data-set": `gestaltMode=${v}`, text: t }), { _info: GESTALT_INFO }))),
+      s.gestalt ? el("p", { class: "list-note", text: "Gestalt: only at the start of the campaign, at the DM's discretion. Pick your second class below your skills." }) : "",
+      group(s.gestalt ? "First class" : "Class"),
       el("div", { class: "tile-grid" }, ...names.map((n) => {
         const bad = s.mode === "pure" && speciesInfo().sub && (speciesInfo().sub.noClass || []).includes(n);
         return tile({ label: n, sub: CLASSES[n].monster ? "DM's approval" : CLASSES[n].tag || "", icon: emblem(`class ${n}`), set: `cls=${n}`, on: s.cls === n, off: bad ? "Not open to Abyssal Tieflings" : "", info: classCard(n) });
@@ -305,8 +315,6 @@
     const [n, list] = c.skills;
     out.push(group(`Class skills: choose ${n} (${s.skills.length} chosen)`), el("div", { class: "check-list check-cols" },
       ...list.map((k) => check(k, { "data-skill": k, ...(s.skills.length >= n && !s.skills.includes(k) ? { disabled: "" } : {}) }, s.skills.includes(k), { kind: `${LABEL[SKILL_AB[k]]} skill`, title: k, text: `A ${LABEL[SKILL_AB[k]]} check you add your proficiency bonus to.` }))));
-    out.push(group("Gestalt (notes)"), check("Gestalt character: two classes at every level", { "data-gestalt": "1" }, s.gestalt,
-      { kind: "Homebrew rule (notes)", title: "Gestalt character", text: "Two classes at every level, with the better of any overlapping feature. Only at the start of the campaign, at the DM's discretion, generally for parties of three or fewer. Hit dice: the larger. Saves: choose two from both classes. Spell slots: the better table, except a warlock keeps Pact Magic beside the other caster's slots. ASIs at 4, 8, 12, 16 and 19 are worth one point each; a feat takes both." }));
     if (s.gestalt) {
       out.push(group("Second class"), el("div", { class: "tile-grid tile-grid-small" }, ...names.filter((x) => x !== s.cls).map((x) =>
         tile({ label: x, icon: emblem(`class ${x}`), set: `cls2=${x}`, on: s.cls2 === x, info: classCard(x) }))));
@@ -510,6 +518,11 @@
       const [k, ...rest] = t.dataset.set.split("=");
       const v = rest.join("=");
       if (!k) { focus = t._info || null; render(); return; }
+      if (k === "gestaltMode") {
+        s.gestalt = v === "on"; s.saves = [];
+        if (s.cls2 === s.cls) s.cls2 = Object.keys(CLASSES).find((n) => n !== s.cls);
+        focus = t._info || null; render(); return;
+      }
       if (k === "species" && O.SPECIES[v] && O.SPECIES[v].npc) { focus = t._info || null; render(); return; }
       s[k] = v;
       if (k === "species" || k === "speciesEd") { s.sub = k === "species" ? "" : s.sub; s.choice = ""; s.inherit = k === "speciesEd" ? [] : s.inherit; }
