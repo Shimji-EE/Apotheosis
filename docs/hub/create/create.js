@@ -173,6 +173,8 @@
     if (b) return el("img", { class: `emblem ${cls}`, src: `../icons/backgrounds/${b.file}`, alt: "" });
     return el("span", { class: `emblem emblem-letter ${cls}`, text: key.replace(/^\w+ /, "").slice(0, 1) });
   }
+  // Each subclass has its own emblem (forged from the game's line art); the class emblem stands in otherwise.
+  const subEmblem = (cls, sub, cls_ = "") => emblem(EMBLEMS[keyOf(`subclass ${sub}`)] ? `subclass ${sub}` : `class ${cls}`, cls_);
   const powerImg = (name) => {
     const p = POWERS[keyOf(name)] || POWERS[keyOf(String(name).replace(/\(.*?\)/g, ""))];
     return p ? el("img", { class: "trait-icon", src: `../icons/powers/${p.file}`, alt: "" }) : el("span", { class: "trait-icon is-blank" });
@@ -323,8 +325,8 @@
         tile({ label: "Decide later", set: "subclass=", on: !s.subclass, info: { kind: "Subclass", title: "Decide later", text: "Pick it when your class reaches its subclass level. The DM can add it to your sheet." } }),
         ...subs.map(([n, src], i) => [
           i === 0 || subs[i - 1][1] !== src ? group(src === "notes" ? "From the notes (PHB)" : "Other published books") : "",
-          tile({ label: n, set: `subclass=${n}`, on: s.subclass === n, icon: emblem(`class ${s.cls}`),
-            info: { kind: `${s.cls} subclass`, title: n, icon: emblem(`class ${s.cls}`, "info-emblem"), meta: fromNotes(src), srd: n, srdTypes: ["feature"], link: K.link.class(s.cls), linkText: `${s.cls} subclasses on dnd5e.wikidot.com ↗` } }),
+          tile({ label: n, set: `subclass=${n}`, on: s.subclass === n, icon: subEmblem(s.cls, n),
+            info: { kind: `${s.cls} subclass`, title: n, icon: subEmblem(s.cls, n, "info-emblem"), meta: fromNotes(src), srd: n, srdTypes: ["feature"], link: K.link.class(s.cls), linkText: `${s.cls} subclasses on dnd5e.wikidot.com ↗` } }),
         ]).flat()));
     }
     const c = C();
@@ -343,8 +345,8 @@
       if (subs2.length) {
         out.push(group(`${s.cls2} subclass`), el("div", { class: "row-list" },
           tile({ label: "Decide later", set: "subclass2=", on: !s.subclass2 }),
-          ...subs2.map(([x, src]) => tile({ label: x, sub: src === "notes" ? "" : "Published", set: `subclass2=${x}`, on: s.subclass2 === x,
-            info: { kind: `${s.cls2} subclass`, title: x, meta: fromNotes(src), link: K.link.class(s.cls2) } }))));
+          ...subs2.map(([x, src]) => tile({ label: x, sub: src === "notes" ? "" : "Published", set: `subclass2=${x}`, on: s.subclass2 === x, icon: subEmblem(s.cls2, x),
+            info: { kind: `${s.cls2} subclass`, title: x, icon: subEmblem(s.cls2, x, "info-emblem"), meta: fromNotes(src), link: K.link.class(s.cls2) } }))));
       }
       const pool = [...new Set([...c.saves, ...C2().saves])];
       out.push(group(`Saving throws: choose two (${s.saves.length} chosen)`), el("div", { class: "check-list check-cols" },

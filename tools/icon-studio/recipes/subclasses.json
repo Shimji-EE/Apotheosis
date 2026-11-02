@@ -1,0 +1,1696 @@
+[
+{
+"label": "subclass Path of the Berserker",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Barbarian_Frenzy",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Path of the Totem Warrior",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Barbarian_Rage_BearTotem",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Path of the Wild Heart",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Barbarian_Rage_WolfTotem",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Path of the Zealot",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_DivineStrike_Radiant_Melee",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Path of the Ancestral Guardian",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_WildMagic_Barbarian_ExplodingFlumph",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Path of the Beast",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Boar_Tusk",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Path of the Giant",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_GiantsRage",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Path of the Storm Herald",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Fly",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Path of Wild Magic",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Barbarian_Rage_WildMagic",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass College of Dance",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Song_BardDance",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass College of Glamour",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_MantleOfInspiration",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass College of Lore",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Bard_CuttingWords",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass College of Valor",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Bard_GrantBardicInspiration",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass College of Creation",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Mag_Harmonizing",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass College of Eloquence",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Bard_Countercharm",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass College of Spirits",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Necromancy_SpeakWithDead",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass College of Swords",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_SlashingFlourish_Melee",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass College of Whispers",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monster_Daisy_CommandHush",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Knowledge Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_KnowledgeOfTheAges",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Life Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Cleric_PreserveLife",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Light Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Cleric_RadianceOfTheDawn",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Nature Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_CharmAnimalsAndPlants",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Tempest Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Conjuration_CallLightning",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Trickery Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Cleric_InvokeDuplicity",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass War Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_DivineStrike_Melee",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Arcana Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Abjuration_Counterspell",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Death Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_CircleOfDeath",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Forge Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Transmutation_HeatMetal",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Grave Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Necromancy_Revivify",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Order Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Enchantment_CommandApproach",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Peace Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Abjuration_Sanctuary",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Twilight Domain",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Evocation_Darkness",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Circle of the Land",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Skill_Druid_NaturalRecovery",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Circle of the Moon",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Skill_Druid_WildShape_Heal",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Circle of the Sea",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_WrithingTide",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Circle of the Stars",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_StarryForm_Dragon",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Circle of Dreams",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_SelunesDream",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Circle of Spores",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_HaloOfSpores",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Circle of Wildfire",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Evocation_FireBolt",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Battle Master",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Riposte",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Champion",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_ChampionChallenge",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Eldritch Knight",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_WeaponBond",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Psi Warrior",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_MagicItem_TelekineticBolt",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Arcane Archer",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_ArcaneArcher_SeekingArrow",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Rune Knight",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_BootOfTheGiants",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Samurai",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Skill_Fighter_Rally",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Warrior of Mercy",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Paladin_LayOnHands_Cure",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Warrior of Shadow",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monk_ShadowStep",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Warrior of the Elements",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monk_FangsOfTheFireSnake",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Warrior of the Open Hand",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monk_OpenHandTechnique_Knock",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Way of the Ascendant Dragon",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Dragonborn_BreathWeapon_Lightning",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Way of the Astral Self",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_AstralKnowledge",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Way of the Drunken Master",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monk_DrunkenTechnique",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Way of the Kensei",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_MobileFlourish_Melee",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Way of the Long Death",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Mag_DeathWish",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Way of the Sun Soul",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Evocation_ScorchingRay",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Oath of Devotion",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Paladin_SacredWeapon",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Oath of Glory",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_InspiringLeader",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Oath of the Ancients",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Paladin_NaturesWrath",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Oath of Vengeance",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Paladin_VowOfEnmity",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Oath of Conquest",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monster_Banite_AuraOfTerror",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Oath of Redemption",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Paladin_DivineGuardian",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Oath of the Crown",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_MantleOfMajesty",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Oath of the Watchers",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Paladin_AuraOfWarding",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Oathbreaker",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Paladin_AuraOfHate",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Beast Master",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Ranger_RangersCompanion_Wolf",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Fey Wanderer",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_FeyPresence",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Gloom Stalker",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_DreadAmbusher_Ranged",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Hunter",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_HordeBreaker_Ranged",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Drakewarden",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Dragonborn_BreathWeapon_FireCone",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Horizon Walker",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Conjuration_MistyStep",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Monster Slayer",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_DarkUrge",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Swarmkeeper",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monster_Bear_Amass",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Arcane Trickster",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Conjuration_MageHand",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Assassin",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_HeartStopper",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Soulknife",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Mag_SilencingBlade",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Thief",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_InfiltrationExpertise",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Mastermind",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Help",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Scout",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Disengage_Bonus",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Swashbuckler",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Panache",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Aberrant Sorcery",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monster_Duergar_MindSpike",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Draconic Sorcery",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Skill_Sorcerer_Passive_ElementalAffinity_Resistance",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Wild Magic Sorcery",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Skill_Sorcerer_Passive_TidesOfChaos",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Divine Soul",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Skill_Sorcerer_Passive_BendLuck",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Lunar Sorcery",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Skill_Druid_MoonBeam_Move",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Shadow Magic",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_UmbralCloak",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Storm Sorcery",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_TempestuousMagic",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Archfey Patron",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Enchantment_CharmPerson",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Celestial Patron",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Mag_BoltOfCelestialLight",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Fiend Patron",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_MagicItem_SlashTheWeak",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Great Old One Patron",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monster_DisplacerBeast_Tentacle",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Fathomless Patron",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monk_WaterWhip",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Genie Patron",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monster_ElementalAir_Blast",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Hexblade",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_HexbladesCurse",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Undead Patron",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Paladin_DreadfulAspect",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Undying Patron",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Abjuration_DeathWard",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Abjurer",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Abjuration_GlyphOfWarding_ExplosiveRunes",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Conjurer",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_BenignTransposition",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Diviner",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Raven_BadOmen",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Enchanter",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_HypnoticGaze",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Evoker",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Evocation_Fireball",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Illusionist",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monster_DisplacerBeast_Illusion",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Necromancer",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Necromancy_AnimateDead",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Transmuter",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_TransmuterStone_Constitution",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Bladesinging",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Bladesong",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Order of Scribes",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Skill_Wizard_ArcaneRecovery",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass War Magic",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monk_DeflectMissile",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Alchemist",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Dip",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Armorer",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Abjuration_ArmorOfAgathys",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Artillerist",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monster_GortashMachine_GrenadeLauncher",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Battle Smith",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monster_GortashMachine_ShieldCapacitor",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Order of the Ghostslayer",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Paladin_TurnTheUnholy",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Order of the Lycan",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Skill_Druid_WildShape_DireWolf",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Order of the Mutant",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Mag_Bloodfeeding_ScarletRegeneration",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Order of the Profane Soul",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_SoulBranding",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Order of the Avatar",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Mag_AuraOfLeadership",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Order of the Awakened",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_ReadThoughts",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Order of the Immortal",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monk_WholenessOfBody",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Order of the Nomad",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Spell_Conjuration_DimensionDoor",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Order of the Soul Knife",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "TadpoleSuperPower_PsionicDominance",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+},
+{
+"label": "subclass Order of the Wu Jen",
+"to": "creator",
+"style": "glow",
+"weight": 5,
+"layers": [
+{
+"icon": "Action_Monk_IceCube",
+"x": 0.5,
+"y": 0.5,
+"size": 0.86
+}
+]
+}
+]
