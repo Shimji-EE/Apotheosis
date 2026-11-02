@@ -924,3 +924,99 @@ body.hub main > :nth-child(n+4), body.hub .hub-main > :nth-child(n+4) { animatio
 /* The DM's delete beside each sheet in the Tavern rail. */
 button.rail-delete { cursor: pointer; background: none; font-family: var(--display); }
 button.rail-delete:hover { color: #fff; background: #5a121a; border-color: var(--accent); }
+
+/* Frosted glass (Charl, 2026-11-02: "rounded and frosted glass, sleek yet fantasy", in line with the
+   landing page, which stays as it is). Same Grave Red tokens and haze; cards become smoked glass with
+   soft corners, a thin warm rim and a red under-glow. Hub pages only. */
+body.hub {
+  --glass: rgba(24, 18, 15, 0.52);
+  --glass-deep: rgba(14, 11, 9, 0.62);
+  --glass-rim: rgba(255, 224, 205, 0.09);
+  --glass-hi: rgba(255, 236, 220, 0.06);
+  --r-lg: 18px; --r-md: 12px; --r-sm: 9px;
+}
+body.hub .haze { animation: m-haze 38s ease-in-out infinite alternate; }
+@keyframes m-haze { from { transform: scale(1) translate(0, 0); } to { transform: scale(1.12) translate(-3%, 2%); } }
+#embers { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+
+.hub .panel, .lobby-rail, .seat, .cc-list, .cc-info, .cc-stage, .sheet, .lobby-stage .scene-panel, .char-card {
+  border-radius: var(--r-lg);
+  background: linear-gradient(160deg, var(--glass-hi), transparent 40%), linear-gradient(180deg, var(--glass), var(--glass-deep));
+  -webkit-backdrop-filter: blur(16px) saturate(1.25); backdrop-filter: blur(16px) saturate(1.25);
+  border: 1px solid var(--glass-rim);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 236, 220, 0.07), inset 0 0 60px rgba(208, 49, 63, 0.04);
+}
+.hub .panel { border-top: 1px solid rgba(208, 49, 63, 0.55); }
+.lobby-rail { border-left: 1px solid var(--glass-rim); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), inset 3px 0 0 var(--accent), inset 0 1px 0 rgba(255, 236, 220, 0.07); }
+.cc-info { border-top: 1px solid rgba(208, 49, 63, 0.6); }
+.cc-stage { background: radial-gradient(ellipse at 50% 28%, rgba(208, 49, 63, 0.2), transparent 60%), linear-gradient(180deg, var(--glass), var(--glass-deep)); }
+.lobby-stage .scene-panel { padding: 1rem; }
+.seat { border-bottom: 1px solid var(--glass-rim); box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5), inset 0 -3px 0 #2a221b, inset 0 1px 0 rgba(255, 236, 220, 0.07); }
+.seat.is-online { box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5), inset 0 -3px 0 var(--accent), 0 0 30px rgba(208, 49, 63, 0.18); }
+.seat.is-ready { box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5), inset 0 -3px 0 #3dff6e, 0 0 30px rgba(61, 255, 110, 0.12); }
+.seat.is-me { box-shadow: 0 0 0 1px var(--accent), 0 18px 44px rgba(208, 49, 63, 0.22), inset 0 -3px 0 var(--accent); }
+
+/* Small cards and controls. */
+.tile-opt, .check-opt, .item-card, .chip {
+  border-radius: var(--r-md);
+}
+.tile-opt, .check-opt, .item-card {
+  background: linear-gradient(160deg, var(--glass-hi), transparent 45%), rgba(16, 12, 10, 0.55);
+  border-color: var(--glass-rim);
+}
+.tile-opt.is-on { background: radial-gradient(circle at 50% 30%, rgba(208, 49, 63, 0.32), transparent 70%), rgba(22, 13, 12, 0.7); border-color: var(--accent); }
+.rail-char { border-radius: var(--r-md) 0 0 var(--r-md); background: rgba(16, 12, 10, 0.5); border-color: var(--glass-rim); }
+.rail-chars li.is-link .rail-char { border-radius: var(--r-md); }
+.rail-open { border-radius: 0 var(--r-md) var(--r-md) 0; border-color: var(--glass-rim); background: rgba(16, 12, 10, 0.4); }
+.rail-char-art, .seat-art { border-radius: 50%; }
+.seat-art { border-radius: var(--r-lg) var(--r-lg) 0 0; }
+.cell, .slot .tile, .tile { border-radius: var(--r-sm); }
+.cc-btn, .ready-button, .button { border-radius: 999px; clip-path: none; }
+.cc-tabs { border-radius: var(--r-md); }
+.cc-tabs button { border-radius: var(--r-sm) var(--r-sm) 0 0; }
+.hub input, .hub select, .hub textarea { border-radius: var(--r-sm); }
+.cc-list { scrollbar-width: thin; }
+
+/* Glass sheen: a soft light sweeps across a card when you point at it, and across live seats now and then. */
+.seat, .tile-opt, .item-card, .rail-char, .lobby-rail, .cc-stage { position: relative; overflow: hidden; }
+.cc-info { overflow: hidden; }
+.seat::after, .tile-opt::after, .item-card::after, .rail-char::after, .lobby-rail::after, .cc-stage::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 230, 215, 0.10) 48%, rgba(236, 74, 86, 0.08) 52%, transparent 65%);
+  transform: translateX(-120%);
+}
+.seat:hover::after, .tile-opt:hover::after, .item-card:hover::after, .rail-char:hover::after { transition: transform 0.9s var(--m-ease); transform: translateX(120%); }
+.seat.is-online::after { animation: m-sheen 7s ease-in-out infinite; animation-delay: calc(var(--m-i, 0) * 0.9s); }
+.lobby-rail::after, .cc-stage::after { animation: m-sheen 11s ease-in-out infinite; }
+@keyframes m-sheen { 0%, 70% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+
+/* Tilt: cards lean toward the pointer (common.js sets --tx/--ty). */
+.seat, .tile-opt, .item-card { transform: perspective(700px) rotateX(var(--ty, 0deg)) rotateY(var(--tx, 0deg)); }
+.seat:hover { transform: perspective(700px) rotateX(var(--ty, 0deg)) rotateY(var(--tx, 0deg)) translateY(-5px); }
+.tile-opt:hover, .item-card:hover { transform: perspective(700px) rotateX(var(--ty, 0deg)) rotateY(var(--tx, 0deg)) translateY(-3px); }
+
+/* Living details. */
+.stage-emblems::after { content: ""; position: absolute; inset: -2px; border-radius: 50%; border: 1px dashed rgba(236, 74, 86, 0.35); animation: m-turn 60s linear infinite; pointer-events: none; }
+.stage-emblems::before { animation: m-halo 4.5s ease-in-out infinite; }
+@keyframes m-turn { to { transform: rotate(360deg); } }
+@keyframes m-halo { 0%, 100% { box-shadow: 0 0 40px rgba(208, 49, 63, 0.18), inset 0 0 40px rgba(208, 49, 63, 0.1); } 50% { box-shadow: 0 0 70px rgba(208, 49, 63, 0.38), inset 0 0 60px rgba(208, 49, 63, 0.2); } }
+.op-crest { animation: m-ember 3.6s ease-in-out infinite; }
+.seat.is-online .seat-status::before, .seat.is-ready .seat-status::before { animation: m-dot 1.6s ease-in-out infinite; }
+@keyframes m-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.45; transform: scale(1.5); } }
+.seat.is-dm .seat-sigil { animation: m-ember 4s ease-in-out infinite; }
+.stage-title, .hub-title { background: linear-gradient(90deg, var(--accent) 0%, var(--accent) 40%, #ff8a8f 50%, var(--accent) 60%, var(--accent) 100%) 0 0 / 250% 100%;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: m-title 6s ease-in-out infinite; }
+@keyframes m-title { 0%, 60% { background-position: 100% 0; } 100% { background-position: -150% 0; } }
+.ready-button:not(.is-on) { animation: m-ready 2.6s ease-in-out infinite; }
+@keyframes m-ready { 0%, 100% { box-shadow: 0 0 0 rgba(208, 49, 63, 0); } 50% { box-shadow: 0 0 26px rgba(208, 49, 63, 0.5); } }
+.cc-next:not(:disabled), .cc-btn.is-final:not(:disabled) { animation: m-ready 2.6s ease-in-out infinite; }
+.hp-fill { background-size: 200% 100%; }
+.lobby-feed li:first-child { animation: feed-in 0.4s ease-out, m-flick 3s ease-in-out 0.4s infinite; }
+@keyframes m-flick { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+.abilities, .ftable, .seg, .align-grid, .item-card, .cc-tabs { border-radius: var(--r-md); overflow: hidden; }
+.abilities, .ftable { background: rgba(14, 11, 9, 0.5); border-color: var(--glass-rim); }
+.stepper button, .stage-level button { border-radius: 50%; transition: background 0.2s, box-shadow 0.2s; }
+.stepper button:hover:not(:disabled), .stage-level button:hover:not(:disabled) { background: rgba(208, 49, 63, 0.25); box-shadow: 0 0 12px rgba(208, 49, 63, 0.45); }
+.cc-stage input, .hp-bar { border-radius: var(--r-md); }
+.stage-stats div, .stage-abilities div { border-radius: var(--r-sm); background: rgba(14, 11, 9, 0.55); border-color: var(--glass-rim); }
+.stage-name input { border-radius: 999px !important; background: rgba(14, 11, 9, 0.5) !important; }
