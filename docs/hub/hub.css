@@ -920,3 +920,7 @@ body.hub main > :nth-child(n+4), body.hub .hub-main > :nth-child(n+4) { animatio
 .info-emblem { animation: m-rise 0.5s var(--m-ease) backwards; }
 .trait-icon { transition: transform 0.2s var(--m-ease); }
 .info-traits li:hover .trait-icon { transform: scale(1.12); }
+
+/* The DM's delete beside each sheet in the Tavern rail. */
+button.rail-delete { cursor: pointer; background: none; font-family: var(--display); }
+button.rail-delete:hover { color: #fff; background: #5a121a; border-color: var(--accent); }
