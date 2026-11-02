@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Icon tool for the Apotheosis Tavern dashboard.
 
+Rule (Charl, 2026-11-02): never reuse one pack icon for two different things.
 Rule (Charl, 2026-11-01): if an icon exists in the icon packs, use it
 directly. Only make new icons for custom requests.
 
@@ -397,6 +398,13 @@ def cmd_glow(args):
     out_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = out_dir / "manifest.json"
     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
+    # Charl (2026-11-02): never reuse a pack icon for two different things.
+    used = {v["from"]: v["label"] for v in manifest.values()}
+    for name, icon_id in names.items():
+        other = used.get(icon_id)
+        if other and other != name:
+            sys.exit(f"{icon_id} is already the emblem for {other!r}; pick another icon for {name!r}.")
+        used[icon_id] = name
     for name, icon_id in names.items():
         file = f"{slug(name)}.webp"
         glow(imgs[icon_id], args.colour, args.size).save(out_dir / file, "WEBP", quality=90)
