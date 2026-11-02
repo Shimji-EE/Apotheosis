@@ -469,8 +469,14 @@
     $("list").scrollTop = scroll;
     renderStage();
     const bad = problems();
-    $("problems").replaceChildren(...bad.slice(0, 4).map(([t, p]) => el("li", {}, el("button", { type: "button", class: "link-button", "data-tab": t, text: p }))),
-      bad.length > 4 ? el("li", { text: `and ${bad.length - 4} more` }) : "");
+    // Tutorial box (Charl, 2026-11-02): what is left, each step a card that jumps to its tab.
+    const tabName = (t) => { const i = TABS.findIndex(([k]) => k === t); return [i + 1, TABS[i][1]]; };
+    $("problems").replaceChildren(...(bad.length ? [
+      el("li", { class: "guide-head" }, el("span", { class: "guide-mark", "aria-hidden": "true", text: "\u2726" }),
+        el("strong", { text: "Before your hero can be made" }), el("span", { class: "guide-count", text: `${bad.length} left` })),
+      ...bad.slice(0, 5).map(([t, p]) => { const [n, name] = tabName(t); return el("li", {}, el("button", { type: "button", class: "guide-step", "data-tab": t, title: `Go to ${name}` },
+        el("span", { class: "guide-tab" }, el("b", { text: n }), name), el("span", { class: "guide-text", text: p }), el("span", { class: "guide-go", "aria-hidden": "true", text: "\u203A" }))); }),
+      bad.length > 5 ? el("li", { class: "guide-more", text: `and ${bad.length - 5} more after these` }) : ""] : []));
     const last = tab === TABS[TABS.length - 1][0];
     $("prev").disabled = tab === TABS[0][0];
     $("next").textContent = last ? "Create character" : "Next";
