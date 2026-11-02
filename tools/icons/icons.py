@@ -421,7 +421,10 @@ def cmd_glow(args):
     manifest_path.write_text(json.dumps(manifest, separators=(",", ":"), ensure_ascii=False))
 
 
-GEN_OUT = ROOT / "tools" / "bg3-icon-generator" / "outputs" / "editor"
+# Where the generator lives: in the repo's tools/, or loose in the Apotheosis folder on Charl's PC.
+GEN_DIRS = [ROOT / "tools" / "bg3-icon-generator", ROOT / "BG3-Icon-Generator", ROOT / "BG3_Icon_Generator"]
+GEN_OUT = next((d / "outputs" / "editor" for d in GEN_DIRS if (d / "outputs" / "editor").exists()),
+               GEN_DIRS[0] / "outputs" / "editor")
 
 
 def generated_art(mod, key):
