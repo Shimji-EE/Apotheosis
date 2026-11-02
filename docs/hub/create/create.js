@@ -198,7 +198,7 @@
     const srd = i.srd && srdText(i.srd, i.srdTypes);
     if (srd) body.push(el("p", { class: "info-text", text: srd.d }), el("p", { class: "info-src", text: "Rules text: SRD 5.1, CC-BY-4.0" }));
     if (i.traits && i.traits.length) {
-      body.push(el("ul", { class: "info-traits" }, ...i.traits.map(([n, d]) => el("li", {}, powerImg(n), el("div", {}, el("strong", { text: n }), d ? el("span", { text: d }) : "")))));
+      body.push(el("ul", { class: "info-traits" }, ...i.traits.map(([n, d, ic]) => el("li", {}, powerImg(ic || n), el("div", {}, el("strong", { text: n }), d ? el("span", { text: d }) : "")))));
     }
     if (i.link) body.push(el("a", { class: "info-link", href: i.link, target: "_blank", rel: "noopener", text: i.linkText || "Full rules on dnd5e.wikidot.com ↗" }));
     $("info").replaceChildren(...body);
@@ -274,12 +274,12 @@
     out.push(group("Variant species"), el("div", { class: "tile-grid tile-grid-small" }, ...Object.keys(O.VARIANTS).map((n) =>
       tile({ label: n, icon: emblem(`variant ${n}`), set: `variant=${n}`, on: s.variant === n,
         info: { kind: "Variant species (notes)", title: n, icon: emblem(`variant ${n}`, "info-emblem"), text: n === "None" ? "No curse, blessing or mutation." : K.LORE[n],
-          traits: (O.VARIANTS[n].features || []).map(([f, , d]) => [f, d]) } }))));
+          traits: (O.VARIANTS[n].features || []).map(([f, , d, o]) => [f, d, o && o.icon]) } }))));
     const v = O.VARIANTS[s.variant];
     if (v.sub) {
       out.push(group("Dhampir strain"), el("div", { class: "tile-grid tile-grid-small" }, ...Object.keys(v.sub).map((n) =>
-        tile({ label: n, set: `variantSub=${n}`, on: s.variantSub === n, icon: emblem(`variant ${s.variant}`),
-          info: { kind: "Dhampir strain", title: n, traits: v.sub[n].features.map(([f, , d]) => [f, d]) } }))));
+        tile({ label: n, set: `variantSub=${n}`, on: s.variantSub === n, icon: emblem(`strain ${n}`),
+          info: { kind: "Dhampir strain", title: n, traits: v.sub[n].features.map(([f, , d, o]) => [f, d, o && o.icon]) } }))));
     }
     return out;
   }
@@ -597,6 +597,7 @@
     const vf = [...(v.features || []), ...((v.sub && v.sub[s.variantSub] && v.sub[s.variantSub].features) || [])];
     for (const [n, k, d, opt = {}] of vf) {
       add(n, k, d, {
+        ...(opt.icon ? { icon: opt.icon } : {}),
         ...(opt.formula ? { formula: opt.formula(s.level) } : {}),
         ...(opt.uses === "PB" ? { uses: String(prof(s.level)) } : {}),
       });

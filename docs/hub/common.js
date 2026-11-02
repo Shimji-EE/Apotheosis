@@ -43,3 +43,50 @@ window.Hub = (() => {
 
   return { SUPABASE_URL, SUPABASE_KEY, db, $, say, el, requireMember };
 })();
+
+// Motion (Charl, 2026-11-02: "animate all UI"). Panels the pages rebuild fade in with a short stagger,
+// but only when what they show changes (a new tab, a new card), never on a simple pick inside them.
+// prefers-reduced-motion turns it off (style.css also stops every animation then).
+(() => {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const BOXES = ["list", "info", "tabs", "my-chars", "characters", "abilities", "side", "tables",
+    "basics", "inventory", "inspiration", "journal", "manage", "dm-panel"];
+  const ITEMS = ".tile-opt, .check-opt, .list-group, li, .feat-row, .frow, .irow, .cell, .slot, .goal, .jquest, .chip, .ability, .char-item";
+  const sigOf = (box) => [...box.children].slice(0, 8).map((c) =>
+    c.dataset.set || c.dataset.tab || c.id || `${c.className}:${(c.textContent || "").slice(0, 32)}`).join("|");
+  function play(box) {
+    let n = 0;
+    for (const c of box.children) {
+      const parts = c.matches(ITEMS) ? [c] : [c, ...c.querySelectorAll(ITEMS)];
+      for (const p of parts) {
+        p.style.setProperty("--m-i", Math.min(n++, 18));
+        p.classList.remove("m-in");
+        void p.offsetWidth;
+        p.classList.add("m-in");
+      }
+    }
+  }
+  function watch(box) {
+    if (!box || box.dataset.motion) return;
+    box.dataset.motion = "1";
+    let last = sigOf(box);
+    const swap = box.id === "info";
+    new MutationObserver(() => {
+      const now = sigOf(box);
+      if (now === last) return;
+      last = now;
+      if (swap) { box.classList.remove("m-swap"); void box.offsetWidth; box.classList.add("m-swap"); }
+      else play(box);
+    }).observe(box, { childList: true });
+    if (box.children.length && !swap) play(box);
+  }
+  const start = () => {
+    document.body.classList.add("m-ready");
+    BOXES.forEach((id) => watch(document.getElementById(id)));
+    // Boxes some pages only make later (panels.js builds its tabs on first open).
+    new MutationObserver(() => BOXES.forEach((id) => watch(document.getElementById(id))))
+      .observe(document.body, { childList: true, subtree: true });
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
+})();

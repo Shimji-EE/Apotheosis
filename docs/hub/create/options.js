@@ -93,17 +93,17 @@ window.CreatorOptions = (() => {
     Dhampir: {
       speedBonus: "+10 m",
       features: [
-        ["Heightened Senses", "feature", "You have advantage on Wisdom (Perception) checks."],
-        ["Darkvision", "feature", "Dhampir: darkvision out to 60 feet."],
-        ["Life-Draining Bite", "action", "A bite attack that heals you for the damage dealt. 2d4, rising to 2d6, 2d8 and 2d10 at character levels 4, 8 and 12.", { formula: (lv) => (lv >= 12 ? "2d10" : lv >= 8 ? "2d8" : lv >= 4 ? "2d6" : "2d4") }],
+        ["Heightened Senses", "feature", "You have advantage on Wisdom (Perception) checks.", { icon: "Dhampir Heightened Senses" }],
+        ["Darkvision", "feature", "Dhampir: darkvision out to 60 feet.", { icon: "Dhampir Darkvision" }],
+        ["Life-Draining Bite", "action", "A bite attack that heals you for the damage dealt. 2d4, rising to 2d6, 2d8 and 2d10 at character levels 4, 8 and 12.", { icon: "Dhampir Life-Draining Bite", formula: (lv) => (lv >= 12 ? "2d10" : lv >= 8 ? "2d8" : lv >= 4 ? "2d6" : "2d4") }],
       ],
       sub: {
         Crystalline: { features: [
-          ["Tough", "feature", "Crystalline: you gain the benefits of the Tough feat and resistance to non-magical bludgeoning, piercing and slashing damage."],
-          ["Brittle Bones", "feature", "Crystalline: you are vulnerable to thunder damage."]] },
+          ["Tough", "feature", "Crystalline: you gain the benefits of the Tough feat and resistance to non-magical bludgeoning, piercing and slashing damage.", { icon: "Dhampir Crystalline Tough" }],
+          ["Brittle Bones", "feature", "Crystalline: you are vulnerable to thunder damage.", { icon: "Dhampir Brittle Bones" }]] },
         Chiropterine: { features: [
-          ["Dread Ambusher", "feature", "Chiropterine: you gain the Dread Ambusher feature of Gloom Stalker rangers."],
-          ["Sunlight Sensitivity", "feature", "Chiropterine: while in sunlight you have disadvantage on attack rolls and on Wisdom (Perception) checks that rely on sight, and you are vulnerable to radiant damage."]] },
+          ["Dread Ambusher", "feature", "Chiropterine: you gain the Dread Ambusher feature of Gloom Stalker rangers.", { icon: "Dhampir Dread Ambusher" }],
+          ["Sunlight Sensitivity", "feature", "Chiropterine: while in sunlight you have disadvantage on attack rolls and on Wisdom (Perception) checks that rely on sight, and you are vulnerable to radiant damage.", { icon: "Dhampir Sunlight Sensitivity" }]] },
       },
     },
     Chymaera: {
