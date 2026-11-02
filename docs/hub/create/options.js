@@ -88,16 +88,21 @@ window.CreatorOptions = (() => {
   // Manual, Variant Species: laid over the base species.
   const VARIANTS = {
     None: {},
+    // Born dhampir are "True Dhampir" (Effects & Afflictions, Dhampirism, stages 1 to 3), plus the variant's extra speed.
     Dhampir: {
       speedBonus: "+10 m",
       features: [
-        ["Darkvision", "feature", "Dhampir: darkvision."],
-        ["Vampiric Bite", "action", "A life-draining bite that heals you for the damage dealt.", { formula: (lv) => (lv >= 12 ? "2d10" : lv >= 8 ? "2d8" : lv >= 4 ? "2d6" : "2d4") }],
+        ["Heightened Senses", "feature", "You have advantage on Wisdom (Perception) checks."],
+        ["Darkvision", "feature", "Dhampir: darkvision out to 60 feet."],
+        ["Life-Draining Bite", "action", "A bite attack that heals you for the damage dealt. 2d4, rising to 2d6, 2d8 and 2d10 at character levels 4, 8 and 12.", { formula: (lv) => (lv >= 12 ? "2d10" : lv >= 8 ? "2d8" : lv >= 4 ? "2d6" : "2d4") }],
       ],
       sub: {
-        None: {},
-        Crystalline: { features: [["Tough", "feature", "Crystalline dhampir: you gain the Tough feat."], ["Thunder Vulnerability", "feature", "Crystalline dhampir: vulnerable to thunder damage."]] },
-        Chiropterine: { features: [["Dread Ambusher", "feature", "Chiropterine dhampir: you gain the Gloom Stalker's Dread Ambusher feature."], ["Radiant Vulnerability", "feature", "Chiropterine dhampir: vulnerable to radiant damage."]] },
+        Crystalline: { features: [
+          ["Tough", "feature", "Crystalline: you gain the benefits of the Tough feat and resistance to non-magical bludgeoning, piercing and slashing damage."],
+          ["Brittle Bones", "feature", "Crystalline: you are vulnerable to thunder damage."]] },
+        Chiropterine: { features: [
+          ["Dread Ambusher", "feature", "Chiropterine: you gain the Dread Ambusher feature of Gloom Stalker rangers."],
+          ["Sunlight Sensitivity", "feature", "Chiropterine: while in sunlight you have disadvantage on attack rolls and on Wisdom (Perception) checks that rely on sight, and you are vulnerable to radiant damage."]] },
       },
     },
     Chymaera: {
