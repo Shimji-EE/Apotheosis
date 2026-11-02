@@ -869,3 +869,54 @@ body.creator-page .hub-bar { max-width: 1440px; }
   background: linear-gradient(to bottom right, transparent calc(50% - 0.75px), rgba(236, 74, 86, 0.9) 50%, transparent calc(50% + 0.75px));
   filter: drop-shadow(0 0 3px rgba(236, 74, 86, 0.8));
 }
+
+/* Motion (Charl, 2026-11-02: "animate all UI"). Grave Red: things rise out of the dark with a brief
+   ember flash; picks and hovers glow. style.css stops all of it under prefers-reduced-motion. */
+:root { --m-ease: cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes m-rise { from { opacity: 0; transform: translateY(12px); filter: brightness(1.8) saturate(0.6); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes m-fade { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: none; } }
+@keyframes m-ember { 0%, 100% { filter: drop-shadow(0 0 6px rgba(236, 74, 86, 0.35)); } 50% { filter: drop-shadow(0 0 16px rgba(236, 74, 86, 0.8)); } }
+@keyframes m-pick { 0% { box-shadow: 0 0 0 0 rgba(236, 74, 86, 0.7); } 100% { box-shadow: 0 0 0 10px rgba(236, 74, 86, 0); } }
+@keyframes m-line { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes m-bar { from { transform: scaleX(0); } }
+
+/* Page entrance: the bar, then each section of the page in turn. */
+body.hub .hub-bar { animation: m-fade 0.5s var(--m-ease) backwards; }
+body.hub main > *:not([hidden]), body.hub .hub-main > *:not([hidden]) { animation: m-rise 0.7s var(--m-ease) backwards; }
+body.hub main > :nth-child(2), body.hub .hub-main > :nth-child(2) { animation-delay: 0.08s; }
+body.hub main > :nth-child(3), body.hub .hub-main > :nth-child(3) { animation-delay: 0.16s; }
+body.hub main > :nth-child(n+4), body.hub .hub-main > :nth-child(n+4) { animation-delay: 0.24s; }
+
+/* Rebuilt panels: staggered rise (common.js sets --m-i), and the info panel slides its new card in. */
+.m-in { animation: m-rise 0.45s var(--m-ease) backwards; animation-delay: calc(var(--m-i, 0) * 28ms); }
+#info.m-swap > * { animation: m-fade 0.32s var(--m-ease) backwards; }
+#info.m-swap > :nth-child(2) { animation-delay: 0.05s; }
+#info.m-swap > :nth-child(n+3) { animation-delay: 0.1s; }
+
+/* Hover, press and pick on everything you can click. */
+.tile-opt, .check-opt, .cc-tabs button, .char-item, .seat, .item-card, .chip, .slot, .goal, .jquest, .rail-char, .op-card, .cell {
+  transition: transform 0.18s var(--m-ease), border-color 0.18s, background 0.18s, box-shadow 0.25s, filter 0.25s, opacity 0.25s;
+}
+.tile-opt:hover, .char-item:hover, .item-card:hover, .rail-char:hover, .slot:hover, .cell:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45), 0 0 12px rgba(208, 49, 63, 0.18); }
+.seat:hover { transform: translateY(-4px); }
+.check-opt:hover { border-color: rgba(208, 49, 63, 0.6); transform: translateX(2px); }
+.tile-opt:active, .check-opt:active, .chip:active, .slot:active, .cell:active, .cc-btn:active, .button:active, .ready-button:active { transform: scale(0.97); }
+.tile-opt.is-on { animation: m-pick 0.6s ease-out; }
+.tile-opt .emblem, .tile-opt .trait-icon { transition: transform 0.25s var(--m-ease), filter 0.25s; }
+.tile-opt:hover .emblem { transform: scale(1.08); filter: drop-shadow(0 0 8px rgba(236, 74, 86, 0.7)); }
+.tile-opt.is-on .emblem { animation: m-ember 2.8s ease-in-out infinite; }
+.cc-btn, .button, .link-button, .rail-link, .rail-open { transition: filter 0.15s, transform 0.15s, color 0.15s, border-color 0.15s; }
+.cc-btn:hover:not(:disabled) { filter: brightness(1.2); }
+
+/* Tabs: the chosen tab draws its red line in. */
+.cc-tabs button { position: relative; }
+.cc-tabs button[aria-selected=true]::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--accent-bright); transform-origin: center; animation: m-line 0.35s var(--m-ease); }
+.tab-dot { animation: m-ember 1.8s ease-in-out infinite; }
+
+/* The character on the stage breathes; bars fill in. */
+.stage-front { animation: m-ember 3.4s ease-in-out infinite; }
+.stage-back { transition: opacity 0.6s; }
+.hp-fill, .load-fill { transform-origin: left; animation: m-bar 0.9s var(--m-ease) backwards; transition: width 0.5s var(--m-ease); }
+.info-emblem { animation: m-rise 0.5s var(--m-ease) backwards; }
+.trait-icon { transition: transform 0.2s var(--m-ease); }
+.info-traits li:hover .trait-icon { transform: scale(1.12); }
