@@ -461,6 +461,13 @@
   /* ---------- render ---------- */
 
   function render() {
+    // Faint engraved art behind the page, one piece per tab (tools/icon-studio/tab_art.py).
+    if (document.body.dataset.tab !== tab) {
+      document.body.dataset.tab = tab;
+      const art = document.getElementById("tab-art") || document.body.appendChild(el("div", { id: "tab-art", "aria-hidden": "true" }));
+      art.style.backgroundImage = `url("art/${tab}.webp")`;
+      art.classList.remove("is-in"); void art.offsetWidth; art.classList.add("is-in");
+    }
     $("tabs").replaceChildren(...TABS.map(([k, t], i) => el("button", { type: "button", role: "tab", "aria-selected": String(tab === k), "data-tab": k },
       el("span", { class: "tab-n", text: i + 1 }), t, problems().some(([pt]) => pt === k) ? el("span", { class: "tab-dot", title: "Something to choose here" }) : "")));
     const lists = { species: listSpecies, class: listClass, background: listBackground, abilities: listAbilities, feats: listFeats, belief: listBelief };
