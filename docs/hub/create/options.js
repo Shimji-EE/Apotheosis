@@ -51,27 +51,28 @@ window.CreatorOptions = (() => {
       ] },
   };
 
-  // Species of the world (manual, Species), with the 2024 PHB species they build on.
+  // Species of the world (manual, Species), with the 2024 PHB species they build on. y2014: the
+  // 2014-rules version, which the player may pick instead (Charl, 2026-11-02). npc: not playable.
   // traits: the bullet traits counted for Half-Blood inheritance.
   const SPECIES = {
-    Elf: { base: "Elf (2024 PHB)", speed: 30, size: "Medium", traits: ["Darkvision", "Elven Lineage", "Fey Ancestry", "Keen Senses", "Trance"],
+    Elf: { y2014: { base: "Elf (2014 PHB)", traits: ["Darkvision", "Keen Senses", "Fey Ancestry", "Trance"] }, base: "Elf (2024 PHB)", speed: 30, size: "Medium", traits: ["Darkvision", "Elven Lineage", "Fey Ancestry", "Keen Senses", "Trance"],
       sub: {
         "High Elf": {}, "Dark Elf (Drow)": {}, "Wood Elf (Dryad)": { speed: 35 },
         "Snow Elf": { dm: true, note: "Presumed extinct: playable only at the DM's discretion.",
           extra: [["Light", "action", "Snow Elf lineage: you know the Light cantrip."], ["Frost Resistance", "feature", "Snow Elf lineage: resistance to cold (frost) damage."],
             ["Ice Knife", "action", "Snow Elf lineage, level 3."], ["Mirror Image", "action", "Snow Elf lineage, level 5."]] },
       } },
-    Dwerfen: { base: "Dwarf (2024 PHB)", speed: 30, size: "Medium", traits: ["Darkvision", "Dwarven Resilience", "Dwarven Toughness", "Stonecunning"],
+    Dwerfen: { y2014: { base: "Dwarf (2014 PHB)", speed: 25, traits: ["Darkvision", "Dwarven Resilience", "Dwarven Combat Training", "Tool Proficiency", "Stonecunning"] }, base: "Dwarf (2024 PHB)", speed: 30, size: "Medium", traits: ["Darkvision", "Dwarven Resilience", "Dwarven Toughness", "Stonecunning"],
       extra: [["Lyrium Resistance", "feature", "Generations near lyrium veins make you resistant, not immune, to its effects. Raw lyrium in open cuts, breathed in, or in the eyes or mouth still affects you. Surface dwerfen lose this over time."]] },
-    Orq: { base: "Orc (2024 PHB)", speed: 30, size: "Medium", traits: ["Adrenaline Rush", "Darkvision", "Relentless Endurance"] },
-    Golyath: { base: "Goliath (2024 PHB)", speed: 35, size: "Medium", traits: ["Giant Ancestry", "Large Form", "Powerful Build"],
+    Orq: { y2014: { base: "Orc (Monsters of the Multiverse)", traits: ["Adrenaline Rush", "Darkvision", "Powerful Build", "Relentless Endurance"] }, base: "Orc (2024 PHB)", speed: 30, size: "Medium", traits: ["Adrenaline Rush", "Darkvision", "Relentless Endurance"] },
+    Golyath: { y2014: { base: "Goliath (Monsters of the Multiverse)", speed: 30, choice: null, traits: ["Little Giant", "Mountain Born", "Stone's Endurance"] }, base: "Goliath (2024 PHB)", speed: 35, size: "Medium", traits: ["Giant Ancestry", "Large Form", "Powerful Build"],
       choice: ["Giant ancestry", ["Cloud's Jaunt", "Fire's Burn", "Frost's Chill", "Hill's Tumble", "Stone's Endurance", "Storm's Thunder"]] },
-    Drakeborn: { base: "Dragonborn (Forgotten Realms)", speed: 30, size: "Medium", traits: ["Draconic Ancestry", "Breath Weapon", "Damage Resistance", "Darkvision", "Draconic Flight"],
+    Drakeborn: { npc: true, base: "Dragonborn (Forgotten Realms)", speed: 30, size: "Medium", traits: ["Draconic Ancestry", "Breath Weapon", "Damage Resistance", "Darkvision", "Draconic Flight"],
       choice: ["Draconic ancestry", ["Black (acid)", "Blue (lightning)", "Brass (fire)", "Bronze (lightning)", "Copper (acid)", "Gold (fire)", "Green (poison)", "Red (fire)", "Silver (cold)", "White (cold)"]] },
-    Halfling: { base: "Halfling (2024 PHB)", speed: 30, size: "Small", traits: ["Brave", "Halfling Nimbleness", "Luck", "Naturally Stealthy"] },
-    Human: { base: "Human (2024 PHB)", speed: 30, size: "Medium", traits: ["Resourceful", "Skillful", "Versatile"] },
-    Seraph: { base: "Aasimar (2024 PHB)", speed: 30, size: "Medium", noHalfBlood: true, traits: ["Celestial Resistance", "Darkvision", "Healing Hands", "Light Bearer", "Celestial Revelation"] },
-    Tiefling: { base: "Tiefling (2024 PHB)", speed: 30, size: "Medium", traits: ["Darkvision", "Fiendish Legacy", "Otherworldly Presence"],
+    Halfling: { y2014: { base: "Halfling (2014 PHB)", speed: 25, traits: ["Lucky", "Brave", "Halfling Nimbleness"] }, base: "Halfling (2024 PHB)", speed: 30, size: "Small", traits: ["Brave", "Halfling Nimbleness", "Luck", "Naturally Stealthy"] },
+    Human: { y2014: { base: "Variant Human (2014 PHB)", traits: ["Extra Skill Proficiency", "Extra Feat"] }, base: "Human (2024 PHB)", speed: 30, size: "Medium", traits: ["Resourceful", "Skillful", "Versatile"] },
+    Seraph: { y2014: { base: "Aasimar (Monsters of the Multiverse)" }, base: "Aasimar (2024 PHB)", speed: 30, size: "Medium", noHalfBlood: true, traits: ["Celestial Resistance", "Darkvision", "Healing Hands", "Light Bearer", "Celestial Revelation"] },
+    Tiefling: { y2014: { base: "Tiefling (2014 PHB)", traits: ["Darkvision", "Hellish Resistance", "Infernal Legacy"] }, base: "Tiefling (2024 PHB)", speed: 30, size: "Medium", traits: ["Darkvision", "Fiendish Legacy", "Otherworldly Presence"],
       sub: {
         Infernal: { note: "Fiend." },
         Abyssal: { note: "Fiend. No Abyssal Tiefling wizards: magic is outlawed, and those born with it become shackled Saarebas.", noClass: ["Wizard"] },

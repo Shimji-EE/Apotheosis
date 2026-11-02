@@ -42,7 +42,7 @@
   // Everything the player has chosen so far.
   const s = {
     name: "", mode: "pure",
-    species: "Human", sub: "", choice: "",
+    speciesEd: "2024", species: "Human", sub: "", choice: "", humanFeat: "",
     parentA: "Elf", parentB: "Human", inherit: [],
     variant: "None", variantSub: "Crystalline",
     cls: "Fighter", subclass: "", level: 1, spell: "",
@@ -53,6 +53,13 @@
     religion: "None", alignment: "Neutral",
   };
   let tab = "species";
+  // A species as the chosen rules edition writes it (2014 or 2024, the player's pick).
+  function SP(name) {
+    const b = O.SPECIES[name];
+    return s.speciesEd === "2014" && b.y2014 ? { ...b, ...b.y2014 } : b;
+  }
+  const PLAYABLE = Object.keys(O.SPECIES).filter((n) => !O.SPECIES[n].npc);
+  const variantHuman = () => s.mode === "pure" && s.species === "Human" && s.speciesEd === "2014";
   let focus = null; // what the right-hand panel explains
 
   /* ---------- derived values ---------- */
@@ -81,14 +88,14 @@
   const pointsSpent = () => O.ABILITIES.reduce((n, a) => n + (O.POINT_COST[s.base[a]] ?? 99), 0);
   function speciesInfo() {
     if (s.mode === "half") {
-      const a = O.SPECIES[s.parentA], b = O.SPECIES[s.parentB];
+      const a = SP(s.parentA), b = SP(s.parentB);
       const sizes = ["Small", "Medium", "Large"];
       const [ia, ib] = [sizes.indexOf(a.size), sizes.indexOf(b.size)];
       const size = ia === ib ? a.size : Math.abs(ia - ib) === 1 ? sizes[Math.min(ia, ib)] : "Medium";
       return { label: `Half-blood ${s.parentA} / ${s.parentB}`, speed: Math.floor((a.speed + b.speed) / 2 / 5) * 5, size,
         need: Math.max(a.traits.length, b.traits.length) };
     }
-    const sp = O.SPECIES[s.species];
+    const sp = SP(s.species);
     const sub = sp.sub ? sp.sub[subOf(s.species)] : null;
     return { label: [s.species, sp.sub ? `(${subOf(s.species)})` : ""].filter(Boolean).join(" "), speed: (sub && sub.speed) || sp.speed, size: sp.size, sp, sub };
   }
@@ -100,7 +107,7 @@
     return hitDie() + con + (s.level - 1) * (hitDie() / 2 + 1 + con) + tough;
   }
   const isCaster = () => [C(), C2()].some((c) => c && c.spell);
-  const chosenFeats = () => [s.originFeat, ...asiLevels().map((l) => s.improvements[l] && s.improvements[l].feat)].filter(Boolean);
+  const chosenFeats = () => [s.originFeat, variantHuman() ? s.humanFeat : "", ...asiLevels().map((l) => s.improvements[l] && s.improvements[l].feat)].filter(Boolean);
   function featBlocked(name) {
     const need = K.FEATS[name] || {};
     if (need.caster && !isCaster()) return "Needs spellcasting or Pact Magic.";
@@ -132,6 +139,7 @@
     if (s.method === "standard" && O.ABILITIES.map((a) => s.base[a]).sort((x, y) => y - x).join() !== O.STANDARD_ARRAY.join()) add("abilities", "Use each standard array number once.");
     if (s.plus2 === s.plus1) add("abilities", "Put the +2 and the +1 on different abilities.");
     if (!s.originFeat) add("feats", "Choose your background's origin feat.");
+    if (variantHuman() && !s.humanFeat) add("feats", "Choose your Variant Human feat.");
     for (const l of asiLevels()) {
       const imp = s.improvements[l];
       if (!imp || (!imp.feat && !(imp.a && imp.b))) add("feats", `Choose your level ${l} improvement.`);
@@ -195,7 +203,8 @@
   /* ---------- info builders ---------- */
 
   function speciesCard(name, sub) {
-    const sp = O.SPECIES[name];
+    const sp = SP(name);
+    if (sp.npc) return { kind: "NPC species", title: name, icon: emblem(`species ${name}`, "info-emblem"), text: K.LORE[name] };
     const subData = sub && sp.sub ? sp.sub[sub] : null;
     const extra = [...(sp.extra || []), ...((subData && subData.extra) || [])];
     return {
@@ -223,11 +232,18 @@
   function listSpecies() {
     const out = [head("Species", "Only the species of the Apotheosis notes."),
       el("div", { class: "seg" }, ...[["pure", "One species"], ["half", "Half-blood"]].map(([v, t]) =>
-        el("button", { type: "button", class: s.mode === v ? "is-on" : "", "data-set": `mode=${v}`, text: t })))];
+        el("button", { type: "button", class: s.mode === v ? "is-on" : "", "data-set": `mode=${v}`, text: t }))),
+      group("Species rules"),
+      el("div", { class: "seg" }, ...[["2024", "2024 PHB"], ["2014", "2014 rules"]].map(([v, t]) =>
+        el("button", { type: "button", class: s.speciesEd === v ? "is-on" : "", "data-set": `speciesEd=${v}`, text: t }))),
+      el("p", { class: "list-note", text: s.speciesEd === "2014"
+        ? "2014 traits (PHB, or Monsters of the Multiverse where the PHB has none). As the 2024 PHB rules for older species, ignore the species' ability increases: your +2 and +1 still come from your background."
+        : "2024 PHB traits. The notes' own changes apply in both editions." })];
     if (s.mode === "pure") {
-      out.push(el("div", { class: "tile-grid" }, ...Object.keys(O.SPECIES).map((n) =>
-        tile({ label: n, icon: emblem(`species ${n}`), set: `species=${n}`, on: s.species === n, info: speciesCard(n) }))));
-      const sp = O.SPECIES[s.species];
+      out.push(el("div", { class: "tile-grid" }, ...Object.keys(O.SPECIES).map((n) => O.SPECIES[n].npc
+        ? tile({ label: n, sub: "NPC only", icon: emblem(`species ${n}`), set: `species=${n}`, on: false, off: "NPC only: not playable", info: speciesCard(n) })
+        : tile({ label: n, icon: emblem(`species ${n}`), set: `species=${n}`, on: s.species === n, info: speciesCard(n) }))));
+      const sp = SP(s.species);
       if (sp.sub) {
         out.push(group(s.species === "Tiefling" ? "Lineage" : "Subspecies"), el("div", { class: "tile-grid" }, ...Object.keys(sp.sub).map((n) =>
           tile({ label: n, sub: sp.sub[n].dm ? "DM's discretion" : "", icon: emblem(`species ${n}`), set: `sub=${n}`, on: subOf(s.species) === n, info: speciesCard(s.species, n) }))));
@@ -238,7 +254,7 @@
             info: { kind: sp.choice[0], title: n, icon: emblem(`ancestry ${n.split(" ")[0]}`, "info-emblem"), text: `Part of your ${s.species} build: ${sp.base}.` } }))));
       }
     } else {
-      const parents = Object.keys(O.SPECIES).filter((k) => !O.SPECIES[k].noHalfBlood);
+      const parents = PLAYABLE.filter((k) => !O.SPECIES[k].noHalfBlood);
       const info = speciesInfo();
       for (const [side, key] of [["First parent", "parentA"], ["Second parent", "parentB"]]) {
         out.push(group(side), el("div", { class: "tile-grid tile-grid-small" }, ...parents.map((n) =>
@@ -247,7 +263,7 @@
       out.push(group(`Inherited traits: ${s.inherit.length} of ${info.need}, at least one from each parent`));
       for (const [side, sp] of [["A", s.parentA], ["B", s.parentB]]) {
         out.push(el("div", { class: "check-list" }, el("p", { class: "check-head", text: `From the ${sp}` }),
-          ...O.SPECIES[sp].traits.map((t) => check(t, { "data-inherit": `${side}:${t}` }, s.inherit.includes(`${side}:${t}`), { kind: `${sp} trait`, title: t, icon: powerImg(t), text: `Gained exactly as written for the ${O.SPECIES[sp].base}.` }))));
+          ...SP(sp).traits.map((t) => check(t, { "data-inherit": `${side}:${t}` }, s.inherit.includes(`${side}:${t}`), { kind: `${sp} trait`, title: t, icon: powerImg(t), text: `Gained exactly as written for the ${SP(sp).base}.` }))));
       }
     }
     out.push(group("Variant species"), el("div", { class: "tile-grid tile-grid-small" }, ...Object.keys(O.VARIANTS).map((n) =>
@@ -267,8 +283,8 @@
     const names = Object.keys(CLASSES);
     const out = [head("Class", "The notes' classes first. Lore wins any clash, such as the paladin casting with Wisdom."),
       el("div", { class: "tile-grid" }, ...names.map((n) => {
-        const bad = O.SPECIES[s.species] && s.mode === "pure" && speciesInfo().sub && (speciesInfo().sub.noClass || []).includes(n);
-        return tile({ label: n, sub: CLASSES[n].monster ? "DM's approval" : CLASSES[n].source ? "Tasha's" : "", icon: emblem(`class ${n}`), set: `cls=${n}`, on: s.cls === n, off: bad ? "Not open to Abyssal Tieflings" : "", info: classCard(n) });
+        const bad = s.mode === "pure" && speciesInfo().sub && (speciesInfo().sub.noClass || []).includes(n);
+        return tile({ label: n, sub: CLASSES[n].monster ? "DM's approval" : CLASSES[n].tag || "", icon: emblem(`class ${n}`), set: `cls=${n}`, on: s.cls === n, off: bad ? "Not open to Abyssal Tieflings" : "", info: classCard(n) });
       }))];
     const subs = subclassesOf(s.cls);
     if (subs.length) {
@@ -362,6 +378,13 @@
     const oRow = el("div", { class: "feat-row" }, el("span", { class: "feat-lv", text: "1" }), el("div", {}, el("p", { class: "feat-what", text: "Origin feat (background)" }), origin));
     oRow._info = s.originFeat ? featInfo(s.originFeat) : { kind: "Feat", title: "Origin feat", text: "In the 2024 PHB every background grants an origin feat." };
     out.push(oRow);
+    if (variantHuman()) {
+      const hf = el("select", { "data-human": "1", "aria-label": "Variant Human feat" }, el("option", { value: "", text: "Choose a feat" }), ...featOptions(s.humanFeat));
+      hf.value = s.humanFeat;
+      const hRow = el("div", { class: "feat-row" }, el("span", { class: "feat-lv", text: "1" }), el("div", {}, el("p", { class: "feat-what", text: "Variant Human feat (2014 species)" }), hf));
+      hRow._info = s.humanFeat ? featInfo(s.humanFeat) : { kind: "Feat", title: "Variant Human feat", text: "The 2014 Variant Human gains one feat of your choice at level 1, besides the origin feat from your background." };
+      out.push(hRow);
+    }
     const lv = asiLevels();
     if (!lv.length) out.push(el("p", { class: "list-note", text: "No ability score improvements yet: the first comes at level 4." }));
     for (const l of lv) {
@@ -385,6 +408,9 @@
       row._info = imp.feat ? featInfo(imp.feat) : { kind: "Ability score improvement", title: `Level ${l}`, text: s.gestalt && K.ASI_STANDARD.includes(l) ? "Gestalt (notes): each class's ASI at this level is worth one point, so you get two points in all, or both ASIs spent on one feat." : "Two +1s (or +2 to one ability, by picking it twice), up to 20, or a feat instead." };
       out.push(row);
     }
+    out.push(group("Racial feats (WIP)"), el("div", { class: "row-list" }, ...K.RACIAL_WIP.map((n) =>
+      tile({ label: `${n} racial feats`, sub: "WIP", icon: emblem(`species ${n}`), set: "", on: false, off: "Work in progress",
+        info: { kind: "Racial feat · WIP", title: `${n} racial feats`, icon: emblem(`species ${n}`, "info-emblem"), text: "Placeholder. Custom racial feats for this species are being written for Apotheosis and aren't available yet." } }))));
     return out;
   }
   function featInfo(f) {
@@ -483,8 +509,10 @@
     if (t.dataset.set !== undefined) {
       const [k, ...rest] = t.dataset.set.split("=");
       const v = rest.join("=");
+      if (!k) { focus = t._info || null; render(); return; }
+      if (k === "species" && O.SPECIES[v] && O.SPECIES[v].npc) { focus = t._info || null; render(); return; }
       s[k] = v;
-      if (k === "species") { s.sub = ""; s.choice = ""; }
+      if (k === "species" || k === "speciesEd") { s.sub = k === "species" ? "" : s.sub; s.choice = ""; s.inherit = k === "speciesEd" ? [] : s.inherit; }
       if (k === "cls") { s.subclass = ""; s.spell = ""; s.skills = []; s.saves = []; if (s.cls2 === s.cls) s.cls2 = Object.keys(CLASSES).find((n) => n !== s.cls); }
       if (k === "cls2") { s.subclass2 = ""; s.saves = []; }
       if (k === "parentA" || k === "parentB" || k === "mode") s.inherit = [];
@@ -511,6 +539,7 @@
     else if (d.gestalt) { s.gestalt = t.checked; s.saves = []; if (s.cls2 === s.cls) s.cls2 = Object.keys(CLASSES).find((n) => n !== s.cls); }
     else if (d.base) s.base[d.base] = Math.max(1, Math.min(20, parseInt(t.value, 10) || 8));
     else if (d.origin !== undefined) { s.originFeat = t.value; focus = t.value ? featInfo(t.value) : null; }
+    else if (d.human !== undefined) { s.humanFeat = t.value; focus = t.value ? featInfo(t.value) : null; }
     else if (d.imp) {
       const [l, part] = d.imp.split(":");
       const imp = { ...(s.improvements[l] || {}) };
@@ -588,13 +617,13 @@
       background: { name: s.background, story: "" },
       // The rules decisions, kept apart from the flavour the player can rewrite.
       build: {
-        species: s.mode === "half" ? { halfBlood: [s.parentA, s.parentB], inherit: s.inherit.map((t) => t.slice(2)) } : { species: s.species, sub: subOf(s.species) || null, choice: s.choice || null },
+        species: s.mode === "half" ? { halfBlood: [s.parentA, s.parentB], inherit: s.inherit.map((t) => t.slice(2)), rules: s.speciesEd } : { species: s.species, sub: subOf(s.species) || null, choice: s.choice || null, rules: s.speciesEd },
         variant: s.variant !== "None" ? { variant: s.variant, strain: O.VARIANTS[s.variant].sub ? s.variantSub : null } : null,
         classes: [{ cls: s.cls, subclass: s.subclass || null }, ...(s.gestalt ? [{ cls: s.cls2, subclass: s.subclass2 || null }] : [])],
         gestalt: s.gestalt,
         spellcasting: c.spell ? s.spell || c.spell : null,
         abilityMethod: s.method, baseScores: s.base, increases: { [s.plus2]: 2, [s.plus1]: 1 },
-        background: s.background, originFeat: s.originFeat,
+        background: s.background, originFeat: s.originFeat, ...(variantHuman() ? { speciesFeat: s.humanFeat } : {}),
         improvements: Object.fromEntries(asiLevels().map((l) => [l, s.improvements[l]])),
       },
     };
