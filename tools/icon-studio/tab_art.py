@@ -1,11 +1,12 @@
 """Faint engraved background art for the character creator's tabs (Charl, 2026-11-02).
 
 Like the Vladimir UI / Dawnwalker menus: a large, worn line engraving sits behind the options, barely
-there. Each tab gets its own: Species a double helix of bone, Class an astrolabe of arms, Background a
+there, and it lives: each piece is a few layers (rings, rays, the helix strip) that the page turns,
+slides and pulses on its own. Each tab gets its own: Species a double helix of bone, Class an astrolabe of arms, Background a
 compass over a map, Abilities a six-point Vitruvian sigil, Feats a laurel crown, Belief the sun-and-moon
 halo. Fine geometric line work is drawn here; the centrepieces are the BG3 line art (via forge.py).
 
-  python tools/icon-studio/tab_art.py            writes docs/hub/create/art/<tab>.webp
+  python tools/icon-studio/tab_art.py            writes docs/hub/create/art/<tab>-<layer>.webp
   python tools/icon-studio/tab_art.py --preview  also writes a contact sheet to tab-art-preview.png
 """
 import math
@@ -27,8 +28,9 @@ INK = (222, 208, 186)
 
 
 class Plate:
-    def __init__(self):
-        self.im = Image.new("L", (W * SS, H * SS), 0)
+    def __init__(self, w=W, h=H):
+        self.w, self.h = w, h
+        self.im = Image.new("L", (w * SS, h * SS), 0)
         self.d = ImageDraw.Draw(self.im)
 
     def line(self, pts, w=2, a=255):
@@ -81,37 +83,42 @@ class Plate:
         for i in range(n):
             self.line(poly_fn(i / max(1, n - 1)), w, a)
 
-    def finish(self):
-        m = self.im.resize((W, H), Image.LANCZOS)
+    def finish(self, vignette=True):
+        w, h = self.w, self.h
+        m = self.im.resize((w, h), Image.LANCZOS)
         # Wear: break the lines with grain and fade them toward the edges, like an old engraving.
         rng = np.random.default_rng(7)
         a = np.asarray(m).astype(np.float32) / 255
-        grain = Image.fromarray((rng.random((H // 3, W // 3)) * 255).astype(np.uint8)).resize((W, H), Image.BICUBIC).filter(ImageFilter.GaussianBlur(1.2))
+        grain = Image.fromarray((rng.random((h // 3, w // 3)) * 255).astype(np.uint8)).resize((w, h), Image.BICUBIC).filter(ImageFilter.GaussianBlur(1.2))
         g = np.asarray(grain).astype(np.float32) / 255
         a *= np.clip(0.45 + g * 0.9, 0, 1)
-        yy, xx = np.mgrid[0:H, 0:W]
-        vign = np.clip(1.25 - np.hypot((xx - W / 2) / (W * 0.55), (yy - H / 2) / (H * 0.6)), 0, 1)
-        a *= vign
+        if vignette:
+            yy, xx = np.mgrid[0:h, 0:w]
+            a *= np.clip(1.25 - np.hypot((xx - w / 2) / (w * 0.55), (yy - h / 2) / (h * 0.6)), 0, 1)
         glow = np.asarray(Image.fromarray((a * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(6))).astype(np.float32) / 255
         alpha = np.clip(a + glow * 0.35, 0, 1)
-        rgb = np.zeros((H, W, 3), np.uint8)
+        rgb = np.zeros((h, w, 3), np.uint8)
         rgb[..., :] = INK
         return Image.fromarray(np.dstack([rgb, (alpha * 255).astype(np.uint8)]), "RGBA")
 
 
+# Every tab is a few layers drawn on the same 1600 x 1000 plate (centre 800, 500 unless noted), so the
+# page can turn, swing and pulse them separately (hub.css, "Creator tab art").
+HP = 520  # helix period in px: the strip tiles, so sliding it along reads as the helix turning
+
+
 def species():
-    p = Plate()
-    # A double helix laid across the page, its rungs small bones.
-    x0, x1, cy, amp, turns = 160, 1440, 500, 150, 2.6
+    # A seamless strip of double helix with bone rungs; the page lays it diagonally and slides it.
+    p = Plate(HP * 2, 420)
+    cy, amp = 210, 150
     for strand in (0, math.pi):
         for off in (-5, 5):
-            p.line([(x, cy + off + amp * math.sin((x - x0) / (x1 - x0) * turns * 2 * math.pi + strand) * (0.55 + 0.45 * math.sin(math.pi * (x - x0) / (x1 - x0)))) for x in range(x0, x1 + 1, 4)], 2)
-    for k in range(34):
-        x = x0 + (x1 - x0) * (k + 0.5) / 34
-        env = 0.55 + 0.45 * math.sin(math.pi * (x - x0) / (x1 - x0))
-        t = (x - x0) / (x1 - x0) * turns * 2 * math.pi
-        y1, y2 = cy + amp * env * math.sin(t), cy + amp * env * math.sin(t + math.pi)
-        if abs(y1 - y2) < 20:
+            p.line([(x, cy + off + amp * math.sin(2 * math.pi * x / HP + strand)) for x in range(0, HP * 2 + 1, 3)], 2)
+    for k in range(24):
+        x = HP * 2 * (k + 0.5) / 24
+        t = 2 * math.pi * x / HP
+        y1, y2 = cy + amp * math.sin(t), cy + amp * math.sin(t + math.pi)
+        if abs(y1 - y2) < 24:
             continue
         top, bot = min(y1, y2) + 8, max(y1, y2) - 8
         p.line([(x - 2, top + 6), (x - 2, bot - 6)], 1.4, 220)
@@ -119,48 +126,48 @@ def species():
         for yy in (top, bot):  # bone knuckles
             p.circle(x - 4, yy, 4, 1.3, 220)
             p.circle(x + 4, yy, 4, 1.3, 220)
-    for _ in range(26):
-        p.star(random.uniform(120, 1480), random.uniform(120, 880), random.uniform(3, 7), 170)
-    return p.finish()
+    stars = Plate()
+    for _ in range(40):
+        stars.star(random.uniform(80, 1520), random.uniform(80, 920), random.uniform(3, 8), 190)
+    return {"helix": p.finish(vignette=False), "stars": stars.finish()}
 
 
 def klass():
-    p = Plate()
     cx, cy = 800, 500
-    for r, w, dash in ((400, 2, 0), (380, 1, 0), (330, 1.5, 6), (230, 2, 0), (210, 1, 0)):
-        p.circle(cx, cy, r, w, 230, dash)
+    outer, mid, core = Plate(), Plate(), Plate()
+    for r, w in ((400, 2), (380, 1)):
+        outer.circle(cx, cy, r, w, 230)
     for k in range(72):
-        t = 2 * math.pi * k / 72
-        p.ray(cx, cy, 380, 400 if k % 6 else 420, t, 1.3, 220)
+        outer.ray(cx, cy, 380, 400 if k % 6 else 420, 2 * math.pi * k / 72, 1.3, 220)
+    mid.circle(cx, cy, 330, 1.5, 230, 6)
     for k in range(12):  # twelve spokes for twelve callings
         t = 2 * math.pi * k / 12 - math.pi / 2
-        p.ray(cx, cy, 230, 330, t, 1.2, 200)
-        p.circle(cx + 355 * math.cos(t), cy + 355 * math.sin(t), 11, 1.5, 230)
-    sword(p, cx, cy, 190, -math.pi / 4)
-    staff(p, cx, cy, 190, math.pi / 4)
-    return p.finish()
+        mid.ray(cx, cy, 230, 330, t, 1.2, 200)
+        mid.circle(cx + 355 * math.cos(t), cy + 355 * math.sin(t), 11, 1.5, 230)
+    for r, w in ((230, 2), (210, 1)):
+        core.circle(cx, cy, r, w, 230)
+    sword(core, cx, cy, 190, -math.pi / 4)
+    staff(core, cx, cy, 190, math.pi / 4)
+    return {"outer": outer.finish(), "mid": mid.finish(), "core": core.finish()}
 
 
 def background():
-    p = Plate()
     rng = random.Random(3)
-    # Map contours: wavy rings around a few hills.
-    for hx, hy in ((360, 300), (1180, 650), (1250, 260), (420, 760)):
+    land, ring, rose_ = Plate(), Plate(), Plate()
+    for hx, hy in ((360, 300), (1180, 650), (1250, 260), (420, 760)):  # map contours
         for k in range(1, 7):
             r = 34 * k
             ph = rng.uniform(0, 6)
-            p.line([(hx + (r + 9 * math.sin(3 * t + ph) + 5 * math.sin(7 * t)) * math.cos(t), hy + (r * 0.8 + 7 * math.sin(4 * t + ph)) * math.sin(t)) for t in np.linspace(0, 2 * math.pi, 120)], 1.1, 150)
-    # A dashed road between them.
+            land.line([(hx + (r + 9 * math.sin(3 * t + ph) + 5 * math.sin(7 * t)) * math.cos(t), hy + (r * 0.8 + 7 * math.sin(4 * t + ph)) * math.sin(t)) for t in np.linspace(0, 2 * math.pi, 120)], 1.1, 150)
     road = [(200 + 1200 * u, 520 + 160 * math.sin(u * 5.2) + 40 * math.sin(u * 13)) for u in np.linspace(0, 1, 160)]
     for i in range(0, len(road) - 4, 6):
-        p.line(road[i:i + 4], 1.6, 190)
-    # Compass rose.
+        land.line(road[i:i + 4], 1.6, 190)
     cx, cy = 800, 500
-    p.circle(cx, cy, 250, 2, 230)
-    p.circle(cx, cy, 236, 1, 200)
-    p.circle(cx, cy, 120, 1.2, 200, 6)
+    ring.circle(cx, cy, 250, 2, 230)
+    ring.circle(cx, cy, 236, 1, 200)
+    ring.circle(cx, cy, 120, 1.2, 200, 6)
     for k in range(32):
-        p.ray(cx, cy, 236, 250 if k % 4 else 270, 2 * math.pi * k / 32, 1.2, 200)
+        ring.ray(cx, cy, 236, 250 if k % 4 else 270, 2 * math.pi * k / 32, 1.2, 200)
     for k in range(8):
         t = math.pi / 4 * k - math.pi / 2
         L = 230 if k % 2 == 0 else 150
@@ -168,75 +175,73 @@ def background():
         tip = (cx + L * math.cos(t), cy + L * math.sin(t))
         l = (cx + s * math.cos(t - math.pi / 2), cy + s * math.sin(t - math.pi / 2))
         r = (cx + s * math.cos(t + math.pi / 2), cy + s * math.sin(t + math.pi / 2))
-        p.line([l, tip, r], 2, 235)
-        p.line([(cx, cy), tip], 1, 180)
-    p.star(cx, cy - 300, 10, 230)
-    return p.finish()
+        rose_.line([l, tip, r], 2, 235)
+        rose_.line([(cx, cy), tip], 1, 180)
+    rose_.star(cx, cy - 300, 10, 230)
+    return {"land": land.finish(), "ring": ring.finish(), "rose": rose_.finish()}
 
 
 def abilities():
-    p = Plate()
     cx, cy = 800, 500
-    p.circle(cx, cy, 360, 2, 230)
-    p.circle(cx, cy, 344, 1, 190)
-    p.line([(cx - 300, cy - 300), (cx + 300, cy - 300), (cx + 300, cy + 300), (cx - 300, cy + 300), (cx - 300, cy - 300)], 1.6, 200)
+    outer, hexa, core = Plate(), Plate(), Plate()
+    outer.circle(cx, cy, 360, 2, 230)
+    outer.circle(cx, cy, 344, 1, 190)
+    for k in range(120):
+        outer.ray(cx, cy, 344, 352 if k % 5 else 362, 2 * math.pi * k / 120, 1, 200)
+    hexa.line([(cx - 300, cy - 300), (cx + 300, cy - 300), (cx + 300, cy + 300), (cx - 300, cy + 300), (cx - 300, cy - 300)], 1.6, 200)
     nodes = [(cx + 300 * math.cos(-math.pi / 2 + k * math.pi / 3), cy + 300 * math.sin(-math.pi / 2 + k * math.pi / 3)) for k in range(6)]
     for i in range(6):  # hexagram through the six abilities
-        p.line([nodes[i], nodes[(i + 2) % 6]], 1.3, 190)
-        p.line([nodes[i], nodes[(i + 1) % 6]], 1, 140)
+        hexa.line([nodes[i], nodes[(i + 2) % 6]], 1.3, 190)
+        hexa.line([nodes[i], nodes[(i + 1) % 6]], 1, 140)
     for x, y in nodes:
-        p.circle(x, y, 34, 2, 230)
-        p.circle(x, y, 26, 1, 180, 4)
-    p.circle(cx, cy, 120, 1.6, 220)
-    p.circle(cx, cy, 104, 1, 170, 5)
+        hexa.circle(x, y, 34, 2, 230)
+        hexa.circle(x, y, 26, 1, 180, 4)
+    core.circle(cx, cy, 120, 1.6, 220)
+    core.circle(cx, cy, 104, 1, 170, 5)
     for r in (80, 56, 32):  # nested hexagons, one ring per pair of abilities
-        p.line([(cx + r * math.cos(math.pi / 6 + k * math.pi / 3), cy + r * math.sin(math.pi / 6 + k * math.pi / 3)) for k in range(7)], 1.6, 220)
-    p.circle(cx, cy, 6, 3, 235)
-    for k in range(120):
-        p.ray(cx, cy, 344, 352 if k % 5 else 362, 2 * math.pi * k / 120, 1, 200)
-    return p.finish()
+        core.line([(cx + r * math.cos(math.pi / 6 + k * math.pi / 3), cy + r * math.sin(math.pi / 6 + k * math.pi / 3)) for k in range(7)], 1.6, 220)
+    core.circle(cx, cy, 6, 3, 235)
+    return {"outer": outer.finish(), "hexa": hexa.finish(), "core": core.finish()}
 
 
 def feats():
-    p = Plate()
     cx, cy, R = 800, 520, 330
+    laurel, rays, star = Plate(), Plate(), Plate()
     for side in (-1, 1):  # laurel: leaves along two arcs that meet at the top
         for k in range(16):
             u = k / 15
             t = math.pi / 2 + side * (0.25 + u * 2.45)
             x, y = cx + R * math.cos(t), cy + R * math.sin(t)
             tang = t + side * math.pi / 2
-            p.leaf(x, y, tang - side * 0.6, 62 - 18 * u, 220)
-            p.leaf(x, y, tang + side * 0.5, 54 - 16 * u, 200)
-        p.arc(cx, cy, R, math.pi / 2 + side * 0.2, math.pi / 2 + side * 2.75, 2, 220)
-    p.line([(cx - 40, cy + R + 10), (cx, cy + R - 10), (cx + 40, cy + R + 10)], 2, 220)  # the tie
+            laurel.leaf(x, y, tang - side * 0.6, 62 - 18 * u, 220)
+            laurel.leaf(x, y, tang + side * 0.5, 54 - 16 * u, 200)
+        laurel.arc(cx, cy, R, math.pi / 2 + side * 0.2, math.pi / 2 + side * 2.75, 2, 220)
+    laurel.line([(cx - 40, cy + R + 10), (cx, cy + R - 10), (cx + 40, cy + R + 10)], 2, 220)  # the tie
     for k in range(40):
         t = -math.pi / 2 + (k - 20) * 0.045
-        p.ray(cx, cy - 40, 200, 255 + (k % 2) * 20, t, 1, 170)
-    rose(p, cx, cy, 150, 8)
-    p.circle(cx, cy, 170, 1.2, 190, 6)
-    return p.finish()
+        rays.ray(cx, cy - 40, 200, 255 + (k % 2) * 20, t, 1, 170)
+    rose(star, cx, cy, 150, 8)
+    star.circle(cx, cy, 170, 1.2, 190, 6)
+    return {"laurel": laurel.finish(), "rays": rays.finish(), "star": star.finish()}
 
 
 def belief():
-    p = Plate()
     cx, cy = 800, 540
-    p.circle(cx, cy, 400, 2, 220)
+    rays, halo, sun, sky = Plate(), Plate(), Plate(), Plate()
     for k in range(180):  # long thin rays like the meditation screen
         t = 2 * math.pi * k / 180
-        if 1.2 < (t % (2 * math.pi)) < 1.95:
-            continue  # leave the bottom open for the seated figure's space
-        p.ray(cx, cy, 120 + (k % 3) * 30, 300 + (k % 4) * 30, t, 0.9, 150 + (k % 2) * 50)
-    p.glyph("Spell_Evocation_Moonbeam", [7], cx, cy - 400, 130, 230, rot=-30)
-    p.circle(cx, cy - 250, 34, 2, 230)
+        rays.ray(cx, cy, 120 + (k % 3) * 30, 300 + (k % 4) * 30, t, 0.9, 150 + (k % 2) * 50)
+    halo.circle(cx, cy, 400, 2, 220)
+    halo.circle(cx, cy, 110, 1.4, 200)
+    halo.circle(cx, cy, 96, 1, 160, 5)
+    eye(halo, cx, cy, 70)
+    sun.circle(cx, cy - 250, 34, 2, 230)
     for k in range(24):
-        p.ray(cx, cy - 250, 44, 62 if k % 2 else 78, 2 * math.pi * k / 24, 1.4, 220)
+        sun.ray(cx, cy - 250, 44, 62 if k % 2 else 78, 2 * math.pi * k / 24, 1.4, 220)
+    sky.glyph("Spell_Evocation_Moonbeam", [7], cx, cy - 400, 130, 230, rot=-30)
     for x, y in ((cx - 140, cy - 330), (cx + 150, cy - 320), (cx - 230, cy - 200), (cx + 240, cy - 190)):
-        p.star(x, y, 9, 220)
-    p.circle(cx, cy, 110, 1.4, 200)
-    p.circle(cx, cy, 96, 1, 160, 5)
-    eye(p, cx, cy, 70)
-    return p.finish()
+        sky.star(x, y, 9, 220)
+    return {"rays": rays.finish(), "halo": halo.finish(), "sun": sun.finish(), "sky": sky.finish()}
 
 
 def sword(p, cx, cy, L, t):
@@ -293,20 +298,28 @@ TABS = {"species": species, "class": klass, "background": background, "abilities
 def main():
     random.seed(11)
     OUT.mkdir(parents=True, exist_ok=True)
-    imgs = {}
+    for old in OUT.glob("*.webp"):
+        old.unlink()
+    flat = {}
     for name, fn in TABS.items():
-        im = fn()
-        im.save(OUT / f"{name}.webp", "WEBP", quality=82)
-        imgs[name] = im
-        print(f"art/{name}.webp")
+        layers = fn()
+        for lname, im in layers.items():
+            im.save(OUT / f"{name}-{lname}.webp", "WEBP", quality=82)
+            print(f"art/{name}-{lname}.webp")
+        flat[name] = layers
     if "--preview" in sys.argv:
-        sheet = Image.new("RGB", (W, H * 2 // 2), (12, 10, 8))
         sheet = Image.new("RGB", (3 * 540, 2 * 340), (12, 10, 8))
-        for i, im in enumerate(imgs.values()):
-            t = im.resize((530, 331))
-            bg = Image.new("RGB", t.size, (12, 10, 8))
-            bg.paste(t, (0, 0), t)
-            sheet.paste(bg, ((i % 3) * 540, (i // 3) * 340))
+        for i, (name, layers) in enumerate(flat.items()):
+            bg = Image.new("RGBA", (W, H), (12, 10, 8, 255))
+            for lname, im in layers.items():
+                if im.size == (W, H):
+                    bg.alpha_composite(im)
+                else:  # the helix strip, laid diagonally as the page does
+                    strip = Image.new("RGBA", (im.width * 2, im.height))
+                    strip.paste(im, (0, 0)); strip.paste(im, (im.width, 0))
+                    strip = strip.rotate(28, expand=True, resample=Image.BICUBIC)
+                    bg.alpha_composite(strip, ((W - strip.width) // 2, (H - strip.height) // 2))
+            sheet.paste(bg.convert("RGB").resize((530, 331)), ((i % 3) * 540, (i // 3) * 340))
         sheet.save("tab-art-preview.png")
         print("tab-art-preview.png")
 

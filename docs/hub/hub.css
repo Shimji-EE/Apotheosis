@@ -901,7 +901,7 @@ body.hub main > :nth-child(n+4), body.hub .hub-main > :nth-child(n+4) { animatio
 .seat:hover { transform: translateY(-4px); }
 .check-opt:hover { border-color: rgba(208, 49, 63, 0.6); transform: translateX(2px); }
 .tile-opt:active, .check-opt:active, .chip:active, .slot:active, .cell:active, .cc-btn:active, .button:active, .ready-button:active { transform: scale(0.97); }
-.tile-opt.is-on { animation: m-pick 0.6s ease-out; }
+.m-pick { animation: m-pick 0.6s ease-out; }
 .tile-opt .emblem, .tile-opt .trait-icon { transition: transform 0.25s var(--m-ease), filter 0.25s; }
 .tile-opt:hover .emblem { transform: scale(1.08); filter: drop-shadow(0 0 8px rgba(236, 74, 86, 0.7)); }
 .tile-opt.is-on .emblem { animation: m-ember 2.8s ease-in-out infinite; }
@@ -916,8 +916,8 @@ body.hub main > :nth-child(n+4), body.hub .hub-main > :nth-child(n+4) { animatio
 /* The character on the stage breathes; bars fill in. */
 .stage-front { animation: m-ember 3.4s ease-in-out infinite; }
 .stage-back { transition: opacity 0.6s; }
-.hp-fill, .load-fill { transform-origin: left; animation: m-bar 0.9s var(--m-ease) backwards; transition: width 0.5s var(--m-ease); }
-.info-emblem { animation: m-rise 0.5s var(--m-ease) backwards; }
+.hp-fill, .load-fill { transition: width 0.5s var(--m-ease); }
+#info.m-swap .info-emblem { animation: m-rise 0.5s var(--m-ease) backwards; }
 .trait-icon { transition: transform 0.2s var(--m-ease); }
 .info-traits li:hover .trait-icon { transform: scale(1.12); }
 
@@ -1049,15 +1049,36 @@ body.hub .haze { animation: m-haze 38s ease-in-out infinite alternate; }
 .guide-more { padding: 0.1rem 0.3rem 0; font: italic 0.85rem var(--body); color: var(--ink-dim) !important; }
 @media (max-width: 560px) { .guide-tab { min-width: 0; } .guide-tab { font-size: 0; gap: 0; } .guide-tab b { font-size: 0.75rem; } }
 
-/* Creator tab art (Charl, 2026-11-02, after the Vladimir UI / Dawnwalker menus): a faint engraving
-   behind everything, one per tab, slowly drifting. Panels blur it through their glass. */
+/* Creator tab art (Charl, 2026-11-02, after the Vladimir UI / Dawnwalker menus): a faint, living engraving
+   behind everything, one per tab. Its layers turn, slide and pulse on their own; panels blur it through
+   their glass. The species helix lies on a diagonal and slides along itself, so it reads as turning. */
 #tab-art {
-  position: fixed; inset: -4% -4%; z-index: 0; pointer-events: none;
-  background: center 55% / min(1500px, 115vw) auto no-repeat; opacity: 0.4; mix-blend-mode: screen;
-  animation: m-art-drift 46s ease-in-out infinite alternate;
+  position: fixed; left: 50%; top: 55%; z-index: 0; pointer-events: none;
+  width: min(1500px, 115vw); aspect-ratio: 16 / 10; translate: -50% -50%;
+  opacity: 0.42; mix-blend-mode: screen;
 }
-#tab-art.is-in { animation: m-art-in 1.2s var(--m-ease) both, m-art-drift 46s ease-in-out 1.2s infinite alternate; }
-@keyframes m-art-in { from { opacity: 0; transform: scale(1.06); filter: blur(6px); } to { opacity: 0.4; transform: none; filter: none; } }
-@keyframes m-art-drift { from { transform: translate(0, 0) rotate(0deg); } to { transform: translate(-1.5%, 1%) rotate(1.2deg); } }
-@media (prefers-reduced-motion: reduce) { #tab-art { animation: none; } }
+#tab-art.is-in { animation: m-art-in 1.2s var(--m-ease) both; }
+@keyframes m-art-in { from { opacity: 0; scale: 1.06; filter: blur(6px); } to { opacity: 0.42; scale: 1; filter: none; } }
+.ta-l { position: absolute; inset: 0; background: center / 100% 100% no-repeat; }
+.ta-spin { animation: ta-spin 140s linear infinite; }
+.ta-spin-back { animation: ta-spin 200s linear infinite reverse; }
+.ta-spin-slow { animation: ta-spin 320s linear infinite; }
+.ta-breathe { animation: ta-breathe 7s ease-in-out infinite; }
+.ta-twinkle { animation: ta-twinkle 4.5s ease-in-out infinite; }
+.ta-drift { animation: ta-drift 40s ease-in-out infinite alternate; }
+.ta-swing { animation: ta-swing 9s ease-in-out infinite alternate; }
+@keyframes ta-spin { to { rotate: 360deg; } }
+@keyframes ta-breathe { 0%, 100% { opacity: 0.75; scale: 1; } 50% { opacity: 1; scale: 1.025; } }
+@keyframes ta-twinkle { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+@keyframes ta-drift { from { translate: -1.5% 0; } to { translate: 1.5% 1%; } }
+@keyframes ta-swing { from { rotate: -9deg; } to { rotate: 7deg; } }
+.ta-helix {
+  inset: auto; left: 50%; top: 50%; width: 260vmax; height: 300px; translate: -50% -50%; rotate: -28deg;
+  background: 0 50% / auto 100% repeat-x; animation: ta-helix 16s linear infinite;
+  -webkit-mask-image: linear-gradient(90deg, transparent 18%, #000 38%, #000 62%, transparent 82%);
+          mask-image: linear-gradient(90deg, transparent 18%, #000 38%, #000 62%, transparent 82%);
+}
+/* One tile is two turns of the helix: 2 x 520 px drawn at 420 px tall, shown 300 px tall. */
+@keyframes ta-helix { to { background-position-x: -743px; } }
+@media (prefers-reduced-motion: reduce) { #tab-art, #tab-art * { animation: none !important; } }
 body.creator-page .cc-list, body.creator-page .cc-info, body.creator-page .cc-stage { -webkit-backdrop-filter: blur(5px) saturate(1.2); backdrop-filter: blur(5px) saturate(1.2); }

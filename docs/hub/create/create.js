@@ -460,18 +460,33 @@
 
   /* ---------- render ---------- */
 
+  const TAB_ART = {
+    species: [["helix", "helix"], ["stars", "twinkle"]],
+    class: [["outer", "spin"], ["mid", "spin-back"], ["core", "breathe"]],
+    background: [["land", "drift"], ["ring", "spin-slow"], ["rose", "swing"]],
+    abilities: [["outer", "spin"], ["hexa", "spin-back"], ["core", "breathe"]],
+    feats: [["laurel", "breathe", "50% 52%"], ["rays", "twinkle"], ["star", "spin", "50% 52%"]],
+    belief: [["rays", "spin-slow", "50% 54%"], ["halo", "breathe", "50% 54%"], ["sun", "spin", "50% 29%"], ["sky", "twinkle"]],
+  };
   function render() {
-    // Faint engraved art behind the page, one piece per tab (tools/icon-studio/tab_art.py).
+    // Faint engraved art behind the page, one living piece per tab (tools/icon-studio/tab_art.py): each
+    // layer turns, slides or pulses on its own. The species helix lies on a diagonal and slides as if turning.
     if (document.body.dataset.tab !== tab) {
       document.body.dataset.tab = tab;
       const art = document.getElementById("tab-art") || document.body.appendChild(el("div", { id: "tab-art", "aria-hidden": "true" }));
-      art.style.backgroundImage = `url("art/${tab}.webp")`;
+      art.replaceChildren(...TAB_ART[tab].map(([layer, anim, origin = "50% 50%"]) => {
+        const d = el("div", { class: `ta-l ta-${anim}` });
+        d.style.backgroundImage = `url("art/${tab}-${layer}.webp")`;
+        d.style.transformOrigin = origin;
+        return d;
+      }));
       art.classList.remove("is-in"); void art.offsetWidth; art.classList.add("is-in");
     }
     $("tabs").replaceChildren(...TABS.map(([k, t], i) => el("button", { type: "button", role: "tab", "aria-selected": String(tab === k), "data-tab": k },
       el("span", { class: "tab-n", text: i + 1 }), t, problems().some(([pt]) => pt === k) ? el("span", { class: "tab-dot", title: "Something to choose here" }) : "")));
     const lists = { species: listSpecies, class: listClass, background: listBackground, abilities: listAbilities, feats: listFeats, belief: listBelief };
     const scroll = $("list").scrollTop;
+    $("list").dataset.view = `${tab}:${s.mode}`; // replays the list's entrance only when this changes
     $("list").replaceChildren(...lists[tab]());
     $("list").scrollTop = scroll;
     renderStage();
