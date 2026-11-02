@@ -1048,3 +1048,16 @@ body.hub .haze { animation: m-haze 38s ease-in-out infinite alternate; }
 .guide-step:hover .guide-go { opacity: 1; transform: translateX(3px); }
 .guide-more { padding: 0.1rem 0.3rem 0; font: italic 0.85rem var(--body); color: var(--ink-dim) !important; }
 @media (max-width: 560px) { .guide-tab { min-width: 0; } .guide-tab { font-size: 0; gap: 0; } .guide-tab b { font-size: 0.75rem; } }
+
+/* Creator tab art (Charl, 2026-11-02, after the Vladimir UI / Dawnwalker menus): a faint engraving
+   behind everything, one per tab, slowly drifting. Panels blur it through their glass. */
+#tab-art {
+  position: fixed; inset: -4% -4%; z-index: 0; pointer-events: none;
+  background: center 55% / min(1500px, 115vw) auto no-repeat; opacity: 0.4; mix-blend-mode: screen;
+  animation: m-art-drift 46s ease-in-out infinite alternate;
+}
+#tab-art.is-in { animation: m-art-in 1.2s var(--m-ease) both, m-art-drift 46s ease-in-out 1.2s infinite alternate; }
+@keyframes m-art-in { from { opacity: 0; transform: scale(1.06); filter: blur(6px); } to { opacity: 0.4; transform: none; filter: none; } }
+@keyframes m-art-drift { from { transform: translate(0, 0) rotate(0deg); } to { transform: translate(-1.5%, 1%) rotate(1.2deg); } }
+@media (prefers-reduced-motion: reduce) { #tab-art { animation: none; } }
+body.creator-page .cc-list, body.creator-page .cc-info, body.creator-page .cc-stage { -webkit-backdrop-filter: blur(5px) saturate(1.2); backdrop-filter: blur(5px) saturate(1.2); }
