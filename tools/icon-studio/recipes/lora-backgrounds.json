@@ -4,30 +4,30 @@
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a craftsman's hammer and chisel crossed over a carved wooden block, curls of wood shavings",
-  "seed": 21,
+  "prompt": "a smith's hammer crossed over a chisel above a small anvil, sparks flying",
+  "seed": 31,
   "n": 4,
-  "pick": 0
+  "pick": 2
  },
  {
   "label": "background Farmer",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a scythe and a sheaf of wheat bound with twine, ploughed furrows below",
-  "seed": 21,
+  "prompt": "a single sheaf of wheat stalks bound with twine in the middle, heavy grain heads fanning out at the top",
+  "seed": 41,
   "n": 4,
-  "pick": 0
+  "pick": 1
  },
  {
   "label": "background Guard",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a halberd standing upright beside a hanging lantern and a ring of iron keys, a city gate arch behind",
-  "seed": 21,
+  "prompt": "a halberd crossed with a hanging lantern, a ring of large iron keys at the centre",
+  "seed": 31,
   "n": 4,
-  "pick": 0
+  "pick": 2
  },
  {
   "label": "background Guide",
@@ -47,26 +47,26 @@
   "prompt": "a balance scale with coins stacked on one pan, an open ledger and a tied coin purse",
   "seed": 21,
   "n": 4,
-  "pick": 0
+  "pick": 2
  },
  {
   "label": "background Scribe",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a quill pen standing in an inkwell beside an unrolled scroll covered in handwriting, a wax seal",
-  "seed": 21,
+  "prompt": "a feather quill standing in an inkwell, an unrolled scroll beneath it with a wax seal",
+  "seed": 31,
   "n": 4,
-  "pick": 0
+  "pick": 1
  },
  {
   "label": "background Wayfarer",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a traveller's backpack with a bedroll and a hanging cooking pot, a winding road and a wooden signpost",
-  "seed": 21,
+  "prompt": "a traveller's backpack with a rolled bedroll strapped on top and a walking stick leaning against it",
+  "seed": 41,
   "n": 4,
-  "pick": 0
+  "pick": 1
  }
 ]
