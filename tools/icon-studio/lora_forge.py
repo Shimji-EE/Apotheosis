@@ -7,7 +7,8 @@ art (the dark tile is dropped by brightness), and turns it into the site's Grave
 game colour presets through forge.render.
 
 Setup (once):
-  pip install -r tools/icon-studio/lora-requirements.txt      (torch: use the CUDA wheel on a GPU PC)
+  pip install -r tools/icon-studio/lora-requirements.txt      (NVIDIA: use the CUDA torch wheel)
+  AMD/Intel on Windows: Python 3.12 and lora-requirements-directml.txt (torch-directml; fp32, ~12 s/image on an RX 6800)
   put bg3_actions_offset.safetensors in tools/icon-studio/models/   (git-ignored)
   base model: the Hugging Face id stable-diffusion-v1-5/stable-diffusion-v1-5 (downloaded on first run),
   or --base PATH to a local SD 1.5 .safetensors / .ckpt file.
@@ -47,6 +48,12 @@ def pipeline(base=BASE, lora=LORA, scale=0.9):
     import torch
     from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
     dev = "cuda" if torch.cuda.is_available() else "cpu"
+    if dev == "cpu":
+        try:  # AMD/Intel GPUs on Windows: pip install -r lora-requirements-directml.txt
+            import torch_directml
+            dev = torch_directml.device()
+        except ImportError:
+            pass
     dtype = torch.float16 if dev == "cuda" else torch.float32
     if Path(base).is_file():
         pipe = StableDiffusionPipeline.from_single_file(base, torch_dtype=dtype)
@@ -65,7 +72,8 @@ def generate(pipe, dev, prompt, seed=0, n=1, steps=24, size=512, cfg=7.0):
     import torch
     out = []
     for i in range(n):
-        g = torch.Generator(device=dev).manual_seed(seed + i)
+        # DirectML has no device-side generator; seed on the CPU (same images for a given seed).
+        g = torch.Generator(device=dev if dev == "cuda" else "cpu").manual_seed(seed + i)
         out.append(pipe(f"{STYLE}, {prompt}", negative_prompt=NEGATIVE, num_inference_steps=steps,
                         guidance_scale=cfg, width=size, height=size, generator=g).images[0])
     return out
@@ -75,6 +83,10 @@ def to_lineart(img, lo=0.35, hi=0.75):
     """The generated tile as forge line art (white strokes, alpha from brightness), 512 px, cropped to the
     glyph and centred so forge.render can thicken and glow it."""
     g = np.asarray(img.convert("L").resize((forge.N, forge.N), Image.LANCZOS)).astype(np.float64) / 255
+    # The LoRA sometimes draws dark line art on a pale tile: judge by the border and invert those.
+    edge = np.concatenate([g[:16].ravel(), g[-16:].ravel(), g[:, :16].ravel(), g[:, -16:].ravel()])
+    if np.median(edge) > 0.5:
+        g = 1 - g
     a = np.clip((g - lo) / (hi - lo), 0, 1)
     # Drop anything touching the border (tile edges and corner marks of the game's frame).
     m = 8

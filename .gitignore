@@ -10,3 +10,7 @@ __pycache__/
 # LoRA / Stable Diffusion weights for tools/icon-studio/lora_forge.py
 tools/icon-studio/models/
 *.safetensors
+
+# lora_forge venv and test output
+tools/icon-studio/.venv/
+lora-try.png
