@@ -6,14 +6,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "saw",
-    "line": 9
-   },
-   {
     "icon": "Action_PactOfTheBlade_Battleaxe",
     "major": 0.9,
-    "size": 0.6083,
-    "y": 0.5
+    "size": 0.84
    }
   ]
  },
@@ -24,14 +19,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "quatrefoil",
-    "line": 9
-   },
-   {
     "icon": "Action_Perform_Lute",
     "major": 0.9,
-    "size": 0.4017,
-    "y": 0.5
+    "size": 0.84
    }
   ]
  },
@@ -42,14 +32,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "sun",
-    "line": 9
-   },
-   {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.4213,
-    "y": 0.5
+    "size": 0.84
    }
   ]
  },
@@ -60,14 +45,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "leaf",
-    "line": 9
-   },
-   {
     "icon": "Spell_Transmutation_Barkskin",
     "major": 0.9,
-    "size": 0.4247,
-    "y": 0.46
+    "size": 0.84
    }
   ]
  },
@@ -78,14 +58,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "shield",
-    "line": 9
-   },
-   {
     "icon": "Action_PactOfTheBlade_Greatsword",
     "major": 0.9,
-    "size": 0.6083,
-    "y": 0.5
+    "size": 0.84
    }
   ]
  },
@@ -96,14 +71,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "enso",
-    "line": 9
-   },
-   {
     "icon": "Skill_Druid_NaturalRecovery",
     "major": 0.9,
-    "size": 0.5167,
-    "y": 0.5
+    "size": 0.84
    }
   ]
  },
@@ -114,14 +84,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "octagon",
-    "line": 9
-   },
-   {
     "icon": "Spell_Evocation_SpiritualWeapon_Greatsword",
     "major": 0.9,
-    "size": 0.5606,
-    "y": 0.46
+    "size": 0.84
    }
   ]
  },
@@ -132,14 +97,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "triangle",
-    "line": 9
-   },
-   {
     "icon": "Skill_Ranger_RangersCompanion",
     "major": 0.9,
-    "size": 0.3463,
-    "y": 0.54
+    "size": 0.84
    }
   ]
  },
@@ -150,14 +110,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "lozenge",
-    "line": 9
-   },
-   {
     "icon": "Action_UmbralCloak",
     "major": 0.9,
-    "size": 0.454,
-    "y": 0.42
+    "size": 0.84
    }
   ]
  },
@@ -168,14 +123,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "hexagon",
-    "line": 9
-   },
-   {
     "icon": "Action_WildMagic_SorceryPoints",
     "major": 0.9,
-    "size": 0.584,
-    "y": 0.54
+    "size": 0.84
    }
   ]
  },
@@ -186,14 +136,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "pentagon",
-    "line": 9
-   },
-   {
     "icon": "Action_Raven_BadOmen",
     "major": 0.9,
-    "size": 0.5376,
-    "y": 0.5
+    "size": 0.84
    }
   ]
  },
@@ -204,14 +149,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "arch",
-    "line": 9
-   },
-   {
     "icon": "Action_AstralKnowledge",
     "major": 0.9,
-    "size": 0.4247,
-    "y": 0.6
+    "size": 0.84
    }
   ]
  },
@@ -222,14 +162,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "crescent",
-    "line": 9
-   },
-   {
     "icon": "Action_Ranger_RangersCompanion_Wolf",
     "major": 0.9,
-    "size": 0.5167,
-    "y": 0.5
+    "size": 0.84
    }
   ]
  },
@@ -240,14 +175,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "cog",
-    "line": 9
-   },
-   {
     "icon": "Action_PactOfTheBlade_Warhammer",
     "major": 0.9,
-    "size": 0.5167,
-    "y": 0.54
+    "size": 0.84
    }
   ]
  },
@@ -258,14 +188,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "drop",
-    "line": 9
-   },
-   {
     "icon": "Action_Mag_FlamingBlade",
     "major": 0.9,
-    "size": 0.375,
-    "y": 0.63
+    "size": 0.84
    }
   ]
  },
@@ -276,14 +201,9 @@
   "weight": 5,
   "layers": [
    {
-    "frame": "star8",
-    "line": 9
-   },
-   {
     "icon": "Spell_TheThirdEye_SeeInvisibility",
     "major": 0.9,
-    "size": 0.4389,
-    "y": 0.5
+    "size": 0.84
    }
   ]
  }

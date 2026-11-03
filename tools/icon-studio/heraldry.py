@@ -1,9 +1,13 @@
-"""Writes the class and subclass emblem recipes as Apotheosis heraldry (Charl, 2026-11-03: the plain
-game glyphs read too much like BG3 icons).
+"""Writes the class and subclass emblem recipes (Charl, 2026-11-03).
 
-Each class owns a procedural frame (forge.py `frame`). A class emblem is its frame around a pared-down
-copy of its glyph; a subclass emblem is its class's frame, drawn finer, around its own glyph,
-also pared down. (Mirrored symmetry was tried and dropped: Charl found it looked forced.) Glyphs are shrunk until no ink touches the frame (no clipping). Run, then `forge.py make recipes/classes.json` and `... subclasses.json`.
+- A class emblem is the class's character motif alone, with no frame (recipes/class-motifs.json:
+  an axe in a fist, a lute, a raven on a skull...).
+- A subclass emblem keeps that class motif at its centre inside a thematic frame from themes.py
+  (recipes/subclass-themes.json: flame for Wildfire, eclipse for Shadow, laurel for Glory...). No two
+  subclasses of one class share a theme.
+- forge.clear_of_frame shrinks or nudges each motif until no ink touches its frame (no clipping).
+
+Run, then `forge.py make recipes/classes.json` and `forge.py make recipes/subclasses.json`.
 """
 import json
 import sys
@@ -13,35 +17,22 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from forge import clear_of_frame  # noqa: E402
 
 R = Path(__file__).resolve().parent / "recipes"
-FRAMES = {"Barbarian": "saw", "Bard": "quatrefoil", "Cleric": "sun", "Druid": "leaf", "Fighter": "shield",
-          "Monk": "enso", "Paladin": "octagon", "Ranger": "triangle", "Rogue": "lozenge", "Sorcerer": "hexagon",
-          "Warlock": "pentagon", "Wizard": "arch", "Carlislean Lycanthrope": "crescent", "Artificer": "cog",
-          "Blood Hunter": "drop", "Mystic": "star8"}
-# Where the glyph sits inside narrow frames: size, y.
-FIT = {"triangle": (.5, .58), "drop": (.46, .63), "lozenge": (.58, .5), "arch": (.5, .6), "leaf": (.48, .5),
-       "pentagon": (.56, .46), "quatrefoil": (.58, .5)}
-# Per-emblem fixes after looking at the sheet.
-TWEAK = {"subclass Twilight Domain": {"solid": .55}}
-
-
-def glyph(icon, label, frame, major):
-    size, y = FIT.get(frame, (.66, .5))
-    return {"icon": icon, "major": major, "size": size, "y": y, **TWEAK.get(label, {})}
+# Where the motif sits inside frames that are not round: size, y.
+FIT = {"giant": (.5, .62), "arch": (.5, .6), "eye": (.5, .5), "twilight": (.56, .46), "shield": (.6, .48)}
 
 
 def main():
-    classes = json.loads((R / "classes.json").read_text(encoding="utf-8"))
-    subs = json.loads((R / "subclasses.json").read_text(encoding="utf-8"))
-    owner = json.loads((R / "subclass-class.json").read_text(encoding="utf-8"))
-    # Class emblems show the character (axe, lute, raven on a skull...), not a class ability (Charl, 2026-11-03).
-    motif = json.loads((R / "class-motifs.json").read_text(encoding="utf-8"))
-    src = lambda item: next(l["icon"] for l in item["layers"] if "icon" in l)
+    load = lambda n: json.loads((R / n).read_text(encoding="utf-8"))
+    classes, subs = load("classes.json"), load("subclasses.json")
+    owner, motif, theme = load("subclass-class.json"), load("class-motifs.json"), load("subclass-themes.json")
     for c in classes:
-        f = FRAMES[c["label"][6:]]
-        c.update(weight=5, layers=clear_of_frame([{"frame": f, "line": 9}, glyph(motif[c["label"][6:]], c["label"], f, .9)]))
+        c.update(weight=5, layers=[{"icon": motif[c["label"][6:]], "major": .9, "size": .84}])
     for s in subs:
-        f = FRAMES[owner[s["label"][9:]]]
-        s.update(weight=5, layers=clear_of_frame([{"frame": f, "line": 6, "size": .94}, glyph(src(s), s["label"], f, .9)]))
+        name = s["label"][9:]
+        t = theme[name]
+        size, y = FIT.get(t, (.62, .5))
+        s.update(weight=5, layers=clear_of_frame([{"theme": t, "line": 7},
+                                                  {"icon": motif[owner[name]], "major": .9, "size": size, "y": y}]))
     for name, data in (("classes.json", classes), ("subclasses.json", subs)):
         (R / name).write_text(json.dumps(data, indent=1), encoding="utf-8")
 
