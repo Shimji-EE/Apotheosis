@@ -2,8 +2,9 @@
 
 - A class emblem is the class's character symbol alone, with no frame (recipes/class-motifs.json:
   an axe in a fist, a lute, wild shape, a raven on a skull...).
-- A subclass emblem is built to read as its class first: the class's own frame shape (forge.frame:
-  notched ring for Barbarian, shield for Fighter, gothic arch for Wizard...) around the class symbol,
+- A subclass emblem is built to read as its class first: a round frame whose three accents are small
+  outlines of the class's shape (notched ring for Barbarian, shield for Fighter, arch for Wizard...) around
+  the class symbol,
   with a subclass crest breaking the top of the frame. The crest is another game icon chosen for the
   subclass's theme (recipes/subclass-themes.json -> recipes/theme-crests.json); no theme repeats in a class.
 - forge.clear_of_frame shrinks or nudges the class symbol until it touches neither frame nor crest.
@@ -37,8 +38,8 @@ def main():
     for s in subs:
         name = s["label"][9:]
         cls = owner[name]
-        f = FRAMES[cls]
-        fs, fy, size, y = FIT.get(f, (.84, .56, .5, .58))
+        f = "round:" + FRAMES[cls]
+        fs, fy, size, y = .86, .54, .62, .56
         s.update(weight=5, layers=clear_of_frame([
             {"frame": f, "line": 7, "size": fs, "y": fy},
             {"icon": crest[theme[name]], "major": .92, "size": .34, "y": .18, "knock": 10, "fixed": True},
