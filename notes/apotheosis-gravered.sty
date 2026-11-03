@@ -209,12 +209,11 @@
       \hyperref[#1]{\usebox{\apolinkbox}}\par\addvspace{6pt}}}}
 
 %% ========================================================================
-%% ART THAT BLENDS INTO THE PAGE
+%% ART ON A MAROON BACKING
 %% ========================================================================
-% Every \includegraphics inside a figure is drawn with soft edges that
-% dissolve into the paper, like the art in the official books. Use
-% \plainart{...} (same arguments as \includegraphics) for an image that
-% should keep hard edges.
+% Every \includegraphics inside a figure sits on a solid maroon backing
+% (\maroonart, below). Use \plainart{...} (same arguments as
+% \includegraphics) for an image with no backing.
 %
 % \fadedart[keys]{file} can also be used directly:
 %   width=<len>   height=<len>   fade=soft|all|bottom|top|sides|none
@@ -292,13 +291,22 @@
     \end{pgfscope}
   \end{tikzpicture}%
   \endgroup}
-% Inside figures, \includegraphics draws a \fadedart at the size it would
-% have had.
-\newcommand{\apo@figart}[2][]{%
+% Inside figures, \includegraphics draws the art with hard edges on a solid
+% maroon backing, like the plates on the website. The backing is offset,
+% not centred: a thin edge at the top and left, a deeper one at the bottom
+% and right. (\fadedart is still available for art that should dissolve
+% into the page.)
+\newcommand{\maroonart}[2][]{%
   \sbox\apo@artbox{\apo@includegraphics[#1]{#2}}%
-  \edef\apo@figw{\the\wd\apo@artbox}%
-  \fadedart[width=\apo@figw]{#2}}
-\AddToHook{env/figure/begin}{\let\includegraphics\apo@figart}
-\AddToHook{env/figure*/begin}{\let\includegraphics\apo@figart}
+  \begin{tikzpicture}[inner sep=0pt, baseline=(art.base)]
+    \node[anchor=south west, inner sep=0pt] (art) at (0,0) {\usebox\apo@artbox};
+    \begin{pgfonlayer}{background}
+      \fill[graveMaroon] ([shift={(-3pt,-9pt)}]art.south west)
+        rectangle ([shift={(9pt,3pt)}]art.north east);
+    \end{pgfonlayer}
+  \end{tikzpicture}}
+\pgfdeclarelayer{background}\pgfsetlayers{background,main}
+\AddToHook{env/figure/begin}{\let\includegraphics\maroonart}
+\AddToHook{env/figure*/begin}{\let\includegraphics\maroonart}
 
 \endinput
