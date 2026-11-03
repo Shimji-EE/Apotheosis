@@ -173,7 +173,8 @@
     if (b) return el("img", { class: `emblem ${cls}`, src: `../icons/backgrounds/${b.file}`, alt: "" });
     return el("span", { class: `emblem emblem-letter ${cls}`, text: key.replace(/^\w+ /, "").slice(0, 1) });
   }
-  // Each subclass has its own emblem (forged from the game's line art); the class emblem stands in otherwise.
+  // Each subclass has its own emblem (its class symbol in a ring with a subclass crest); once a hero
+  // specialises it replaces the class emblem on the stage. The class emblem stands in otherwise.
   const subEmblem = (cls, sub, cls_ = "") => emblem(EMBLEMS[keyOf(`subclass ${sub}`)] ? `subclass ${sub}` : `class ${cls}`, cls_);
   const powerImg = (name) => {
     const p = POWERS[keyOf(name)] || POWERS[keyOf(String(name).replace(/\(.*?\)/g, ""))];
@@ -466,7 +467,7 @@
     const speciesKey = s.mode === "half" ? "species Half-blood" : `species ${subOf(s.species) || s.species}`;
     const nameInput = el("input", { id: "cc-name", "data-name": "1", value: s.name, maxlength: "60", placeholder: "Name your character", "aria-label": "Character name" });
     $("stage").replaceChildren(
-      el("div", { class: "stage-emblems" }, emblem(speciesKey, "stage-back"), emblem(`class ${s.cls}`, "stage-front"), s.gestalt ? emblem(`class ${s.cls2}`, "stage-second") : ""),
+      el("div", { class: "stage-emblems" }, emblem(speciesKey, "stage-back"), subEmblem(s.cls, s.subclass, "stage-front"), s.gestalt ? subEmblem(s.cls2, s.subclass2, "stage-second") : ""),
       el("p", { class: "stage-line", text: `${info.label}${s.variant !== "None" ? ` · ${s.variant}${O.VARIANTS[s.variant].sub ? ` (${s.variantSub})` : ""}` : ""}` }),
       el("p", { class: "stage-line stage-class", text: `${s.cls}${s.subclass ? `: ${s.subclass}` : ""}${s.gestalt ? ` / ${s.cls2}${s.subclass2 ? `: ${s.subclass2}` : ""}` : ""}` }),
       el("div", { class: "stage-level" },
