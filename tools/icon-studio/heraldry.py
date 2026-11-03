@@ -14,7 +14,7 @@ FRAMES = {"Barbarian": "saw", "Bard": "quatrefoil", "Cleric": "sun", "Druid": "l
           "Warlock": "pentagon", "Wizard": "arch", "Carlislean Lycanthrope": "crescent", "Artificer": "cog",
           "Blood Hunter": "drop", "Mystic": "star8"}
 # Where the glyph sits inside narrow frames: size, y.
-FIT = {"triangle": (.42, .6), "drop": (.4, .62), "lozenge": (.44, .5), "arch": (.42, .58), "leaf": (.42, .5),
+FIT = {"triangle": (.5, .62), "drop": (.4, .62), "lozenge": (.44, .5), "arch": (.42, .58), "leaf": (.42, .5),
        "pentagon": (.46, .46), "quatrefoil": (.46, .5)}
 # Per-emblem fixes after looking at the sheet.
 TWEAK = {"subclass Twilight Domain": {"solid": .55}}
@@ -22,6 +22,7 @@ TWEAK = {"subclass Twilight Domain": {"solid": .55}}
 
 def glyph(icon, label, frame, major):
     size, y = FIT.get(frame, (.54, .5))
+    size *= .86  # stay inside the frame's inner hairline
     return {"icon": icon, "major": major, "size": size, "y": y, **TWEAK.get(label, {})}
 
 
