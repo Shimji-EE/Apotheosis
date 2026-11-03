@@ -100,7 +100,7 @@ window.CreatorOptions = (() => {
       sub: {
         Crystalline: { features: [
           ["Tough", "feature", "Crystalline: you gain the benefits of the Tough feat and resistance to non-magical bludgeoning, piercing and slashing damage.", { icon: "Dhampir Crystalline Tough" }],
-          ["Brittle Bones", "feature", "Crystalline: you are vulnerable to thunder damage.", { icon: "Dhampir Brittle Bones" }]] },
+          ["Brittle Skin", "feature", "Crystalline: you are vulnerable to thunder damage.", { icon: "Dhampir Brittle Skin" }]] },
         Chiropterine: { features: [
           ["Dread Ambusher", "feature", "Chiropterine: you gain the Dread Ambusher feature of Gloom Stalker rangers.", { icon: "Dhampir Dread Ambusher" }],
           ["Sunlight Sensitivity", "feature", "Chiropterine: while in sunlight you have disadvantage on attack rolls and on Wisdom (Perception) checks that rely on sight, and you are vulnerable to radiant damage.", { icon: "Dhampir Sunlight Sensitivity" }]] },

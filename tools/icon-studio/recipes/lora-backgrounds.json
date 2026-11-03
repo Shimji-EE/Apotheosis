@@ -4,69 +4,139 @@
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a smith's hammer crossed over a chisel above a small anvil, sparks flying",
+  "prompt": "two crossed smith's hammers",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
-  "pick": 2
+  "pick": "auto",
+  "layers": [
+   {
+    "icon": "Spell_Transmutation_Mending",
+    "strokes": [
+     1,
+     2,
+     7,
+     8
+    ],
+    "size": 0.84
+   }
+  ]
  },
  {
   "label": "background Farmer",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a single sheaf of wheat stalks bound with twine in the middle, heavy grain heads fanning out at the top",
-  "seed": 41,
+  "prompt": "a harvest sickle held in a fist",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 1
+  "pick": "auto",
+  "layers": [
+   {
+    "icon": "Action_PactOfTheBlade_Sickle",
+    "strokes": [
+     1,
+     3,
+     8,
+     13
+    ],
+    "size": 0.84
+   }
+  ]
  },
  {
   "label": "background Guard",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a halberd crossed with a hanging lantern, a ring of large iron keys at the centre",
+  "prompt": "a kite shield with a spear behind it",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
-  "pick": 2
+  "pick": "auto",
+  "layers": [
+   {
+    "icon": "Spell_Abjuration_ShieldOfFaith",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ]
  },
  {
   "label": "background Guide",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a walking staff with a compass hanging from it and a rolled trail map, mountain peaks behind",
-  "seed": 21,
+  "prompt": "a guiding star with a long trailing tail",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 0
+  "pick": "auto",
+  "layers": [
+   {
+    "icon": "Spell_Evocation_GuidingBolt",
+    "strokes": [
+     1,
+     2,
+     5
+    ],
+    "size": 0.84
+   }
+  ]
  },
  {
   "label": "background Merchant",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a balance scale with coins stacked on one pan, an open ledger and a tied coin purse",
-  "seed": 21,
+  "prompt": "a tied coin purse with two coins",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 2
+  "pick": "auto",
+  "layers": [
+   {
+    "icon": "Action_TossACoin",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ]
  },
  {
   "label": "background Scribe",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a feather quill standing in an inkwell, an unrolled scroll beneath it with a wax seal",
+  "prompt": "a quill dipped in an inkpot",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
-  "pick": 1
+  "pick": "auto",
+  "layers": [
+   {
+    "icon": "Spell_Transmutation_FeatherFall",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ]
  },
  {
   "label": "background Wayfarer",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a traveller's backpack with a rolled bedroll strapped on top and a walking stick leaning against it",
-  "seed": 41,
+  "prompt": "a striding traveller's boot with motion lines",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 1
+  "pick": "auto",
+  "layers": [
+   {
+    "icon": "Action_Dash",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ]
  }
 ]

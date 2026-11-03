@@ -28,7 +28,12 @@ A recipe is a list of icons:
   seed / n / pick: generate n candidates from seed and publish candidate `pick` (default 0).
   Other keys (to, style, weight, kind) work as in forge.py. Same one-icon-one-meaning rule.
 
-Runs on CUDA when available, else CPU (slow: minutes per image at 512 px).
+Fuse (the default for emblems): give an item forge `layers` (a game glyph, optionally an accent glyph)
+and the LoRA redraws that composition at `strength` (.45-.6) with the prompt's custom detail; clean()
+then drops washes, specks and strokes that stray off the composition. `pick: "auto"` keeps the candidate
+that holds the composition with the fewest strokes. Use `guide: "self"` when no game glyph fits.
+
+Runs on CUDA, else DirectML (AMD/Intel), else CPU (slow: minutes per image at 512 px).
 """
 import argparse
 import json
@@ -45,8 +50,8 @@ import forge  # noqa: E402
 LORA = HERE / "models" / "bg3_actions_offset.safetensors"
 BASE = "stable-diffusion-v1-5/stable-diffusion-v1-5"
 # The subject leads the prompt; the style words follow so they don't flatten it into a generic glyph.
-STYLE = "bg3 action icon, white line art on dark background, centered, high contrast, detailed"
-NEGATIVE = "text, letters, watermark, signature, frame, border, photo, realistic, blurry, colourful, gradient"
+STYLE = "bg3 action icon, simple clean white line art on dark background, centered, bold strokes, minimal"
+NEGATIVE = "text, letters, watermark, signature, frame, border, photo, realistic, blurry, colourful, gradient, cluttered, intricate, busy, sparkles, particles"
 
 
 def pipeline(base=BASE, lora=LORA, scale=0.9):
@@ -73,20 +78,39 @@ def pipeline(base=BASE, lora=LORA, scale=0.9):
     return pipe.to(dev), dev
 
 
-def generate(pipe, dev, prompt, seed=0, n=1, steps=24, size=512, cfg=7.0):
+def img2img(pipe):
+    from diffusers import StableDiffusionImg2ImgPipeline
+    i2i = StableDiffusionImg2ImgPipeline(**pipe.components)
+    i2i.set_progress_bar_config(disable=True)
+    return i2i
+
+
+def generate(pipe, dev, prompt, seed=0, n=1, steps=24, size=512, cfg=7.0, init=None, strength=0.55):
+    """txt2img, or img2img from `init` (a guide tile) when given."""
     import torch
     out = []
     for i in range(n):
         # DirectML has no device-side generator; seed on the CPU (same images for a given seed).
         g = torch.Generator(device=dev if dev == "cuda" else "cpu").manual_seed(seed + i)
-        out.append(pipe(f"{prompt}, {STYLE}", negative_prompt=NEGATIVE, num_inference_steps=steps,
-                        guidance_scale=cfg, width=size, height=size, generator=g).images[0])
+        kw = dict(negative_prompt=NEGATIVE, num_inference_steps=steps, guidance_scale=cfg, generator=g)
+        if init is None:
+            out.append(pipe(f"{prompt}, {STYLE}", width=size, height=size, **kw).images[0])
+        else:
+            out.append(pipe(f"{prompt}, {STYLE}", image=init, strength=strength, **kw).images[0])
     return out
 
 
+def guide_tile(art):
+    """Forge line art (RGBA) as the LoRA's own kind of tile: pale strokes on a near-black square."""
+    from PIL import ImageFilter
+    a = art.getchannel("A").filter(ImageFilter.MaxFilter(3))
+    tile = Image.new("RGB", (forge.N, forge.N), (16, 13, 13))
+    tile.paste(Image.new("RGB", tile.size, (235, 228, 214)), (0, 0), a)
+    return tile
+
+
 def to_lineart(img, lo=0.35, hi=0.75):
-    """The generated tile as forge line art (white strokes, alpha from brightness), 512 px, cropped to the
-    glyph and centred so forge.render can thicken and glow it."""
+    """The generated tile as forge line art (white strokes, alpha from brightness), 512 px."""
     g = np.asarray(img.convert("L").resize((forge.N, forge.N), Image.LANCZOS)).astype(np.float64) / 255
     # The LoRA sometimes draws dark line art on a pale tile: judge by the border and invert those.
     edge = np.concatenate([g[:16].ravel(), g[-16:].ravel(), g[:, :16].ravel(), g[:, -16:].ravel()])
@@ -96,16 +120,88 @@ def to_lineart(img, lo=0.35, hi=0.75):
     # Drop anything touching the border (tile edges and corner marks of the game's frame).
     m = 8
     a[:m], a[-m:], a[:, :m], a[:, -m:] = 0, 0, 0, 0
-    im = Image.fromarray((np.dstack([np.ones_like(a)] * 3 + [a]) * 255).astype(np.uint8), "RGBA")
+    return a
+
+
+def clean(a, guide=None, min_area=0.003):
+    """Cleanup that makes generated glyphs read as deliberate: hysteresis threshold (no grey washes), drop
+    specks, fill pinholes, and with a guide keep only strokes that sit on the guide's composition.
+    Returns (alpha, number of strokes, guide cover)."""
+    from scipy import ndimage as ndi
+    lab, n = ndi.label(a > 0.35)
+    if n:  # hysteresis: faint ink survives only where it joins a strong stroke; then drop specks
+        strong = ndi.maximum(a > 0.7, lab, range(1, n + 1))
+        size = ndi.sum(np.ones_like(a), lab, range(1, n + 1))
+        ink = np.isin(lab, 1 + np.flatnonzero(strong & (size >= min_area * a.size)))
+    else:
+        ink = lab > 0
+    holes, h = ndi.label(~ink)
+    if h:  # fill pinholes
+        small = 1 + np.flatnonzero(ndi.sum(np.ones_like(a), holes, range(1, h + 1)) < 64)
+        ink |= np.isin(holes, small)
+    cover = 1.0
+    if guide is not None:
+        g = ndi.binary_dilation(guide > 0.3, iterations=18)
+        lab, n = ndi.label(ink)
+        if n:
+            on = ndi.sum(g, lab, range(1, n + 1)) / ndi.sum(np.ones_like(g), lab, range(1, n + 1))
+            ink = np.isin(lab, 1 + np.flatnonzero(on > 0.6))
+        gi = guide > 0.3
+        cover = (ndi.binary_dilation(ink, iterations=10) & gi).sum() / max(1, gi.sum())
+    n = ndi.label(ink)[1]
+    # Soft edges inside the kept strokes, nothing outside them.
+    alpha = np.where(ndi.binary_dilation(ink, iterations=1), a, 0)
+    alpha = np.where(ink, np.maximum(alpha, 0.85), alpha)
+    return alpha, n, cover
+
+
+def centred(alpha, fill=0.84):
+    im = Image.fromarray((np.dstack([np.ones_like(alpha)] * 3 + [alpha]) * 255).astype(np.uint8), "RGBA")
     bb = im.getchannel("A").getbbox()
     if not bb:
         return im
     im = im.crop(bb)
-    s = 0.84 * forge.N / max(im.size)
+    s = fill * forge.N / max(im.size)
     im = im.resize((max(1, round(im.width * s)), max(1, round(im.height * s))), Image.LANCZOS)
     c = Image.new("RGBA", (forge.N, forge.N), (0, 0, 0, 0))
     c.paste(im, ((forge.N - im.width) // 2, (forge.N - im.height) // 2), im)
     return c
+
+
+def candidates(pipes, dev, item, steps):
+    """Generate an item's candidates and clean them. Returns [(raw, art, score)].
+
+    `layers` (forge layers, e.g. a game glyph plus an accent) become the composition the LoRA redraws at
+    `strength` (default .55): game-accurate structure, custom detail. `guide: "self"` does a first txt2img
+    pass, cleans it and redraws that. Without either it is plain txt2img, cleaned."""
+    pipe, i2i = pipes
+    seed, n, prompt = item.get("seed", 0), item.get("n", 4), item["prompt"]
+    strength = item.get("strength", 0.55)
+    out = []
+    if item.get("layers"):
+        art = forge.compose(item["layers"])
+        guide = np.asarray(art.getchannel("A")).astype(np.float64) / 255
+        raws = generate(i2i, dev, prompt, seed, n, steps, init=guide_tile(art), strength=strength)
+        pairs = [(r, guide) for r in raws]
+    elif item.get("guide") == "self":
+        pairs = []
+        for k, first in enumerate(generate(pipe, dev, prompt, seed, n, steps)):
+            g, _, _ = clean(to_lineart(first))
+            art = Image.fromarray((np.dstack([np.ones_like(g)] * 3 + [g]) * 255).astype(np.uint8), "RGBA")
+            r = generate(i2i, dev, prompt, seed + k, 1, steps, init=guide_tile(art), strength=strength)[0]
+            pairs.append((r, g))
+    else:
+        pairs = [(r, None) for r in generate(pipe, dev, prompt, seed, n, steps)]
+    for raw, guide in pairs:
+        alpha, strokes, cover = clean(to_lineart(raw), guide)
+        # Prefer candidates that keep the composition and read as few, deliberate strokes.
+        out.append((raw, centred(alpha), cover - 0.04 * strokes))
+    return out
+
+
+def choose(item, cands):
+    p = item.get("pick", "auto")
+    return max(range(len(cands)), key=lambda i: cands[i][2]) if p == "auto" else p
 
 
 def sheet(images, path, tile=160):
@@ -116,37 +212,49 @@ def sheet(images, path, tile=160):
     print(path)
 
 
-def cmd_try(a):
+def pipes(a):
     pipe, dev = pipeline(a.base, a.lora, a.scale)
-    raw = generate(pipe, dev, a.prompt, a.seed, a.n, a.steps)
-    finished = [forge.render(to_lineart(r), "glow", 128) for r in raw]
-    sheet(raw + finished, a.out)
+    return (pipe, img2img(pipe)), dev
+
+
+def cmd_try(a):
+    ps, dev = pipes(a)
+    item = {"prompt": a.prompt, "seed": a.seed, "n": a.n}
+    if a.icon:
+        item["layers"] = [{"icon": a.icon, "major": 0.9, "size": 0.84}]
+        item["strength"] = a.strength
+    cs = candidates(ps, dev, item, a.steps)
+    sheet([c[0] for c in cs] + [forge.render(c[1], "glow", 128, weight=5) for c in cs], a.out)
 
 
 def cmd_cands(a):
-    """One sheet per recipe item (raw candidates over their glow finish) to choose each item's `pick`."""
+    """One sheet per recipe item (raw candidates over their cleaned glow finish); prints the auto pick."""
     items = json.loads(Path(a.recipe).read_text(encoding="utf-8"))
     out = Path(a.out_dir); out.mkdir(parents=True, exist_ok=True)
-    pipe, dev = pipeline(a.base, a.lora, a.scale)
+    ps, dev = pipes(a)
     for item in items:
-        raw = generate(pipe, dev, item["prompt"], item.get("seed", 0), item.get("n", 4), a.steps)
-        sheet(raw + [forge.render(to_lineart(r), "glow", 128) for r in raw], out / f"{forge.icons.slug(item['label'])}.png")
+        cs = candidates(ps, dev, item, a.steps)
+        sheet([c[0] for c in cs] + [forge.render(c[1], "glow", 128, weight=item.get("weight", 5)) for c in cs],
+              out / f"{forge.icons.slug(item['label'])}.png")
+        print(item["label"], "auto pick", choose(dict(item, pick="auto"), cs), [round(c[2], 3) for c in cs])
 
 
 def cmd_make(a):
     items = json.loads(Path(a.recipe).read_text(encoding="utf-8"))
-    pipe, dev = pipeline(a.base, a.lora, a.scale)
+    ps, dev = pipes(a)
     previews = []
     for item in items:
-        raw = generate(pipe, dev, item["prompt"], item.get("seed", 0), item.get("n", 1), a.steps)
-        art = to_lineart(raw[item.get("pick", 0)])
-        img = forge.render(art, item.get("style", "glow"), forge.SIZES.get(item["to"], 128),
+        cs = candidates(ps, dev, item, a.steps)
+        k = choose(item, cs)
+        img = forge.render(cs[k][1], item.get("style", "glow"), forge.SIZES.get(item["to"], 128),
                            item.get("kind", "Spell"), item.get("weight", 5))
         previews.append(img)
+        print(item["label"], "pick", k)
         if not a.dry:
-            # The digest keys on the prompt and seed, so one generated icon cannot carry two meanings.
-            forge.publish(dict(item, layers=[{"lora": item["prompt"], "seed": item.get("seed", 0),
-                                              "pick": item.get("pick", 0)}]), img)
+            # The digest keys on the guide, prompt and seed, so one generated icon cannot carry two meanings.
+            forge.publish(dict(item, layers=[{"lora": item["prompt"], "seed": item.get("seed", 0), "pick": k,
+                                              "guide": item.get("layers") or item.get("guide"),
+                                              "strength": item.get("strength", 0.55)}]), img)
     if a.out:
         sheet(previews, a.out, 128)
 
@@ -159,6 +267,7 @@ def main():
     ap.add_argument("--steps", type=int, default=24)
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("try"); p.add_argument("prompt"); p.add_argument("-n", type=int, default=4)
+    p.add_argument("--icon", help="game glyph to redraw (img2img guide)"); p.add_argument("--strength", type=float, default=0.55)
     p.add_argument("--seed", type=int, default=0); p.add_argument("-o", "--out", default="lora-try.png"); p.set_defaults(fn=cmd_try)
     p = sub.add_parser("cands"); p.add_argument("recipe"); p.add_argument("-o", "--out-dir", default="lora-cands")
     p.set_defaults(fn=cmd_cands)

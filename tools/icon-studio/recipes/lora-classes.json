@@ -4,159 +4,287 @@
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a furious barbarian warrior raising a double-bitted greataxe overhead with both hands, wild mane of hair, fur mantle over bare shoulders, mouth open in a war cry",
-  "seed": 11,
+  "layers": [
+   {
+    "icon": "Action_PactOfTheBlade_Battleaxe",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "a double-bitted battleaxe with a fur-wrapped haft",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 2
+  "pick": "auto"
  },
  {
   "label": "class Bard",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a lute with a long neck and tuning pegs, musical notes floating above its strings, a feathered quill tucked behind the strings",
+  "layers": [
+   {
+    "icon": "Action_Perform_Lute",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "a lute with ribbons trailing from its neck",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
-  "pick": 1
+  "pick": "auto"
  },
  {
   "label": "class Cleric",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a raised hand holding up a radiant holy symbol, a sun disc with straight rays, prayer beads wrapped around the wrist",
-  "seed": 11,
+  "layers": [
+   {
+    "icon": "Action_Cleric_RadianceOfTheDawn",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "a sunburst holy symbol with an eye at its centre",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 0
+  "pick": "auto"
  },
  {
   "label": "class Druid",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a stag's head with large branching antlers entwined with oak leaves and ivy, a crescent moon between the antlers",
+  "layers": [
+   {
+    "icon": "Skill_Druid_WildShape",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "a stag's head with antlers that end in leaves",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
-  "pick": 1
+  "pick": "auto"
  },
  {
   "label": "class Fighter",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a notched longsword crossed over a dented round shield, a closed steel great helm resting on top, battle-worn",
-  "seed": 11,
+  "layers": [
+   {
+    "icon": "Action_PactOfTheBlade_Greatsword",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "a greatsword pointing down with a flared crossguard",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 2
+  "pick": "auto"
  },
  {
   "label": "class Monk",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a monk sitting cross-legged in meditation, palms pressed together, flowing robe and sash, a ring of breath circling the head",
-  "seed": 11,
+  "layers": [
+   {
+    "icon": "Skill_Druid_NaturalRecovery",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "an open palm with a ring of breath above it",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 0
+  "pick": "auto"
  },
  {
   "label": "class Paladin",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a knight's sword held point-down in front of a kite shield bearing a sunburst, an oath ribbon wrapped around the hilt",
-  "seed": 11,
+  "layers": [
+   {
+    "icon": "Spell_Evocation_SpiritualWeapon_Greatsword",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "a greatsword point down with wings behind the crossguard",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 0
+  "pick": "auto"
  },
  {
   "label": "class Ranger",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a longbow drawn with an arrow nocked and aimed upward, a wolf's head beside it, pine branches below",
+  "layers": [
+   {
+    "icon": "Skill_Ranger_RangersCompanion",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "a hawk perched on a longbow",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
-  "pick": 1
+  "pick": "auto"
  },
  {
   "label": "class Rogue",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a hooded figure whose face is hidden in shadow, holding a curved dagger close to the chest, cloak drawn across the body",
-  "seed": 11,
+  "layers": [
+   {
+    "icon": "Action_UmbralCloak",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "a hooded cloak with a curved dagger",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 2
+  "pick": "auto"
  },
  {
   "label": "class Sorcerer",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "an open hand with a flame rising from the palm and a small dragon coiling around the wrist, dragon scales on the skin of the forearm",
-  "seed": 11,
+  "layers": [
+   {
+    "icon": "Action_WildMagic_SorceryPoints",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "an orb of raw magic in an open clawed hand",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 1
+  "pick": "auto"
  },
  {
   "label": "class Warlock",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a raven perched on a horned skull, an eye sigil carved on the skull's brow, a pact chain hanging from the horns",
-  "seed": 11,
+  "layers": [
+   {
+    "icon": "Action_Raven_BadOmen",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "a raven with spread wings above a single eye",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 2
+  "pick": "auto"
  },
  {
   "label": "class Wizard",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a tall pointed hat resting on an open spellbook, a staff topped with a crystal leaning against it, runes floating above the pages",
-  "seed": 11,
+  "layers": [
+   {
+    "icon": "Action_AstralKnowledge",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "an open spellbook with a star rising from it",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 1
+  "pick": "auto"
  },
  {
   "label": "class Carlislean Lycanthrope",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a snarling werewolf head half transformed from a human face, fangs and fur breaking through the skin, a full moon behind",
-  "seed": 11,
+  "layers": [
+   {
+    "icon": "Action_Ranger_RangersCompanion_Wolf",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "a wolf head beneath a crescent moon",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 2
+  "pick": "auto"
  },
  {
   "label": "class Artificer",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a gauntleted hand holding a smith's hammer over a large gear, small cogs, a wrench and an alchemical vial around it",
-  "seed": 11,
+  "layers": [
+   {
+    "icon": "Action_PactOfTheBlade_Warhammer",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "a forge hammer with a gear set into its head",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 2
+  "pick": "auto"
  },
  {
   "label": "class Blood Hunter",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a curved hunter's sword dripping drops of blood, a blood rune carved on the blade, a wide-brimmed hunter's hat behind it",
+  "layers": [
+   {
+    "icon": "Action_Mag_FlamingBlade",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "a curved blade with a drop of blood",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
-  "pick": 1
+  "pick": "auto"
  },
  {
   "label": "class Mystic",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a head in profile with a third eye open on the brow, waves of thought radiating outward in concentric rings",
-  "seed": 11,
+  "layers": [
+   {
+    "icon": "Spell_TheThirdEye_SeeInvisibility",
+    "major": 0.9,
+    "size": 0.84
+   }
+  ],
+  "prompt": "an open third eye with ripples around it",
+  "strength": 0.45,
+  "seed": 31,
   "n": 4,
-  "pick": 1
+  "pick": "auto"
  }
 ]
