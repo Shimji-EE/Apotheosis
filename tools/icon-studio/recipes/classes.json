@@ -10,9 +10,9 @@
     "line": 9
    },
    {
-    "icon": "Action_Barbarian_Rage",
-    "major": 0.88,
-    "size": 0.46440000000000003,
+    "icon": "Action_PactOfTheBlade_Battleaxe",
+    "major": 0.9,
+    "size": 0.6083,
     "y": 0.5
    }
   ]
@@ -28,9 +28,9 @@
     "line": 9
    },
    {
-    "icon": "Action_Bard_SongOfRest",
-    "major": 0.88,
-    "size": 0.3956,
+    "icon": "Action_Perform_Lute",
+    "major": 0.9,
+    "size": 0.4017,
     "y": 0.5
    }
   ]
@@ -46,9 +46,9 @@
     "line": 9
    },
    {
-    "icon": "Spell_Cleric_TurnUndead",
-    "major": 0.88,
-    "size": 0.46440000000000003,
+    "icon": "Action_Cleric_RadianceOfTheDawn",
+    "major": 0.9,
+    "size": 0.4213,
     "y": 0.5
    }
   ]
@@ -64,10 +64,10 @@
     "line": 9
    },
    {
-    "icon": "Skill_Druid_WildShape",
-    "major": 0.88,
-    "size": 0.36119999999999997,
-    "y": 0.5
+    "icon": "Spell_Transmutation_Barkskin",
+    "major": 0.9,
+    "size": 0.4247,
+    "y": 0.46
    }
   ]
  },
@@ -82,9 +82,9 @@
     "line": 9
    },
    {
-    "icon": "Skill_Fighter_ActionSurge",
-    "major": 0.88,
-    "size": 0.46440000000000003,
+    "icon": "Action_PactOfTheBlade_Greatsword",
+    "major": 0.9,
+    "size": 0.6083,
     "y": 0.5
    }
   ]
@@ -100,9 +100,9 @@
     "line": 9
    },
    {
-    "icon": "Action_Monk_FlurryOfBlows",
-    "major": 0.88,
-    "size": 0.46440000000000003,
+    "icon": "Skill_Druid_NaturalRecovery",
+    "major": 0.9,
+    "size": 0.5167,
     "y": 0.5
    }
   ]
@@ -118,10 +118,10 @@
     "line": 9
    },
    {
-    "icon": "Action_Paladin_DivineSmite",
-    "major": 0.88,
-    "size": 0.46440000000000003,
-    "y": 0.5
+    "icon": "Spell_Evocation_SpiritualWeapon_Greatsword",
+    "major": 0.9,
+    "size": 0.5606,
+    "y": 0.46
    }
   ]
  },
@@ -136,10 +136,10 @@
     "line": 9
    },
    {
-    "icon": "Spell_Divination_HuntersMark",
-    "major": 0.88,
-    "size": 0.43,
-    "y": 0.62
+    "icon": "Skill_Ranger_RangersCompanion",
+    "major": 0.9,
+    "size": 0.3463,
+    "y": 0.54
    }
   ]
  },
@@ -154,10 +154,10 @@
     "line": 9
    },
    {
-    "icon": "Action_SneakAttack_Melee",
-    "major": 0.88,
-    "size": 0.3784,
-    "y": 0.5
+    "icon": "Action_UmbralCloak",
+    "major": 0.9,
+    "size": 0.454,
+    "y": 0.42
    }
   ]
  },
@@ -172,10 +172,10 @@
     "line": 9
    },
    {
-    "icon": "Skill_Sorcerer_Passive_Metamagic_TwinnedSpell",
-    "major": 0.88,
-    "size": 0.46440000000000003,
-    "y": 0.5
+    "icon": "Action_WildMagic_SorceryPoints",
+    "major": 0.9,
+    "size": 0.584,
+    "y": 0.54
    }
   ]
  },
@@ -190,10 +190,10 @@
     "line": 9
    },
    {
-    "icon": "Spell_Evocation_EldritchBlast",
-    "major": 0.88,
-    "size": 0.3956,
-    "y": 0.46
+    "icon": "Action_Raven_BadOmen",
+    "major": 0.9,
+    "size": 0.5376,
+    "y": 0.5
    }
   ]
  },
@@ -208,10 +208,10 @@
     "line": 9
    },
    {
-    "icon": "Spell_Evocation_MagicMissile",
-    "major": 0.88,
-    "size": 0.36119999999999997,
-    "y": 0.58
+    "icon": "Action_AstralKnowledge",
+    "major": 0.9,
+    "size": 0.4247,
+    "y": 0.6
    }
   ]
  },
@@ -226,9 +226,9 @@
     "line": 9
    },
    {
-    "icon": "Action_Wolf_InfectiousBite",
-    "major": 0.88,
-    "size": 0.46440000000000003,
+    "icon": "Action_Ranger_RangersCompanion_Wolf",
+    "major": 0.9,
+    "size": 0.5167,
     "y": 0.5
    }
   ]
@@ -244,10 +244,10 @@
     "line": 9
    },
    {
-    "icon": "Action_WildMagic_Barbarian_WeaponInfusion",
-    "major": 0.88,
-    "size": 0.46440000000000003,
-    "y": 0.5
+    "icon": "Action_PactOfTheBlade_Warhammer",
+    "major": 0.9,
+    "size": 0.5167,
+    "y": 0.54
    }
   ]
  },
@@ -262,10 +262,10 @@
     "line": 9
    },
    {
-    "icon": "Action_MagicItem_Bloodrend",
-    "major": 0.88,
-    "size": 0.34400000000000003,
-    "y": 0.62
+    "icon": "Action_Mag_FlamingBlade",
+    "major": 0.9,
+    "size": 0.375,
+    "y": 0.63
    }
   ]
  },
@@ -280,9 +280,9 @@
     "line": 9
    },
    {
-    "icon": "TadpoleSuperPower_PsionicOverload",
-    "major": 0.88,
-    "size": 0.46440000000000003,
+    "icon": "Spell_TheThirdEye_SeeInvisibility",
+    "major": 0.9,
+    "size": 0.4389,
     "y": 0.5
    }
   ]

@@ -85,9 +85,12 @@ def _shape(name, c, r):
     if name == "octagon":  # Paladin
         pts = poly(8, math.pi / 8); return [(pts, True)], poly(4, 0, r * .96)
     if name == "triangle":  # Ranger
-        pts = poly(3); return [(pts, True)], pts
+        cy = c + r * .14  # sit the triangle low so its inner space is as wide as it can be
+        pts = [(c + r * 1.12 * math.sin(2 * math.pi * i / 3), cy - r * 1.12 * math.cos(2 * math.pi * i / 3)) for i in range(3)]
+        pts[0] = (c, c - r * .98)
+        return [(pts, True)], pts
     if name == "lozenge":  # Rogue
-        pts = [(c, c - r), (c + r * .72, c), (c, c + r), (c - r * .72, c)]; return [(pts, True)], pts
+        pts = [(c, c - r), (c + r * .86, c), (c, c + r), (c - r * .86, c)]; return [(pts, True)], pts
     if name == "hexagon":  # Sorcerer
         pts = poly(6); return [(pts, True)], pts
     if name == "pentagon":  # Warlock: inverted
@@ -194,6 +197,34 @@ def layer(spec):
     c = Image.new("RGBA", (N, N), (0, 0, 0, 0))
     c.paste(im, (round(spec.get("x", 0.5) * N - im.width / 2), round(spec.get("y", 0.5) * N - im.height / 2)), im)
     return c
+
+
+def clear_of_frame(layers, gap=8):
+    """Shrink glyph layers until none of their ink touches a frame layer (plus `gap` px at 512),
+    so nothing clips once the glow thickens both. Returns the adjusted layers."""
+    from PIL import ImageFilter
+    frames = [l for l in layers if l.get("frame")]
+    if not frames:
+        return layers
+    fa = np.zeros((N, N), bool)
+    for l in frames:
+        fa |= np.asarray(layer(l).getchannel("A").filter(ImageFilter.MaxFilter(2 * gap + 1))) > 20
+    def fit(l):
+        for _ in range(40):
+            ink = np.asarray(layer(l).getchannel("A")) > 20
+            if not (ink & fa).any():
+                return l
+            l["size"] = round(l.get("size", 0.8) * 0.96, 4)
+        return l
+
+    out = []
+    for l in layers:
+        if not l.get("frame"):
+            # Try the glyph a little higher and lower too, and keep the placement that lets it stay largest.
+            y0 = l.get("y", 0.5)
+            l = max((fit(dict(l, y=round(y0 + dy, 3))) for dy in (0, -.04, .04, -.08, .08)), key=lambda t: t["size"])
+        out.append(l)
+    return out
 
 
 def compose(layers):
