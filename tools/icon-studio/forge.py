@@ -17,6 +17,9 @@ A recipe is a list of icons:
   strokes: stroke ids from the sheet (omit for the whole icon). x, y: centre (0-1).
   size: longest side as a share of the icon. Layers later in the list are drawn on top.
   weight (glow only, default 7): how much the strokes are thickened, in pixels at 512.
+  Extras: "major": 0-1 keeps the largest strokes up to that share of the ink; "mirror": "left"/"right"
+  makes the glyph symmetric from that half; "solid": 0-1 drops faint washes. A layer {"frame": NAME,
+  "line": px, "size": 0-1} draws a procedural frame instead (see frame(); used by heraldry.py).
 
 Rule (Charl, 2026-11-02): one icon, one meaning. A composition already published under one
 label is refused for another.
@@ -53,16 +56,113 @@ def lineart(name):
     return a[..., 0], a[..., 1], lab[..., 0] + 256 * lab[..., 1]
 
 
+def frame(name, line=9, size=0.96):
+    """A procedural line-art frame (white strokes on clear), drawn 4x and scaled down."""
+    import math
+    K = 4; W = N * K; c = W / 2; r = size * W / 2; lw = line * K
+    im = Image.new("L", (W, W), 0); d = ImageDraw.Draw(im)
+    P = lambda pts: d.line(pts + [pts[0]], fill=255, width=lw, joint="curve")
+    poly = lambda n, rot=0, rr=r: [(c + rr * math.sin(rot + 2 * math.pi * i / n), c - rr * math.cos(rot + 2 * math.pi * i / n)) for i in range(n)]
+    ring = lambda rr: d.ellipse([c - rr, c - rr, c + rr, c + rr], outline=255, width=lw)
+    def lozenge(x, y, h):
+        d.polygon([(x, y - h), (x + h * .6, y), (x, y + h), (x - h * .6, y)], fill=255)
+    arc = lambda rr, a0, a1: d.arc([c - rr, c - rr, c + rr, c + rr], a0, a1, fill=255, width=lw)
+    if name == "saw":  # Barbarian: notched ring
+        pts = []
+        for i in range(48):
+            a = 2 * math.pi * i / 48; rr = r if i % 2 else r * .9
+            pts.append((c + rr * math.sin(a), c - rr * math.cos(a)))
+        P(pts)
+    elif name == "quatrefoil":  # Bard
+        q = r * .44
+        for dx, dy in ((0, -1), (1, 0), (0, 1), (-1, 0)):
+            x, y = c + dx * (r - q), c + dy * (r - q)
+            a0 = {(0, -1): 150, (1, 0): 240, (0, 1): 330, (-1, 0): 60}[(dx, dy)]
+            d.arc([x - q, y - q, x + q, y + q], a0, a0 + 240, fill=255, width=lw)
+    elif name == "sun":  # Cleric
+        ring(r * .78)
+        for i in range(16):
+            a = 2 * math.pi * i / 16; r0, r1 = r * .84, (r if i % 2 == 0 else r * .92)
+            d.line([(c + r0 * math.sin(a), c - r0 * math.cos(a)), (c + r1 * math.sin(a), c - r1 * math.cos(a))], fill=255, width=lw)
+    elif name == "leaf":  # Druid: vesica (two circle arcs)
+        dx = r * .6; R = math.hypot(dx, r); t = math.degrees(math.atan2(r, dx))
+        d.arc([c + dx - R, c - R, c + dx + R, c + R], 180 - t, 180 + t, fill=255, width=lw)
+        d.arc([c - dx - R, c - R, c - dx + R, c + R], -t, t, fill=255, width=lw)
+    elif name == "shield":  # Fighter: heater
+        pts = [(c - r * .82, c - r * .86), (c + r * .82, c - r * .86)]
+        for i in range(1, 20):
+            t = i / 20; pts.append((c + r * .82 * math.cos(t * math.pi / 2), c - r * .2 + r * 1.16 * math.sin(t * math.pi / 2)))
+        pts.append((c, c + r * .96))
+        pts += [(2 * c - x, y) for x, y in reversed(pts[2:-1])]
+        P(pts)
+    elif name == "enso":  # Monk: open double ring
+        arc(r * .96, -60, 230); arc(r * .84, 120, 410)
+    elif name == "octagon":  # Paladin
+        P(poly(8, math.pi / 8)); 
+        for x, y in poly(4, 0, r * 1.0): lozenge(x, y, lw * 2.2)
+    elif name == "triangle":  # Ranger
+        P(poly(3, 0, r)); ring(r * .5) if False else None
+    elif name == "lozenge":  # Rogue
+        P([(c, c - r), (c + r * .72, c), (c, c + r), (c - r * .72, c)])
+    elif name == "hexagon":  # Sorcerer
+        P(poly(6, 0)); P(poly(6, 0, r * .9))
+    elif name == "pentagon":  # Warlock: inverted
+        P(poly(5, math.pi))
+        for x, y in poly(5, math.pi, r): lozenge(x, y, lw * 1.8)
+    elif name == "arch":  # Wizard: pointed gothic window
+        w = r * .62; ys = c - r + 1.732 * w
+        d.arc([c + w - 2 * w, ys - 2 * w, c + w + 2 * w, ys + 2 * w], 180, 240, fill=255, width=lw)
+        d.arc([c - w - 2 * w, ys - 2 * w, c - w + 2 * w, ys + 2 * w], 300, 360, fill=255, width=lw)
+        d.line([(c - w, ys), (c - w, c + r), (c + w, c + r), (c + w, ys)], fill=255, width=lw, joint="curve")
+    elif name == "crescent":  # Lycanthrope
+        arc(r, 200, 520); arc(r * .8, 230, 490)
+    elif name == "cog":  # Artificer
+        pts = []
+        for i in range(12):
+            for k, rr in ((0, r * .84), (.18, r * .84), (.3, r), (.7, r), (.82, r * .84)):
+                a = 2 * math.pi * (i + k) / 12; pts.append((c + rr * math.sin(a), c - rr * math.cos(a)))
+        P(pts)
+    elif name == "drop":  # Blood Hunter
+        rr = r * .62; cy = c + r * .34
+        pts = [(c, c - r)]
+        for i in range(0, 41):
+            a = math.radians(-35 + 250 * i / 40)
+            pts.append((c + rr * math.cos(a) * (1 if i <= 20 else 1), cy + rr * math.sin(a)))
+        pts = [(c, c - r)] + [(c + rr * math.cos(math.radians(a)), cy + rr * math.sin(math.radians(a))) for a in range(-35, 216, 5)]
+        P(pts)
+    elif name == "star8":  # Mystic
+        P(poly(4, 0)); P(poly(4, math.pi / 4))
+    else:
+        sys.exit(f"Unknown frame {name!r}")
+    a = np.asarray(im.resize((N, N), Image.LANCZOS)).astype(np.float64) / 255
+    return Image.fromarray((np.dstack([np.ones_like(a)] * 3 + [a]) * 255).astype(np.uint8), "RGBA")
+
+
 def layer(spec):
+    if spec.get("frame"):
+        return frame(spec["frame"], spec.get("line", 9), spec.get("size", 0.96))
     g, al, lab = lineart(spec["icon"])
     if spec.get("strokes"):
         keep = np.isin(lab, spec["strokes"])
         al = np.where(keep, al, 0)
+    if spec.get("solid"):  # drop faint washes behind the strokes
+        al = np.where(al * g > spec["solid"], al, 0)
+    if spec.get("major"):
+        # Keep only the largest strokes (dropping the game's sparks and filler) up to this share of the ink.
+        ids, areas = np.unique(lab[al > 0.5], return_counts=True)
+        order = np.argsort(-areas); cum = np.cumsum(areas[order]) / areas.sum()
+        al = np.where(np.isin(lab, ids[order][: int(np.searchsorted(cum, spec["major"])) + 1]), al, 0)
     im = Image.fromarray(np.dstack([g, g, g, al]).__mul__(255).clip(0, 255).astype(np.uint8), "RGBA")
     bb = im.getchannel("A").getbbox()
     if not bb:
         sys.exit(f"{spec['icon']}: those strokes are empty.")
     im = im.crop(bb)
+    if spec.get("mirror"):
+        # Heraldic symmetry: one half of the glyph reflected onto the other.
+        h = im.width // 2
+        half = im.crop((0, 0, h, im.height)) if spec["mirror"] == "left" else im.crop((im.width - h, 0, im.width, im.height)).transpose(Image.FLIP_LEFT_RIGHT)
+        im = Image.new("RGBA", (h * 2, im.height), (0, 0, 0, 0))
+        im.paste(half, (0, 0)); im.paste(half.transpose(Image.FLIP_LEFT_RIGHT), (h, 0))
     if spec.get("flip"):
         im = im.transpose(Image.FLIP_LEFT_RIGHT)
     if spec.get("rot"):
