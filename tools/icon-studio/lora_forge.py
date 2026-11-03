@@ -15,7 +15,11 @@ Setup (once):
 
 Use:
   python tools/icon-studio/lora_forge.py try "a wolf head, howling" -n 4 -o sheet.png
+  python tools/icon-studio/lora_forge.py cands recipes/lora-classes.json -o lora-cands   (one sheet per icon)
   python tools/icon-studio/lora_forge.py make recipes/lora-example.json [--dry] [-o sheet.png]
+
+Prompts: describe the subject concretely (objects, pose, what is held, what surrounds it), not a word
+like "barbarian"; generic prompts give generic glyphs (Charl, 2026-11-03).
 
 A recipe is a list of icons:
   [{"label": "subclass Order of the Lycan", "to": "creator", "style": "glow",
@@ -40,7 +44,8 @@ import forge  # noqa: E402
 
 LORA = HERE / "models" / "bg3_actions_offset.safetensors"
 BASE = "stable-diffusion-v1-5/stable-diffusion-v1-5"
-STYLE = "bg3 action icon, white line art glyph on dark background, simple, centered, high contrast"
+# The subject leads the prompt; the style words follow so they don't flatten it into a generic glyph.
+STYLE = "bg3 action icon, white line art on dark background, centered, high contrast, detailed"
 NEGATIVE = "text, letters, watermark, signature, frame, border, photo, realistic, blurry, colourful, gradient"
 
 
@@ -74,7 +79,7 @@ def generate(pipe, dev, prompt, seed=0, n=1, steps=24, size=512, cfg=7.0):
     for i in range(n):
         # DirectML has no device-side generator; seed on the CPU (same images for a given seed).
         g = torch.Generator(device=dev if dev == "cuda" else "cpu").manual_seed(seed + i)
-        out.append(pipe(f"{STYLE}, {prompt}", negative_prompt=NEGATIVE, num_inference_steps=steps,
+        out.append(pipe(f"{prompt}, {STYLE}", negative_prompt=NEGATIVE, num_inference_steps=steps,
                         guidance_scale=cfg, width=size, height=size, generator=g).images[0])
     return out
 
@@ -118,6 +123,16 @@ def cmd_try(a):
     sheet(raw + finished, a.out)
 
 
+def cmd_cands(a):
+    """One sheet per recipe item (raw candidates over their glow finish) to choose each item's `pick`."""
+    items = json.loads(Path(a.recipe).read_text(encoding="utf-8"))
+    out = Path(a.out_dir); out.mkdir(parents=True, exist_ok=True)
+    pipe, dev = pipeline(a.base, a.lora, a.scale)
+    for item in items:
+        raw = generate(pipe, dev, item["prompt"], item.get("seed", 0), item.get("n", 4), a.steps)
+        sheet(raw + [forge.render(to_lineart(r), "glow", 128) for r in raw], out / f"{forge.icons.slug(item['label'])}.png")
+
+
 def cmd_make(a):
     items = json.loads(Path(a.recipe).read_text(encoding="utf-8"))
     pipe, dev = pipeline(a.base, a.lora, a.scale)
@@ -145,6 +160,8 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("try"); p.add_argument("prompt"); p.add_argument("-n", type=int, default=4)
     p.add_argument("--seed", type=int, default=0); p.add_argument("-o", "--out", default="lora-try.png"); p.set_defaults(fn=cmd_try)
+    p = sub.add_parser("cands"); p.add_argument("recipe"); p.add_argument("-o", "--out-dir", default="lora-cands")
+    p.set_defaults(fn=cmd_cands)
     p = sub.add_parser("make"); p.add_argument("recipe"); p.add_argument("--dry", action="store_true")
     p.add_argument("-o", "--out"); p.set_defaults(fn=cmd_make)
     a = ap.parse_args()

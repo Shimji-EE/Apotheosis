@@ -1,0 +1,72 @@
+[
+ {
+  "label": "background Artisan",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a craftsman's hammer and chisel crossed over a carved wooden block, curls of wood shavings",
+  "seed": 21,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "background Farmer",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a scythe and a sheaf of wheat bound with twine, ploughed furrows below",
+  "seed": 21,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "background Guard",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a halberd standing upright beside a hanging lantern and a ring of iron keys, a city gate arch behind",
+  "seed": 21,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "background Guide",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a walking staff with a compass hanging from it and a rolled trail map, mountain peaks behind",
+  "seed": 21,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "background Merchant",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a balance scale with coins stacked on one pan, an open ledger and a tied coin purse",
+  "seed": 21,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "background Scribe",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a quill pen standing in an inkwell beside an unrolled scroll covered in handwriting, a wax seal",
+  "seed": 21,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "background Wayfarer",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a traveller's backpack with a bedroll and a hanging cooking pot, a winding road and a wooden signpost",
+  "seed": 21,
+  "n": 4,
+  "pick": 0
+ }
+]

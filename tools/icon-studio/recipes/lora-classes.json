@@ -1,0 +1,162 @@
+[
+ {
+  "label": "class Barbarian",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a furious barbarian warrior raising a double-bitted greataxe overhead with both hands, wild mane of hair, fur mantle over bare shoulders, mouth open in a war cry",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Bard",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a lute crossed with a feathered quill, musical notes curling up from the strings, a small theatre mask tied to the lute's neck with a ribbon",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Cleric",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a raised hand holding up a radiant holy symbol, a sun disc with straight rays, prayer beads wrapped around the wrist",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Druid",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a druid shapeshifting, half human face and half snarling bear, antlers rising from the head, oak leaves and ivy around the neck",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Fighter",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a notched longsword crossed over a dented round shield, a closed steel great helm resting on top, battle-worn",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Monk",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a monk sitting cross-legged in meditation, palms pressed together, flowing robe and sash, a ring of breath circling the head",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Paladin",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a knight's sword held point-down in front of a kite shield bearing a sunburst, an oath ribbon wrapped around the hilt",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Ranger",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a hooded ranger drawing a longbow with an arrow nocked, a wolf standing at their side, pine branches",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Rogue",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a hooded figure whose face is hidden in shadow, holding a curved dagger close to the chest, cloak drawn across the body",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Sorcerer",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "an open hand with a flame rising from the palm and a small dragon coiling around the wrist, dragon scales on the skin of the forearm",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Warlock",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a raven perched on a horned skull, an eye sigil carved on the skull's brow, a pact chain hanging from the horns",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Wizard",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a tall pointed hat resting on an open spellbook, a staff topped with a crystal leaning against it, runes floating above the pages",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Carlislean Lycanthrope",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a snarling werewolf head half transformed from a human face, fangs and fur breaking through the skin, a full moon behind",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Artificer",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a gauntleted hand holding a smith's hammer over a large gear, small cogs, a wrench and an alchemical vial around it",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Blood Hunter",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a curved hunter's blade dripping blood held in a hand with a rune drawn in blood on the palm, a wide-brimmed tricorn hat above",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ },
+ {
+  "label": "class Mystic",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "prompt": "a head in profile with a third eye open on the brow, waves of thought radiating outward in concentric rings",
+  "seed": 11,
+  "n": 4,
+  "pick": 0
+ }
+]

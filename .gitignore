@@ -14,3 +14,4 @@ tools/icon-studio/models/
 # lora_forge venv and test output
 tools/icon-studio/.venv/
 lora-try.png
+lora-cands/
