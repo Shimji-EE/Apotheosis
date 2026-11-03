@@ -1,0 +1,18 @@
+{
+ "Barbarian": "Action_PactOfTheBlade_Battleaxe",
+ "Bard": "Action_Perform_Lute",
+ "Cleric": "Action_Cleric_RadianceOfTheDawn",
+ "Druid": "Spell_Transmutation_Barkskin",
+ "Fighter": "Action_PactOfTheBlade_Greatsword",
+ "Monk": "Skill_Druid_NaturalRecovery",
+ "Paladin": "Spell_Evocation_SpiritualWeapon_Greatsword",
+ "Ranger": "Skill_Ranger_RangersCompanion",
+ "Rogue": "Action_UmbralCloak",
+ "Sorcerer": "Action_WildMagic_SorceryPoints",
+ "Warlock": "Action_Raven_BadOmen",
+ "Wizard": "Action_AstralKnowledge",
+ "Carlislean Lycanthrope": "Action_Ranger_RangersCompanion_Wolf",
+ "Artificer": "Action_PactOfTheBlade_Warhammer",
+ "Blood Hunter": "Action_Mag_FlamingBlade",
+ "Mystic": "Spell_TheThirdEye_SeeInvisibility"
+}
