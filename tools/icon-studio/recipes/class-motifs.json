@@ -2,7 +2,7 @@
  "Barbarian": "Action_PactOfTheBlade_Battleaxe",
  "Bard": "Action_Perform_Lute",
  "Cleric": "Action_Cleric_RadianceOfTheDawn",
- "Druid": "Spell_Transmutation_Barkskin",
+ "Druid": "Skill_Druid_WildShape",
  "Fighter": "Action_PactOfTheBlade_Greatsword",
  "Monk": "Skill_Druid_NaturalRecovery",
  "Paladin": "Spell_Evocation_SpiritualWeapon_Greatsword",

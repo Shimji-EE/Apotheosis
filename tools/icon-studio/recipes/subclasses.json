@@ -6,14 +6,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "barbs",
-    "line": 7
+    "frame": "saw",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Abjuration_DeathWard",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Battleaxe",
     "major": 0.9,
-    "size": 0.5952,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -24,14 +34,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "wings",
-    "line": 7
+    "frame": "saw",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Monster_GiantEagle_Fly",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Battleaxe",
     "major": 0.9,
-    "size": 0.5952,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -42,14 +62,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "wreath",
-    "line": 7
+    "frame": "saw",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Transmutation_PlantGrowth",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Battleaxe",
     "major": 0.9,
-    "size": 0.5952,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -60,14 +90,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "radiant",
-    "line": 7
+    "frame": "saw",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_Sunbeam",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Battleaxe",
     "major": 0.9,
-    "size": 0.5952,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -78,14 +118,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "shield",
-    "line": 7
+    "frame": "saw",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Shield",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Battleaxe",
     "major": 0.9,
-    "size": 0.6,
-    "y": 0.48
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -96,14 +146,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "beast",
-    "line": 7
+    "frame": "saw",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Bear_Claws",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Battleaxe",
     "major": 0.9,
-    "size": 0.5952,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -114,14 +174,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "giant",
-    "line": 7
+    "frame": "saw",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_GiantsRage",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Battleaxe",
     "major": 0.9,
-    "size": 0.3914,
-    "y": 0.54
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -132,14 +202,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "storm",
-    "line": 7
+    "frame": "saw",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Conjuration_CallLightning",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Battleaxe",
     "major": 0.9,
-    "size": 0.5952,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -150,14 +230,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "spiral",
-    "line": 7
+    "frame": "saw",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Skill_Sorcerer_Passive_TidesOfChaos",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Battleaxe",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -168,14 +258,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "sea",
-    "line": 7
+    "frame": "quatrefoil",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Monk_WaterWhip",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Perform_Lute",
     "major": 0.9,
-    "size": 0.4659,
-    "y": 0.5
+    "size": 0.3607,
+    "y": 0.58
    }
   ]
  },
@@ -186,14 +286,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "fey",
-    "line": 7
+    "frame": "quatrefoil",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_FeyPresence",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Perform_Lute",
     "major": 0.9,
-    "size": 0.4122,
-    "y": 0.5
+    "size": 0.3607,
+    "y": 0.58
    }
   ]
  },
@@ -204,14 +314,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "knowledge",
-    "line": 7
+    "frame": "quatrefoil",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_KnowledgeOfTheAges",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Perform_Lute",
     "major": 0.9,
-    "size": 0.4853,
-    "y": 0.5
+    "size": 0.3607,
+    "y": 0.58
    }
   ]
  },
@@ -222,14 +342,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "shield",
-    "line": 7
+    "frame": "quatrefoil",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Shield",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Perform_Lute",
     "major": 0.9,
-    "size": 0.553,
-    "y": 0.44
+    "size": 0.3607,
+    "y": 0.58
    }
   ]
  },
@@ -240,14 +370,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "stars",
-    "line": 7
+    "frame": "quatrefoil",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_StarryForm_Chalice",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Perform_Lute",
     "major": 0.9,
-    "size": 0.4659,
-    "y": 0.5
+    "size": 0.3607,
+    "y": 0.58
    }
   ]
  },
@@ -258,14 +398,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "song",
-    "line": 7
+    "frame": "quatrefoil",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Singing",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Perform_Lute",
     "major": 0.9,
-    "size": 0.5055,
-    "y": 0.5
+    "size": 0.3607,
+    "y": 0.58
    }
   ]
  },
@@ -276,14 +426,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "ripples",
-    "line": 7
+    "frame": "quatrefoil",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "TadpoleSuperPower_MindBlast",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Perform_Lute",
     "major": 0.9,
-    "size": 0.5266,
-    "y": 0.5
+    "size": 0.3607,
+    "y": 0.58
    }
   ]
  },
@@ -294,14 +454,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "war",
-    "line": 7
+    "frame": "quatrefoil",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_SpiritualWeapon_Greataxe",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Perform_Lute",
     "major": 0.9,
-    "size": 0.4122,
-    "y": 0.5
+    "size": 0.3607,
+    "y": 0.58
    }
   ]
  },
@@ -312,14 +482,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "dashed",
-    "line": 7
+    "frame": "quatrefoil",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Illusion_MirrorImage",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Perform_Lute",
     "major": 0.9,
-    "size": 0.4659,
-    "y": 0.5
+    "size": 0.3607,
+    "y": 0.58
    }
   ]
  },
@@ -330,14 +510,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "knowledge",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_KnowledgeOfTheAges",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.5055,
-    "y": 0.54
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -348,14 +538,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "laurel",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Cleric_PreserveLife",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.4853,
-    "y": 0.5
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -366,14 +566,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "radiant",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_Sunbeam",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.4473,
-    "y": 0.5
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -384,14 +594,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "wreath",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Transmutation_PlantGrowth",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.4473,
-    "y": 0.5
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -402,14 +622,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "storm",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Conjuration_CallLightning",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.4473,
-    "y": 0.5
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -420,14 +650,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "dashed",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Illusion_MirrorImage",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.4294,
-    "y": 0.5
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -438,14 +678,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "war",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_SpiritualWeapon_Greataxe",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.3799,
-    "y": 0.5
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -456,14 +706,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "arcane",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Skill_Wizard_ArcaneRecovery",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.3647,
-    "y": 0.5
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -474,14 +734,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "barbs",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Abjuration_DeathWard",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.4473,
-    "y": 0.5
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -492,14 +762,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "cog",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Monster_GortashMachine_ShieldCapacitor",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.4473,
-    "y": 0.5
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -510,14 +790,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "arch",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Necromancy_FeignDeath",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.5,
-    "y": 0.68
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -528,14 +818,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "order",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Abjuration_ArcaneGate",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.4853,
-    "y": 0.54
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -546,14 +846,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "halo",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Mag_BoltOfCelestialLight",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.4853,
-    "y": 0.5
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -564,14 +874,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "twilight",
-    "line": 7
+    "frame": "sun",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_Moonbeam",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Cleric_RadianceOfTheDawn",
     "major": 0.9,
-    "size": 0.4209,
-    "y": 0.5
+    "size": 0.4077,
+    "y": 0.58
    }
   ]
  },
@@ -582,14 +902,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "wreath",
-    "line": 7
+    "frame": "leaf",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
    },
    {
-    "icon": "Spell_Transmutation_Barkskin",
+    "icon": "Spell_Transmutation_PlantGrowth",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
+   },
+   {
+    "icon": "Skill_Druid_WildShape",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.4,
+    "y": 0.58
    }
   ]
  },
@@ -600,14 +930,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "moon",
-    "line": 7
+    "frame": "leaf",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
    },
    {
-    "icon": "Spell_Transmutation_Barkskin",
+    "icon": "Skill_Druid_MoonBeam_Move",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
+   },
+   {
+    "icon": "Skill_Druid_WildShape",
     "major": 0.9,
-    "size": 0.5714,
-    "y": 0.5
+    "size": 0.4,
+    "y": 0.58
    }
   ]
  },
@@ -618,14 +958,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "sea",
-    "line": 7
+    "frame": "leaf",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
    },
    {
-    "icon": "Spell_Transmutation_Barkskin",
+    "icon": "Action_Monk_WaterWhip",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
+   },
+   {
+    "icon": "Skill_Druid_WildShape",
     "major": 0.9,
-    "size": 0.5266,
-    "y": 0.5
+    "size": 0.4,
+    "y": 0.58
    }
   ]
  },
@@ -636,14 +986,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "stars",
-    "line": 7
+    "frame": "leaf",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
    },
    {
-    "icon": "Spell_Transmutation_Barkskin",
+    "icon": "Action_StarryForm_Chalice",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
+   },
+   {
+    "icon": "Skill_Druid_WildShape",
     "major": 0.9,
-    "size": 0.5266,
-    "y": 0.5
+    "size": 0.4,
+    "y": 0.58
    }
   ]
  },
@@ -654,14 +1014,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "fey",
-    "line": 7
+    "frame": "leaf",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
    },
    {
-    "icon": "Spell_Transmutation_Barkskin",
+    "icon": "Action_FeyPresence",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
+   },
+   {
+    "icon": "Skill_Druid_WildShape",
     "major": 0.9,
-    "size": 0.4659,
-    "y": 0.5
+    "size": 0.4,
+    "y": 0.58
    }
   ]
  },
@@ -672,14 +1042,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "barbs",
-    "line": 7
+    "frame": "leaf",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
    },
    {
-    "icon": "Spell_Transmutation_Barkskin",
+    "icon": "Spell_Abjuration_DeathWard",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
+   },
+   {
+    "icon": "Skill_Druid_WildShape",
     "major": 0.9,
-    "size": 0.5266,
-    "y": 0.5
+    "size": 0.4,
+    "y": 0.58
    }
   ]
  },
@@ -690,14 +1070,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "flame",
-    "line": 7
+    "frame": "leaf",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
    },
    {
-    "icon": "Spell_Transmutation_Barkskin",
+    "icon": "Spell_Conjuration_ProduceFlame_Light",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
+   },
+   {
+    "icon": "Skill_Druid_WildShape",
     "major": 0.9,
-    "size": 0.5266,
-    "y": 0.5
+    "size": 0.4,
+    "y": 0.58
    }
   ]
  },
@@ -708,14 +1098,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "war",
-    "line": 7
+    "frame": "shield",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_SpiritualWeapon_Greataxe",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Greatsword",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -726,14 +1126,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "laurel",
-    "line": 7
+    "frame": "shield",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Cleric_PreserveLife",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Greatsword",
     "major": 0.9,
-    "size": 0.62,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -744,14 +1154,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "shield",
-    "line": 7
+    "frame": "shield",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Shield",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Greatsword",
     "major": 0.9,
-    "size": 0.6,
-    "y": 0.48
+    "size": 0.5,
+    "y": 0.58
    }
   ]
  },
@@ -762,14 +1182,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "ripples",
-    "line": 7
+    "frame": "shield",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "TadpoleSuperPower_MindBlast",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Greatsword",
     "major": 0.9,
-    "size": 0.62,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -780,14 +1210,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "arcane",
-    "line": 7
+    "frame": "shield",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Skill_Wizard_ArcaneRecovery",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Greatsword",
     "major": 0.9,
-    "size": 0.5055,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -798,14 +1238,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "knowledge",
-    "line": 7
+    "frame": "shield",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_KnowledgeOfTheAges",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Greatsword",
     "major": 0.9,
-    "size": 0.62,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -816,14 +1266,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "twilight",
-    "line": 7
+    "frame": "shield",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_Moonbeam",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Greatsword",
     "major": 0.9,
-    "size": 0.4955,
-    "y": 0.46
+    "size": 0.5,
+    "y": 0.58
    }
   ]
  },
@@ -834,14 +1294,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "halo",
-    "line": 7
+    "frame": "enso",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Mag_BoltOfCelestialLight",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Druid_NaturalRecovery",
     "major": 0.9,
-    "size": 0.5952,
-    "y": 0.5
+    "size": 0.4608,
+    "y": 0.58
    }
   ]
  },
@@ -852,14 +1322,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "shadow",
-    "line": 7
+    "frame": "enso",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_ShadowWalk",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Druid_NaturalRecovery",
     "major": 0.9,
-    "size": 0.4853,
-    "y": 0.5
+    "size": 0.4608,
+    "y": 0.62
    }
   ]
  },
@@ -870,14 +1350,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "spiral",
-    "line": 7
+    "frame": "enso",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Skill_Sorcerer_Passive_TidesOfChaos",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Druid_NaturalRecovery",
     "major": 0.9,
-    "size": 0.4853,
-    "y": 0.54
+    "size": 0.4608,
+    "y": 0.62
    }
   ]
  },
@@ -888,14 +1378,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "ripples",
-    "line": 7
+    "frame": "enso",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "TadpoleSuperPower_MindBlast",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Druid_NaturalRecovery",
     "major": 0.9,
-    "size": 0.5952,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.58
    }
   ]
  },
@@ -906,14 +1406,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "wings",
-    "line": 7
+    "frame": "enso",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Monster_GiantEagle_Fly",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Druid_NaturalRecovery",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.4608,
+    "y": 0.62
    }
   ]
  },
@@ -924,14 +1434,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "stars",
-    "line": 7
+    "frame": "enso",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_StarryForm_Chalice",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Druid_NaturalRecovery",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.4608,
+    "y": 0.62
    }
   ]
  },
@@ -942,14 +1462,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "sea",
-    "line": 7
+    "frame": "enso",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Monk_WaterWhip",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Druid_NaturalRecovery",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.4608,
+    "y": 0.62
    }
   ]
  },
@@ -960,14 +1490,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "war",
-    "line": 7
+    "frame": "enso",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_SpiritualWeapon_Greataxe",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Druid_NaturalRecovery",
     "major": 0.9,
-    "size": 0.4853,
-    "y": 0.5
+    "size": 0.4608,
+    "y": 0.58
    }
   ]
  },
@@ -978,14 +1518,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "barbs",
-    "line": 7
+    "frame": "enso",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Abjuration_DeathWard",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Druid_NaturalRecovery",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.58
    }
   ]
  },
@@ -996,14 +1546,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "radiant",
-    "line": 7
+    "frame": "enso",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_Sunbeam",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Druid_NaturalRecovery",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.4608,
+    "y": 0.62
    }
   ]
  },
@@ -1014,14 +1574,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "halo",
-    "line": 7
+    "frame": "octagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Mag_BoltOfCelestialLight",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_Evocation_SpiritualWeapon_Greatsword",
     "major": 0.9,
-    "size": 0.5714,
-    "y": 0.46
+    "size": 0.4608,
+    "y": 0.58
    }
   ]
  },
@@ -1032,14 +1602,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "laurel",
-    "line": 7
+    "frame": "octagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Cleric_PreserveLife",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_Evocation_SpiritualWeapon_Greatsword",
     "major": 0.9,
-    "size": 0.62,
-    "y": 0.42
+    "size": 0.4247,
+    "y": 0.58
    }
   ]
  },
@@ -1050,14 +1630,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "wreath",
-    "line": 7
+    "frame": "octagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Transmutation_PlantGrowth",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_Evocation_SpiritualWeapon_Greatsword",
     "major": 0.9,
-    "size": 0.5055,
-    "y": 0.46
+    "size": 0.4247,
+    "y": 0.58
    }
   ]
  },
@@ -1068,14 +1658,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "barbs",
-    "line": 7
+    "frame": "octagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Abjuration_DeathWard",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_Evocation_SpiritualWeapon_Greatsword",
     "major": 0.9,
-    "size": 0.5266,
-    "y": 0.46
+    "size": 0.4247,
+    "y": 0.58
    }
   ]
  },
@@ -1086,14 +1686,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "war",
-    "line": 7
+    "frame": "octagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_SpiritualWeapon_Greataxe",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_Evocation_SpiritualWeapon_Greatsword",
     "major": 0.9,
-    "size": 0.4659,
-    "y": 0.46
+    "size": 0.4247,
+    "y": 0.58
    }
   ]
  },
@@ -1104,14 +1714,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "ripples",
-    "line": 7
+    "frame": "octagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "TadpoleSuperPower_MindBlast",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_Evocation_SpiritualWeapon_Greatsword",
     "major": 0.9,
-    "size": 0.5952,
-    "y": 0.46
+    "size": 0.4247,
+    "y": 0.58
    }
   ]
  },
@@ -1122,14 +1742,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "crown",
-    "line": 7
+    "frame": "octagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Enchantment_CrownOfMadness",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_Evocation_SpiritualWeapon_Greatsword",
     "major": 0.9,
-    "size": 0.5266,
-    "y": 0.46
+    "size": 0.4608,
+    "y": 0.58
    }
   ]
  },
@@ -1140,14 +1770,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "eye",
-    "line": 7
+    "frame": "octagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Eyebite_Panicked",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_Evocation_SpiritualWeapon_Greatsword",
     "major": 0.9,
-    "size": 0.4247,
-    "y": 0.5
+    "size": 0.4608,
+    "y": 0.58
    }
   ]
  },
@@ -1158,14 +1798,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "shadow",
-    "line": 7
+    "frame": "octagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_ShadowWalk",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_Evocation_SpiritualWeapon_Greatsword",
     "major": 0.9,
-    "size": 0.4853,
-    "y": 0.42
+    "size": 0.4247,
+    "y": 0.58
    }
   ]
  },
@@ -1176,14 +1826,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "beast",
-    "line": 7
+    "frame": "triangle",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Bear_Claws",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Ranger_RangersCompanion",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.3444,
+    "y": 0.62
    }
   ]
  },
@@ -1194,14 +1854,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "fey",
-    "line": 7
+    "frame": "triangle",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_FeyPresence",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Ranger_RangersCompanion",
     "major": 0.9,
-    "size": 0.5055,
-    "y": 0.5
+    "size": 0.3444,
+    "y": 0.62
    }
   ]
  },
@@ -1212,14 +1882,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "shadow",
-    "line": 7
+    "frame": "triangle",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_ShadowWalk",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Ranger_RangersCompanion",
     "major": 0.9,
-    "size": 0.5055,
-    "y": 0.46
+    "size": 0.3444,
+    "y": 0.62
    }
   ]
  },
@@ -1230,14 +1910,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "war",
-    "line": 7
+    "frame": "triangle",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_SpiritualWeapon_Greataxe",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Ranger_RangersCompanion",
     "major": 0.9,
-    "size": 0.4853,
-    "y": 0.5
+    "size": 0.3444,
+    "y": 0.62
    }
   ]
  },
@@ -1248,14 +1938,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "wings",
-    "line": 7
+    "frame": "triangle",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Monster_GiantEagle_Fly",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Ranger_RangersCompanion",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.3444,
+    "y": 0.62
    }
   ]
  },
@@ -1266,14 +1966,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "twilight",
-    "line": 7
+    "frame": "triangle",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_Moonbeam",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Ranger_RangersCompanion",
     "major": 0.9,
-    "size": 0.4955,
-    "y": 0.46
+    "size": 0.3444,
+    "y": 0.62
    }
   ]
  },
@@ -1284,14 +1994,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "barbs",
-    "line": 7
+    "frame": "triangle",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Abjuration_DeathWard",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Ranger_RangersCompanion",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.3444,
+    "y": 0.62
    }
   ]
  },
@@ -1302,14 +2022,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "dashed",
-    "line": 7
+    "frame": "triangle",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Illusion_MirrorImage",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Skill_Ranger_RangersCompanion",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.3444,
+    "y": 0.62
    }
   ]
  },
@@ -1320,14 +2050,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "arcane",
-    "line": 7
+    "frame": "lozenge",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Skill_Wizard_ArcaneRecovery",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_UmbralCloak",
     "major": 0.9,
-    "size": 0.4473,
-    "y": 0.46
+    "size": 0.36,
+    "y": 0.54
    }
   ]
  },
@@ -1338,14 +2078,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "barbs",
-    "line": 7
+    "frame": "lozenge",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Abjuration_DeathWard",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_UmbralCloak",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.46
+    "size": 0.36,
+    "y": 0.54
    }
   ]
  },
@@ -1356,14 +2106,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "ripples",
-    "line": 7
+    "frame": "lozenge",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "TadpoleSuperPower_MindBlast",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_UmbralCloak",
     "major": 0.9,
-    "size": 0.5952,
-    "y": 0.46
+    "size": 0.36,
+    "y": 0.54
    }
   ]
  },
@@ -1374,14 +2134,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "dashed",
-    "line": 7
+    "frame": "lozenge",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Illusion_MirrorImage",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_UmbralCloak",
     "major": 0.9,
-    "size": 0.5266,
-    "y": 0.46
+    "size": 0.36,
+    "y": 0.54
    }
   ]
  },
@@ -1392,14 +2162,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "crown",
-    "line": 7
+    "frame": "lozenge",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Enchantment_CrownOfMadness",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_UmbralCloak",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.46
+    "size": 0.36,
+    "y": 0.54
    }
   ]
  },
@@ -1410,14 +2190,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "twilight",
-    "line": 7
+    "frame": "lozenge",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_Moonbeam",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_UmbralCloak",
     "major": 0.9,
-    "size": 0.5376,
-    "y": 0.46
+    "size": 0.4069,
+    "y": 0.5
    }
   ]
  },
@@ -1428,14 +2218,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "war",
-    "line": 7
+    "frame": "lozenge",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_SpiritualWeapon_Greataxe",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_UmbralCloak",
     "major": 0.9,
-    "size": 0.4853,
-    "y": 0.46
+    "size": 0.36,
+    "y": 0.54
    }
   ]
  },
@@ -1446,14 +2246,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "tentacle",
-    "line": 7
+    "frame": "hexagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_EvardsBlackTentacles",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_WildMagic_SorceryPoints",
     "major": 0.9,
-    "size": 0.5714,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -1464,14 +2274,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "wings",
-    "line": 7
+    "frame": "hexagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Monster_GiantEagle_Fly",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_WildMagic_SorceryPoints",
     "major": 0.9,
-    "size": 0.5714,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -1482,14 +2302,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "spiral",
-    "line": 7
+    "frame": "hexagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Skill_Sorcerer_Passive_TidesOfChaos",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_WildMagic_SorceryPoints",
     "major": 0.9,
-    "size": 0.5266,
-    "y": 0.54
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -1500,14 +2330,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "halo",
-    "line": 7
+    "frame": "hexagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Mag_BoltOfCelestialLight",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_WildMagic_SorceryPoints",
     "major": 0.9,
-    "size": 0.62,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -1518,14 +2358,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "moon",
-    "line": 7
+    "frame": "hexagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Skill_Druid_MoonBeam_Move",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_WildMagic_SorceryPoints",
     "major": 0.9,
-    "size": 0.62,
-    "y": 0.54
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -1536,14 +2386,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "shadow",
-    "line": 7
+    "frame": "hexagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_ShadowWalk",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_WildMagic_SorceryPoints",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -1554,14 +2414,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "storm",
-    "line": 7
+    "frame": "hexagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Conjuration_CallLightning",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_WildMagic_SorceryPoints",
     "major": 0.9,
-    "size": 0.5714,
-    "y": 0.5
+    "size": 0.5,
+    "y": 0.62
    }
   ]
  },
@@ -1572,14 +2442,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "fey",
-    "line": 7
+    "frame": "pentagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_FeyPresence",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Raven_BadOmen",
     "major": 0.9,
-    "size": 0.4853,
-    "y": 0.5
+    "size": 0.48,
+    "y": 0.58
    }
   ]
  },
@@ -1590,14 +2470,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "halo",
-    "line": 7
+    "frame": "pentagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Mag_BoltOfCelestialLight",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Raven_BadOmen",
     "major": 0.9,
-    "size": 0.62,
-    "y": 0.5
+    "size": 0.4608,
+    "y": 0.58
    }
   ]
  },
@@ -1608,14 +2498,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "horns",
-    "line": 7
+    "frame": "pentagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Monster_Cambion_FiendishCharm",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Raven_BadOmen",
     "major": 0.9,
-    "size": 0.5714,
-    "y": 0.5
+    "size": 0.4247,
+    "y": 0.58
    }
   ]
  },
@@ -1626,14 +2526,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "eye",
-    "line": 7
+    "frame": "pentagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Eyebite_Panicked",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Raven_BadOmen",
     "major": 0.9,
-    "size": 0.4424,
-    "y": 0.5
+    "size": 0.48,
+    "y": 0.58
    }
   ]
  },
@@ -1644,14 +2554,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "tentacle",
-    "line": 7
+    "frame": "pentagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_EvardsBlackTentacles",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Raven_BadOmen",
     "major": 0.9,
-    "size": 0.5714,
-    "y": 0.5
+    "size": 0.4608,
+    "y": 0.58
    }
   ]
  },
@@ -1662,14 +2582,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "spiral",
-    "line": 7
+    "frame": "pentagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Skill_Sorcerer_Passive_TidesOfChaos",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Raven_BadOmen",
     "major": 0.9,
-    "size": 0.5055,
-    "y": 0.54
+    "size": 0.4247,
+    "y": 0.58
    }
   ]
  },
@@ -1680,14 +2610,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "shadow",
-    "line": 7
+    "frame": "pentagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_ShadowWalk",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Raven_BadOmen",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.4247,
+    "y": 0.58
    }
   ]
  },
@@ -1698,14 +2638,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "barbs",
-    "line": 7
+    "frame": "pentagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Abjuration_DeathWard",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Raven_BadOmen",
     "major": 0.9,
-    "size": 0.5714,
-    "y": 0.5
+    "size": 0.48,
+    "y": 0.54
    }
   ]
  },
@@ -1716,14 +2666,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "laurel",
-    "line": 7
+    "frame": "pentagon",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Cleric_PreserveLife",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Raven_BadOmen",
     "major": 0.9,
-    "size": 0.5952,
-    "y": 0.5
+    "size": 0.4608,
+    "y": 0.58
    }
   ]
  },
@@ -1734,14 +2694,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "shield",
-    "line": 7
+    "frame": "arch",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Shield",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_AstralKnowledge",
     "major": 0.9,
-    "size": 0.576,
-    "y": 0.44
+    "size": 0.4055,
+    "y": 0.66
    }
   ]
  },
@@ -1752,14 +2722,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "stars",
-    "line": 7
+    "frame": "arch",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_StarryForm_Chalice",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_AstralKnowledge",
     "major": 0.9,
-    "size": 0.5266,
-    "y": 0.5
+    "size": 0.4055,
+    "y": 0.66
    }
   ]
  },
@@ -1770,14 +2750,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "eye",
-    "line": 7
+    "frame": "arch",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Eyebite_Panicked",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_AstralKnowledge",
     "major": 0.9,
-    "size": 0.4247,
-    "y": 0.5
+    "size": 0.4055,
+    "y": 0.66
    }
   ]
  },
@@ -1788,14 +2778,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "fey",
-    "line": 7
+    "frame": "arch",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_FeyPresence",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_AstralKnowledge",
     "major": 0.9,
-    "size": 0.4659,
-    "y": 0.5
+    "size": 0.4055,
+    "y": 0.66
    }
   ]
  },
@@ -1806,14 +2806,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "flame",
-    "line": 7
+    "frame": "arch",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Conjuration_ProduceFlame_Light",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_AstralKnowledge",
     "major": 0.9,
-    "size": 0.5266,
-    "y": 0.5
+    "size": 0.4055,
+    "y": 0.66
    }
   ]
  },
@@ -1824,14 +2834,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "dashed",
-    "line": 7
+    "frame": "arch",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Illusion_MirrorImage",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_AstralKnowledge",
     "major": 0.9,
-    "size": 0.5055,
-    "y": 0.5
+    "size": 0.4055,
+    "y": 0.66
    }
   ]
  },
@@ -1842,14 +2862,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "barbs",
-    "line": 7
+    "frame": "arch",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Abjuration_DeathWard",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_AstralKnowledge",
     "major": 0.9,
-    "size": 0.5266,
-    "y": 0.5
+    "size": 0.4055,
+    "y": 0.66
    }
   ]
  },
@@ -1860,14 +2890,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "order",
-    "line": 7
+    "frame": "arch",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Abjuration_ArcaneGate",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_AstralKnowledge",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.4055,
+    "y": 0.66
    }
   ]
  },
@@ -1878,14 +2918,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "song",
-    "line": 7
+    "frame": "arch",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Singing",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_AstralKnowledge",
     "major": 0.9,
-    "size": 0.5714,
-    "y": 0.5
+    "size": 0.4055,
+    "y": 0.66
    }
   ]
  },
@@ -1896,14 +2946,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "knowledge",
-    "line": 7
+    "frame": "arch",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_KnowledgeOfTheAges",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_AstralKnowledge",
     "major": 0.9,
-    "size": 0.5266,
-    "y": 0.5
+    "size": 0.4055,
+    "y": 0.66
    }
   ]
  },
@@ -1914,14 +2974,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "war",
-    "line": 7
+    "frame": "arch",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_SpiritualWeapon_Greataxe",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_AstralKnowledge",
     "major": 0.9,
-    "size": 0.4659,
-    "y": 0.5
+    "size": 0.4055,
+    "y": 0.66
    }
   ]
  },
@@ -1932,14 +3002,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "drops",
-    "line": 7
+    "frame": "cog",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Mag_Bloodfeeding",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Warhammer",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.54
+    "size": 0.4424,
+    "y": 0.62
    }
   ]
  },
@@ -1950,14 +3030,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "shield",
-    "line": 7
+    "frame": "cog",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Shield",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Warhammer",
     "major": 0.9,
-    "size": 0.6,
-    "y": 0.48
+    "size": 0.48,
+    "y": 0.58
    }
   ]
  },
@@ -1968,14 +3058,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "flame",
-    "line": 7
+    "frame": "cog",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Conjuration_ProduceFlame_Light",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Warhammer",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.54
+    "size": 0.4608,
+    "y": 0.58
    }
   ]
  },
@@ -1986,14 +3086,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "cog",
-    "line": 7
+    "frame": "cog",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Monster_GortashMachine_ShieldCapacitor",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_PactOfTheBlade_Warhammer",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.54
+    "size": 0.4424,
+    "y": 0.62
    }
   ]
  },
@@ -2004,14 +3114,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "radiant",
-    "line": 7
+    "frame": "drop",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_Sunbeam",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Mag_FlamingBlade",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.3397,
+    "y": 0.68
    }
   ]
  },
@@ -2022,14 +3142,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "moon",
-    "line": 7
+    "frame": "drop",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Skill_Druid_MoonBeam_Move",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Mag_FlamingBlade",
     "major": 0.9,
-    "size": 0.5714,
-    "y": 0.54
+    "size": 0.3397,
+    "y": 0.68
    }
   ]
  },
@@ -2040,14 +3170,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "drops",
-    "line": 7
+    "frame": "drop",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Mag_Bloodfeeding",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Mag_FlamingBlade",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.3397,
+    "y": 0.68
    }
   ]
  },
@@ -2058,14 +3198,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "horns",
-    "line": 7
+    "frame": "drop",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Monster_Cambion_FiendishCharm",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Action_Mag_FlamingBlade",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.3397,
+    "y": 0.68
    }
   ]
  },
@@ -2076,14 +3226,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "radiant",
-    "line": 7
+    "frame": "star8",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_Sunbeam",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_TheThirdEye_SeeInvisibility",
     "major": 0.9,
-    "size": 0.5485,
-    "y": 0.5
+    "size": 0.4077,
+    "y": 0.54
    }
   ]
  },
@@ -2094,14 +3254,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "eye",
-    "line": 7
+    "frame": "star8",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Eyebite_Panicked",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_TheThirdEye_SeeInvisibility",
     "major": 0.9,
-    "size": 0.4247,
-    "y": 0.5
+    "size": 0.4077,
+    "y": 0.54
    }
   ]
  },
@@ -2112,14 +3282,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "laurel",
-    "line": 7
+    "frame": "star8",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Action_Cleric_PreserveLife",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_TheThirdEye_SeeInvisibility",
     "major": 0.9,
-    "size": 0.5714,
-    "y": 0.5
+    "size": 0.3914,
+    "y": 0.58
    }
   ]
  },
@@ -2130,14 +3310,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "twilight",
-    "line": 7
+    "frame": "star8",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_Moonbeam",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_TheThirdEye_SeeInvisibility",
     "major": 0.9,
-    "size": 0.4955,
-    "y": 0.46
+    "size": 0.3914,
+    "y": 0.58
    }
   ]
  },
@@ -2148,14 +3338,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "war",
-    "line": 7
+    "frame": "star8",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Spell_Evocation_SpiritualWeapon_Greataxe",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_TheThirdEye_SeeInvisibility",
     "major": 0.9,
-    "size": 0.4853,
-    "y": 0.5
+    "size": 0.3914,
+    "y": 0.58
    }
   ]
  },
@@ -2166,14 +3366,24 @@
   "weight": 5,
   "layers": [
    {
-    "theme": "spiral",
-    "line": 7
+    "frame": "star8",
+    "line": 7,
+    "size": 0.84,
+    "y": 0.56
+   },
+   {
+    "icon": "Skill_Sorcerer_Passive_TidesOfChaos",
+    "major": 0.92,
+    "size": 0.34,
+    "y": 0.18,
+    "knock": 10,
+    "fixed": true
    },
    {
     "icon": "Spell_TheThirdEye_SeeInvisibility",
     "major": 0.9,
-    "size": 0.4853,
-    "y": 0.5
+    "size": 0.3914,
+    "y": 0.58
    }
   ]
  }

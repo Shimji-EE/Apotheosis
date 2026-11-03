@@ -20,6 +20,8 @@ A recipe is a list of icons:
   Extras: "major": 0-1 keeps the largest strokes up to that share of the ink; "mirror": "left"/"right"
   makes the glyph symmetric from that half; "solid": 0-1 drops faint washes. A layer {"frame": NAME,
   "line": px, "size": 0-1} draws a procedural frame instead (see frame(); used by heraldry.py).
+  "knock": px on a layer cuts whatever lies beneath it (a crest breaking a frame); "fixed": true
+  keeps a glyph layer in place when clear_of_frame fits the others around it.
 
 Rule (Charl, 2026-11-02): one icon, one meaning. A composition already published under one
 label is refused for another.
@@ -151,7 +153,11 @@ def frame(name, line=9, size=0.96):
 
 def layer(spec):
     if spec.get("frame"):
-        return frame(spec["frame"], spec.get("line", 9), spec.get("size", 0.96))
+        im = frame(spec["frame"], spec.get("line", 9), spec.get("size", 0.96))
+        dy = round((spec.get("y", 0.5) - 0.5) * N)
+        if dy:
+            moved = Image.new("RGBA", (N, N), (0, 0, 0, 0)); moved.paste(im, (0, dy)); im = moved
+        return im
     if spec.get("theme"):
         import themes
         a = np.asarray(themes.draw(spec["theme"], spec.get("line", 7))).astype(np.float64) / 255
@@ -193,7 +199,7 @@ def clear_of_frame(layers, gap=8):
     """Shrink glyph layers until none of their ink touches a frame layer (plus `gap` px at 512),
     so nothing clips once the glow thickens both. Returns the adjusted layers."""
     from PIL import ImageFilter
-    frames = [l for l in layers if l.get("frame") or l.get("theme")]
+    frames = [l for l in layers if l.get("frame") or l.get("theme") or l.get("fixed")]
     if not frames:
         return layers
     fa = np.zeros((N, N), bool)
@@ -209,7 +215,7 @@ def clear_of_frame(layers, gap=8):
 
     out = []
     for l in layers:
-        if not (l.get("frame") or l.get("theme")):
+        if not (l.get("frame") or l.get("theme") or l.get("fixed")):
             # Try the glyph a little higher and lower too, and keep the placement that lets it stay largest.
             y0 = l.get("y", 0.5)
             l = max((fit(dict(l, y=round(y0 + dy, 3))) for dy in (0, -.04, .04, -.08, .08)), key=lambda t: t["size"])
@@ -218,9 +224,16 @@ def clear_of_frame(layers, gap=8):
 
 
 def compose(layers):
+    from PIL import ImageFilter
     out = Image.new("RGBA", (N, N), (0, 0, 0, 0))
     for spec in layers:
-        out.alpha_composite(layer(spec))
+        im = layer(spec)
+        if spec.get("knock"):
+            # Cut what lies beneath this layer (plus `knock` px) so a crest breaks the frame cleanly.
+            m = im.getchannel("A").point(lambda v: 255 if v > 20 else 0).filter(ImageFilter.MaxFilter(2 * spec["knock"] + 1))
+            a = np.asarray(out.getchannel("A")).astype(np.float64) * (1 - np.asarray(m) / 255)
+            out.putalpha(Image.fromarray(a.astype(np.uint8)))
+        out.alpha_composite(im)
     return out
 
 
