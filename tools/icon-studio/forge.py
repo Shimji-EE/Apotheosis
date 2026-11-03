@@ -133,6 +133,21 @@ def frame(name, line=9, size=0.96):
         d.polygon([(x + ux * h, y + uy * h), (x - uy * h * .5, y + ux * h * .5), (x - ux * h, y - uy * h), (x + uy * h * .5, y - ux * h * .5)], fill=255)
         d.ellipse([x - h * .28, y - h * .28, x + h * .28, y + h * .28], fill=0)
 
+    if name.startswith("round:"):
+        # Round frame (Charl, 2026-11-03: shaped frames left the symbol too small): one ring and a fine inner
+        # ring, with three small outlines of the class's frame shape set into it as accents.
+        ring = lambda rr, w: d.ellipse([c - rr, c - rr, c + rr, c + rr], outline=255, width=max(1, round(w)))
+        ring(r, lw); ring(r * .93, lw * .35)
+        mr = r * .15
+        for a in (math.pi / 2, math.pi, 3 * math.pi / 2):
+            x, y = c + r * math.sin(a), c - r * math.cos(a)
+            d.ellipse([x - mr * 1.15, y - mr * 1.15, x + mr * 1.15, y + mr * 1.15], fill=0)
+            mlines, _ = _shape(name[6:], c, mr)
+            for pts, closed in mlines:
+                stroke([(px - c + x, py - c + y) for px, py in pts], closed, lw * .6)
+            q = mr * .22; d.ellipse([x - q, y - q, x + q, y + q], fill=255)
+        a = np.asarray(im.resize((N, N), Image.LANCZOS)).astype(np.float64) / 255
+        return Image.fromarray((np.dstack([np.ones_like(a)] * 3 + [a]) * 255).astype(np.uint8), "RGBA")
     lines, jewels = _shape(name, c, r)
     scale = lambda pts, f: [(c + (x - c) * f, c + (y - c) * f) for x, y in pts]
     for pts, closed in lines:
