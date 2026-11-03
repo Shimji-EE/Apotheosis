@@ -45,7 +45,7 @@
   "weight": 5,
   "layers": [
    {
-    "icon": "Spell_Transmutation_Barkskin",
+    "icon": "Skill_Druid_WildShape",
     "major": 0.9,
     "size": 0.84
    }
