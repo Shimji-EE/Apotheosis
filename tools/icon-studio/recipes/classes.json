@@ -12,8 +12,7 @@
    {
     "icon": "Action_Barbarian_Rage",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.54,
+    "size": 0.46440000000000003,
     "y": 0.5
    }
   ]
@@ -31,8 +30,7 @@
    {
     "icon": "Action_Bard_SongOfRest",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.46,
+    "size": 0.3956,
     "y": 0.5
    }
   ]
@@ -50,8 +48,7 @@
    {
     "icon": "Spell_Cleric_TurnUndead",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.54,
+    "size": 0.46440000000000003,
     "y": 0.5
    }
   ]
@@ -69,8 +66,7 @@
    {
     "icon": "Skill_Druid_WildShape",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.42,
+    "size": 0.36119999999999997,
     "y": 0.5
    }
   ]
@@ -88,8 +84,7 @@
    {
     "icon": "Skill_Fighter_ActionSurge",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.54,
+    "size": 0.46440000000000003,
     "y": 0.5
    }
   ]
@@ -107,8 +102,7 @@
    {
     "icon": "Action_Monk_FlurryOfBlows",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.54,
+    "size": 0.46440000000000003,
     "y": 0.5
    }
   ]
@@ -126,8 +120,7 @@
    {
     "icon": "Action_Paladin_DivineSmite",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.54,
+    "size": 0.46440000000000003,
     "y": 0.5
    }
   ]
@@ -145,9 +138,8 @@
    {
     "icon": "Spell_Divination_HuntersMark",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.42,
-    "y": 0.6
+    "size": 0.43,
+    "y": 0.62
    }
   ]
  },
@@ -164,8 +156,7 @@
    {
     "icon": "Action_SneakAttack_Melee",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.44,
+    "size": 0.3784,
     "y": 0.5
    }
   ]
@@ -183,8 +174,7 @@
    {
     "icon": "Skill_Sorcerer_Passive_Metamagic_TwinnedSpell",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.54,
+    "size": 0.46440000000000003,
     "y": 0.5
    }
   ]
@@ -202,8 +192,7 @@
    {
     "icon": "Spell_Evocation_EldritchBlast",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.46,
+    "size": 0.3956,
     "y": 0.46
    }
   ]
@@ -221,8 +210,7 @@
    {
     "icon": "Spell_Evocation_MagicMissile",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.42,
+    "size": 0.36119999999999997,
     "y": 0.58
    }
   ]
@@ -240,8 +228,7 @@
    {
     "icon": "Action_Wolf_InfectiousBite",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.54,
+    "size": 0.46440000000000003,
     "y": 0.5
    }
   ]
@@ -259,8 +246,7 @@
    {
     "icon": "Action_WildMagic_Barbarian_WeaponInfusion",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.54,
+    "size": 0.46440000000000003,
     "y": 0.5
    }
   ]
@@ -278,8 +264,7 @@
    {
     "icon": "Action_MagicItem_Bloodrend",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.4,
+    "size": 0.34400000000000003,
     "y": 0.62
    }
   ]
@@ -297,8 +282,7 @@
    {
     "icon": "TadpoleSuperPower_PsionicOverload",
     "major": 0.88,
-    "mirror": "left",
-    "size": 0.54,
+    "size": 0.46440000000000003,
     "y": 0.5
    }
   ]

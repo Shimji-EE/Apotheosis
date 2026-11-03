@@ -1,9 +1,9 @@
 """Writes the class and subclass emblem recipes as Apotheosis heraldry (Charl, 2026-11-03: the plain
 game glyphs read too much like BG3 icons).
 
-Each class owns a procedural frame (forge.py `frame`). A class emblem is its frame around a mirrored,
-pared-down copy of its glyph; a subclass emblem is its class's frame, drawn finer, around its own glyph,
-also mirrored and pared down. Run, then `forge.py make recipes/classes.json` and `... subclasses.json`.
+Each class owns a procedural frame (forge.py `frame`). A class emblem is its frame around a pared-down
+copy of its glyph; a subclass emblem is its class's frame, drawn finer, around its own glyph,
+also pared down. (Mirrored symmetry was tried and dropped: Charl found it looked forced.) Run, then `forge.py make recipes/classes.json` and `... subclasses.json`.
 """
 import json
 from pathlib import Path
@@ -14,15 +14,16 @@ FRAMES = {"Barbarian": "saw", "Bard": "quatrefoil", "Cleric": "sun", "Druid": "l
           "Warlock": "pentagon", "Wizard": "arch", "Carlislean Lycanthrope": "crescent", "Artificer": "cog",
           "Blood Hunter": "drop", "Mystic": "star8"}
 # Where the glyph sits inside narrow frames: size, y.
-FIT = {"triangle": (.42, .6), "drop": (.4, .62), "lozenge": (.44, .5), "arch": (.42, .58), "leaf": (.42, .5),
+FIT = {"triangle": (.5, .62), "drop": (.4, .62), "lozenge": (.44, .5), "arch": (.42, .58), "leaf": (.42, .5),
        "pentagon": (.46, .46), "quatrefoil": (.46, .5)}
 # Per-emblem fixes after looking at the sheet.
-TWEAK = {"subclass Drakewarden": {"mirror": "right"}, "subclass Twilight Domain": {"solid": .55}}
+TWEAK = {"subclass Twilight Domain": {"solid": .55}}
 
 
 def glyph(icon, label, frame, major):
     size, y = FIT.get(frame, (.54, .5))
-    return {"icon": icon, "major": major, "mirror": "left", "size": size, "y": y, **TWEAK.get(label, {})}
+    size *= .86  # stay inside the frame's inner hairline
+    return {"icon": icon, "major": major, "size": size, "y": y, **TWEAK.get(label, {})}
 
 
 def main():

@@ -56,84 +56,106 @@ def lineart(name):
     return a[..., 0], a[..., 1], lab[..., 0] + 256 * lab[..., 1]
 
 
-def frame(name, line=9, size=0.96):
-    """A procedural line-art frame (white strokes on clear), drawn 4x and scaled down."""
+def _shape(name, c, r):
+    """Outline(s) of a class frame as polylines: (points, closed). Also returns the jewel points."""
     import math
-    K = 4; W = N * K; c = W / 2; r = size * W / 2; lw = line * K
-    im = Image.new("L", (W, W), 0); d = ImageDraw.Draw(im)
-    P = lambda pts: d.line(pts + [pts[0]], fill=255, width=lw, joint="curve")
+    pol = lambda rho, n=360: [(c + rho(2 * math.pi * i / n) * math.sin(2 * math.pi * i / n),
+                               c - rho(2 * math.pi * i / n) * math.cos(2 * math.pi * i / n)) for i in range(n)]
     poly = lambda n, rot=0, rr=r: [(c + rr * math.sin(rot + 2 * math.pi * i / n), c - rr * math.cos(rot + 2 * math.pi * i / n)) for i in range(n)]
-    ring = lambda rr: d.ellipse([c - rr, c - rr, c + rr, c + rr], outline=255, width=lw)
-    def lozenge(x, y, h):
-        d.polygon([(x, y - h), (x + h * .6, y), (x, y + h), (x - h * .6, y)], fill=255)
-    arc = lambda rr, a0, a1: d.arc([c - rr, c - rr, c + rr, c + rr], a0, a1, fill=255, width=lw)
+    arcpts = lambda cx, cy, rr, a0, a1, n=60: [(cx + rr * math.cos(math.radians(a0 + (a1 - a0) * i / n)),
+                                                cy + rr * math.sin(math.radians(a0 + (a1 - a0) * i / n))) for i in range(n + 1)]
     if name == "saw":  # Barbarian: notched ring
-        pts = []
-        for i in range(48):
-            a = 2 * math.pi * i / 48; rr = r if i % 2 else r * .9
-            pts.append((c + rr * math.sin(a), c - rr * math.cos(a)))
-        P(pts)
-    elif name == "quatrefoil":  # Bard
-        q = r * .44
-        for dx, dy in ((0, -1), (1, 0), (0, 1), (-1, 0)):
-            x, y = c + dx * (r - q), c + dy * (r - q)
-            a0 = {(0, -1): 150, (1, 0): 240, (0, 1): 330, (-1, 0): 60}[(dx, dy)]
-            d.arc([x - q, y - q, x + q, y + q], a0, a0 + 240, fill=255, width=lw)
-    elif name == "sun":  # Cleric
-        ring(r * .78)
-        for i in range(16):
-            a = 2 * math.pi * i / 16; r0, r1 = r * .84, (r if i % 2 == 0 else r * .92)
-            d.line([(c + r0 * math.sin(a), c - r0 * math.cos(a)), (c + r1 * math.sin(a), c - r1 * math.cos(a))], fill=255, width=lw)
-    elif name == "leaf":  # Druid: vesica (two circle arcs)
+        pts = [(c + (r if i % 2 else r * .9) * math.sin(math.pi * i / 24), c - (r if i % 2 else r * .9) * math.cos(math.pi * i / 24)) for i in range(48)]
+        return [(pts, True)], pts[1::4]
+    if name == "quatrefoil":  # Bard
+        pts = pol(lambda t: r * (.74 + .26 * abs(math.cos(2 * t))) / 1.0)
+        return [(pts, True)], poly(4, 0, r)
+    if name == "sun":  # Cleric
+        return [(pol(lambda t: r * .84), True)], poly(8, 0, r * .84)
+    if name == "leaf":  # Druid: vesica
         dx = r * .6; R = math.hypot(dx, r); t = math.degrees(math.atan2(r, dx))
-        d.arc([c + dx - R, c - R, c + dx + R, c + R], 180 - t, 180 + t, fill=255, width=lw)
-        d.arc([c - dx - R, c - R, c - dx + R, c + R], -t, t, fill=255, width=lw)
-    elif name == "shield":  # Fighter: heater
+        return [(arcpts(c + dx, c, R, 180 - t, 180 + t) + arcpts(c - dx, c, R, -t, t), True)], [(c, c - r), (c, c + r)]
+    if name == "shield":  # Fighter: heater
         pts = [(c - r * .82, c - r * .86), (c + r * .82, c - r * .86)]
-        for i in range(1, 20):
-            t = i / 20; pts.append((c + r * .82 * math.cos(t * math.pi / 2), c - r * .2 + r * 1.16 * math.sin(t * math.pi / 2)))
-        pts.append((c, c + r * .96))
-        pts += [(2 * c - x, y) for x, y in reversed(pts[2:-1])]
-        P(pts)
-    elif name == "enso":  # Monk: open double ring
-        arc(r * .96, -60, 230); arc(r * .84, 120, 410)
-    elif name == "octagon":  # Paladin
-        P(poly(8, math.pi / 8)); 
-        for x, y in poly(4, 0, r * 1.0): lozenge(x, y, lw * 2.2)
-    elif name == "triangle":  # Ranger
-        P(poly(3, 0, r)); ring(r * .5) if False else None
-    elif name == "lozenge":  # Rogue
-        P([(c, c - r), (c + r * .72, c), (c, c + r), (c - r * .72, c)])
-    elif name == "hexagon":  # Sorcerer
-        P(poly(6, 0)); P(poly(6, 0, r * .9))
-    elif name == "pentagon":  # Warlock: inverted
-        P(poly(5, math.pi))
-        for x, y in poly(5, math.pi, r): lozenge(x, y, lw * 1.8)
-    elif name == "arch":  # Wizard: pointed gothic window
+        pts += [(c + r * .82 * math.cos(i / 20 * math.pi / 2), c - r * .2 + r * 1.16 * math.sin(i / 20 * math.pi / 2)) for i in range(1, 20)]
+        pts.append((c, c + r * .96)); pts += [(2 * c - x, y) for x, y in reversed(pts[2:-1])]
+        return [(pts, True)], [pts[0], pts[1], (c, c + r * .96)]
+    if name == "enso":  # Monk: open double ring
+        return [(arcpts(c, c, r * .96, -60, 230), False), (arcpts(c, c, r * .86, 120, 410), False)], [arcpts(c, c, r * .96, -60, 230)[0]]
+    if name == "octagon":  # Paladin
+        pts = poly(8, math.pi / 8); return [(pts, True)], poly(4, 0, r * .96)
+    if name == "triangle":  # Ranger
+        pts = poly(3); return [(pts, True)], pts
+    if name == "lozenge":  # Rogue
+        pts = [(c, c - r), (c + r * .72, c), (c, c + r), (c - r * .72, c)]; return [(pts, True)], pts
+    if name == "hexagon":  # Sorcerer
+        pts = poly(6); return [(pts, True)], pts
+    if name == "pentagon":  # Warlock: inverted
+        pts = poly(5, math.pi); return [(pts, True)], pts
+    if name == "arch":  # Wizard: pointed gothic window
         w = r * .62; ys = c - r + 1.732 * w
-        d.arc([c + w - 2 * w, ys - 2 * w, c + w + 2 * w, ys + 2 * w], 180, 240, fill=255, width=lw)
-        d.arc([c - w - 2 * w, ys - 2 * w, c - w + 2 * w, ys + 2 * w], 300, 360, fill=255, width=lw)
-        d.line([(c - w, ys), (c - w, c + r), (c + w, c + r), (c + w, ys)], fill=255, width=lw, joint="curve")
-    elif name == "crescent":  # Lycanthrope
-        arc(r, 200, 520); arc(r * .8, 230, 490)
-    elif name == "cog":  # Artificer
+        pts = [(c - w, c + r)] + arcpts(c + w, ys, 2 * w, 180, 240, 30) + arcpts(c - w, ys, 2 * w, 300, 360, 30) + [(c + w, c + r)]
+        return [(pts, True)], [(c, c - r), (c - w, ys), (c + w, ys)]
+    if name == "crescent":  # Lycanthrope
+        return [(arcpts(c, c, r, 200, 520), False), (arcpts(c, c, r * .86, 230, 490), False)], [arcpts(c, c, r, 200, 520)[0], arcpts(c, c, r, 200, 520)[-1]]
+    if name == "cog":  # Artificer
         pts = []
         for i in range(12):
             for k, rr in ((0, r * .84), (.18, r * .84), (.3, r), (.7, r), (.82, r * .84)):
                 a = 2 * math.pi * (i + k) / 12; pts.append((c + rr * math.sin(a), c - rr * math.cos(a)))
-        P(pts)
-    elif name == "drop":  # Blood Hunter
+        return [(pts, True)], []
+    if name == "drop":  # Blood Hunter
         rr = r * .62; cy = c + r * .34
-        pts = [(c, c - r)]
-        for i in range(0, 41):
-            a = math.radians(-35 + 250 * i / 40)
-            pts.append((c + rr * math.cos(a) * (1 if i <= 20 else 1), cy + rr * math.sin(a)))
         pts = [(c, c - r)] + [(c + rr * math.cos(math.radians(a)), cy + rr * math.sin(math.radians(a))) for a in range(-35, 216, 5)]
-        P(pts)
-    elif name == "star8":  # Mystic
-        P(poly(4, 0)); P(poly(4, math.pi / 4))
-    else:
-        sys.exit(f"Unknown frame {name!r}")
+        return [(pts, True)], [(c, c - r)]
+    if name == "star8":  # Mystic
+        return [(poly(4), True), (poly(4, math.pi / 4), True)], poly(8)
+    sys.exit(f"Unknown frame {name!r}")
+
+
+def frame(name, line=9, size=0.96):
+    """A procedural engraved frame (white strokes on clear), drawn 4x and scaled down: the class outline,
+    an inner hairline, a bead band between them, jewels at the corners and a few class-specific extras."""
+    import math
+    K = 4; W = N * K; c = W / 2; r = size * W / 2; lw = line * K
+    im = Image.new("L", (W, W), 0); d = ImageDraw.Draw(im)
+
+    def stroke(pts, closed, width):
+        d.line(pts + ([pts[0], pts[1]] if closed else []), fill=255, width=max(1, round(width)), joint="curve")
+
+    def walk(pts, closed, step):  # points spaced evenly along a polyline
+        P = pts + ([pts[0]] if closed else []); out = []; left = 0
+        for (x0, y0), (x1, y1) in zip(P, P[1:]):
+            L = math.hypot(x1 - x0, y1 - y0); t = left
+            while t < L:
+                out.append((x0 + (x1 - x0) * t / L, y0 + (y1 - y0) * t / L)); t += step
+            left = t - L
+        return out
+
+    def jewel(x, y, h):
+        dx, dy = x - c, y - c; L = math.hypot(dx, dy) or 1; ux, uy = dx / L, dy / L
+        d.polygon([(x + ux * h, y + uy * h), (x - uy * h * .5, y + ux * h * .5), (x - ux * h, y - uy * h), (x + uy * h * .5, y - ux * h * .5)], fill=255)
+        d.ellipse([x - h * .28, y - h * .28, x + h * .28, y + h * .28], fill=0)
+
+    lines, jewels = _shape(name, c, r)
+    scale = lambda pts, f: [(c + (x - c) * f, c + (y - c) * f) for x, y in pts]
+    for pts, closed in lines:
+        stroke(pts, closed, lw)                           # the outline
+        stroke(scale(pts, .8), closed, lw * .45)          # inner hairline
+        for x, y in walk(scale(pts, .9), closed, lw * 3.6):  # bead band
+            q = lw * .38; d.ellipse([x - q, y - q, x + q, y + q], fill=255)
+    for x, y in jewels:
+        jewel(x, y, lw * 2.4)
+    if name == "sun":  # Cleric: alternating rays
+        for i in range(24):
+            a = 2 * math.pi * i / 24; r1 = r if i % 2 == 0 else r * .93
+            d.line([(c + r * .87 * math.sin(a), c - r * .87 * math.cos(a)), (c + r1 * math.sin(a), c - r1 * math.cos(a))], fill=255, width=round(lw * (.8 if i % 2 == 0 else .5)))
+    if name == "cog":  # Artificer: rivets on the hub ring
+        for x, y in walk([(c + r * .7 * math.sin(2 * math.pi * i / 60), c - r * .7 * math.cos(2 * math.pi * i / 60)) for i in range(60)], True, lw * 4):
+            q = lw * .25; d.ellipse([x - q, y - q, x + q, y + q], fill=255)
+    if name == "enso":  # Monk: brush-end knots
+        for x, y in (lines[0][0][-1], lines[1][0][0], lines[1][0][-1]):
+            q = lw * .9; d.ellipse([x - q, y - q, x + q, y + q], fill=255)
     a = np.asarray(im.resize((N, N), Image.LANCZOS)).astype(np.float64) / 255
     return Image.fromarray((np.dstack([np.ones_like(a)] * 3 + [a]) * 255).astype(np.uint8), "RGBA")
 
