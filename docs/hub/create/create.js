@@ -47,7 +47,8 @@
     ...(CLASSES[cls].subclasses || []).map((n) => [n, "notes"]),
     ...[...(K.MORE_SUBCLASSES[cls] || []), ...(CLASSES[cls].more || [])].map((n) => [n, "published"]),
   ];
-  const BACKGROUNDS = [...O.BACKGROUNDS.map((b) => [b, "notes"]), ...K.MORE_BACKGROUNDS.filter((b) => !O.BACKGROUNDS.includes(b)).map((b) => [b, "published"])];
+  // Only the notes' backgrounds (Charl, 2026-11-03: the published extras were removed).
+  const BACKGROUNDS = O.BACKGROUNDS.map((b) => [b, "notes"]);
 
   // Everything the player has chosen so far.
   const s = {
