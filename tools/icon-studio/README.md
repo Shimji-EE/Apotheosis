@@ -40,3 +40,12 @@ files, unzipped into the generator folder) and numpy, scipy and Pillow.
     python tools/icon-studio/forge.py make tools/icon-studio/recipes/creator-emblems.json
 
 Recipes in `recipes/` record how each forged icon was built, so it can be remade or adjusted.
+
+## LoRA forge (headless generation)
+
+`lora_forge.py` generates new glyphs with Stable Diffusion 1.5 and Charl's BG3 action-icon LoRA
+(`bg3_actions_offset.safetensors`, kept in the git-ignored `models/` folder), then finishes and
+publishes them like `forge.py` (Grave Red glow or a game colour preset, same manifests, same
+one-icon-one-meaning rule). `try PROMPT -n 4` makes a candidate sheet; `make RECIPE.json` publishes.
+Needs `pip install -r lora-requirements.txt` and the SD 1.5 base model (Hugging Face download on
+first run, or `--base` to a local checkpoint). Fast on a CUDA GPU; minutes per image on CPU.
