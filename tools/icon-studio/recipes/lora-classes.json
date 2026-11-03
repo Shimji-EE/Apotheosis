@@ -11,8 +11,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "a double-bitted battleaxe with a wolf-fur wrap and bone charms tied below the blade, notched edges",
-  "strength": 0.5,
+  "prompt": "a double-bitted battleaxe with a fur-wrapped haft",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -29,8 +29,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "an ornate lute with a carved scroll head, ribbons trailing from the neck, three musical notes rising",
-  "strength": 0.5,
+  "prompt": "a lute with ribbons trailing from its neck",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -47,8 +47,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "a sunburst holy symbol with an engraved eye of faith at its centre, long straight radiant rays",
-  "strength": 0.5,
+  "prompt": "a sunburst holy symbol with an eye at its centre",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -65,8 +65,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "a stag's head whose branching antlers grow into leafy oak branches",
-  "strength": 0.5,
+  "prompt": "a stag's head with antlers that end in leaves",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -83,8 +83,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "a greatsword pointing down, wrapped leather grip, crossguard with flared ends, a notched blade",
-  "strength": 0.5,
+  "prompt": "a greatsword pointing down with a flared crossguard",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -101,8 +101,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "an open palm raised in calm, a swirling ring of breath above it, prayer beads hanging from the wrist",
-  "strength": 0.5,
+  "prompt": "an open palm with a ring of breath above it",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -119,8 +119,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "a greatsword held point down, a pair of radiant wings spreading behind the crossguard",
-  "strength": 0.5,
+  "prompt": "a greatsword point down with wings behind the crossguard",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -137,8 +137,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "a hawk with half-raised wings perched on a curved longbow",
-  "strength": 0.5,
+  "prompt": "a hawk perched on a longbow",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -155,8 +155,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "a deep hooded cloak with a curved dagger crossing in front of it",
-  "strength": 0.5,
+  "prompt": "a hooded cloak with a curved dagger",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -173,8 +173,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "a crackling orb of raw magic cupped in an open clawed hand with draconic scales on the wrist",
-  "strength": 0.5,
+  "prompt": "an orb of raw magic in an open clawed hand",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -191,8 +191,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "a raven with spread wings above a single eldritch eye, curling pact tendrils below",
-  "strength": 0.5,
+  "prompt": "a raven with spread wings above a single eye",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -209,8 +209,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "an open spellbook with arcane sigils rising off the pages towards a single star",
-  "strength": 0.5,
+  "prompt": "an open spellbook with a star rising from it",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -227,8 +227,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "a snarling wolf head beneath a thin crescent moon",
-  "strength": 0.5,
+  "prompt": "a wolf head beneath a crescent moon",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -245,8 +245,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "a forge hammer with a brass gear set into its head and a coiled spring around the haft",
-  "strength": 0.5,
+  "prompt": "a forge hammer with a gear set into its head",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -263,8 +263,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "a curved hunter's blade dripping blood, a crimson sigil burning along its edge",
-  "strength": 0.5,
+  "prompt": "a curved blade with a drop of blood",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"
@@ -281,8 +281,8 @@
     "size": 0.84
    }
   ],
-  "prompt": "an open third eye on a brow of light, concentric ripples of psionic waves around it",
-  "strength": 0.5,
+  "prompt": "an open third eye with ripples around it",
+  "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto"

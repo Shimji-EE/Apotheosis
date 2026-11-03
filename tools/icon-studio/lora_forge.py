@@ -50,8 +50,8 @@ import forge  # noqa: E402
 LORA = HERE / "models" / "bg3_actions_offset.safetensors"
 BASE = "stable-diffusion-v1-5/stable-diffusion-v1-5"
 # The subject leads the prompt; the style words follow so they don't flatten it into a generic glyph.
-STYLE = "bg3 action icon, white line art on dark background, centered, high contrast, detailed"
-NEGATIVE = "text, letters, watermark, signature, frame, border, photo, realistic, blurry, colourful, gradient"
+STYLE = "bg3 action icon, simple clean white line art on dark background, centered, bold strokes, minimal"
+NEGATIVE = "text, letters, watermark, signature, frame, border, photo, realistic, blurry, colourful, gradient, cluttered, intricate, busy, sparkles, particles"
 
 
 def pipeline(base=BASE, lora=LORA, scale=0.9):
@@ -123,7 +123,7 @@ def to_lineart(img, lo=0.35, hi=0.75):
     return a
 
 
-def clean(a, guide=None, min_area=0.0015):
+def clean(a, guide=None, min_area=0.003):
     """Cleanup that makes generated glyphs read as deliberate: hysteresis threshold (no grey washes), drop
     specks, fill pinholes, and with a guide keep only strokes that sit on the guide's composition.
     Returns (alpha, number of strokes, guide cover)."""
@@ -195,7 +195,7 @@ def candidates(pipes, dev, item, steps):
     for raw, guide in pairs:
         alpha, strokes, cover = clean(to_lineart(raw), guide)
         # Prefer candidates that keep the composition and read as few, deliberate strokes.
-        out.append((raw, centred(alpha), cover - 0.015 * strokes))
+        out.append((raw, centred(alpha), cover - 0.04 * strokes))
     return out
 
 
