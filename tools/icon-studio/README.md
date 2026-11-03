@@ -49,3 +49,10 @@ publishes them like `forge.py` (Grave Red glow or a game colour preset, same man
 one-icon-one-meaning rule). `try PROMPT -n 4` makes a candidate sheet; `make RECIPE.json` publishes.
 Needs `pip install -r lora-requirements.txt` and the SD 1.5 base model (Hugging Face download on
 first run, or `--base` to a local checkpoint). Fast on a CUDA GPU; minutes per image on CPU.
+
+**Fuse** (how emblems are made): plain prompts give messy, off-style glyphs, so a recipe item gives
+forge `layers` (a game glyph, optionally an accent) and the LoRA redraws that composition at
+`strength` (.45-.6) with the prompt's custom detail. A cleanup pass then drops grey washes, specks and
+strokes that wander off the composition, and `pick: "auto"` keeps the candidate that holds the
+composition with the fewest strokes. `guide: "self"` redraws a cleaned first pass when no game glyph
+fits. `try PROMPT --icon GAME_ICON` tests one.
