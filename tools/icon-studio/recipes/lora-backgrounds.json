@@ -4,24 +4,46 @@
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a hammer and chisel crossed",
+  "prompt": "two crossed smith's hammers",
   "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto",
-  "guide": "self"
+  "layers": [
+   {
+    "icon": "Spell_Transmutation_Mending",
+    "strokes": [
+     1,
+     2,
+     7,
+     8
+    ],
+    "size": 0.84
+   }
+  ]
  },
  {
   "label": "background Farmer",
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a scythe with a sheaf of wheat",
+  "prompt": "a harvest sickle held in a fist",
   "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto",
-  "guide": "self"
+  "layers": [
+   {
+    "icon": "Action_PactOfTheBlade_Sickle",
+    "strokes": [
+     1,
+     3,
+     8,
+     13
+    ],
+    "size": 0.84
+   }
+  ]
  },
  {
   "label": "background Guard",
@@ -46,15 +68,19 @@
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a lantern hanging from a walking pole",
+  "prompt": "a guiding star with a long trailing tail",
   "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto",
   "layers": [
    {
-    "icon": "Action_InspectMoonLantern",
-    "major": 0.9,
+    "icon": "Spell_Evocation_GuidingBolt",
+    "strokes": [
+     1,
+     2,
+     5
+    ],
     "size": 0.84
    }
   ]
@@ -100,14 +126,14 @@
   "to": "creator",
   "style": "glow",
   "weight": 5,
-  "prompt": "a travelling boot beside a walking staff",
+  "prompt": "a striding traveller's boot with motion lines",
   "strength": 0.45,
   "seed": 31,
   "n": 4,
   "pick": "auto",
   "layers": [
    {
-    "icon": "Action_BootOfTheGiants",
+    "icon": "Action_Dash",
     "major": 0.9,
     "size": 0.84
    }
