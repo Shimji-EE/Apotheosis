@@ -1,226 +1,306 @@
 [
-{
-"label": "class Barbarian",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Action_Barbarian_Rage",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Bard",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Action_Bard_SongOfRest",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Cleric",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Spell_Cleric_TurnUndead",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Druid",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Skill_Druid_WildShape",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Fighter",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Skill_Fighter_ActionSurge",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Monk",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Action_Monk_FlurryOfBlows",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Paladin",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Action_Paladin_DivineSmite",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Ranger",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Spell_Divination_HuntersMark",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Rogue",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Action_SneakAttack_Melee",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Sorcerer",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Skill_Sorcerer_Passive_Metamagic_TwinnedSpell",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Warlock",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Spell_Evocation_EldritchBlast",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Wizard",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Spell_Evocation_MagicMissile",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Carlislean Lycanthrope",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Action_Wolf_InfectiousBite",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Artificer",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Action_WildMagic_Barbarian_WeaponInfusion",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Blood Hunter",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "Action_MagicItem_Bloodrend",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-},
-{
-"label": "class Mystic",
-"to": "creator",
-"style": "glow",
-"weight": 5,
-"layers": [
-{
-"icon": "TadpoleSuperPower_PsionicOverload",
-"x": 0.5,
-"y": 0.5,
-"size": 0.86
-}
-]
-}
+ {
+  "label": "class Barbarian",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "saw",
+    "line": 9
+   },
+   {
+    "icon": "Action_Barbarian_Rage",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.54,
+    "y": 0.5
+   }
+  ]
+ },
+ {
+  "label": "class Bard",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "quatrefoil",
+    "line": 9
+   },
+   {
+    "icon": "Action_Bard_SongOfRest",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.46,
+    "y": 0.5
+   }
+  ]
+ },
+ {
+  "label": "class Cleric",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "sun",
+    "line": 9
+   },
+   {
+    "icon": "Spell_Cleric_TurnUndead",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.54,
+    "y": 0.5
+   }
+  ]
+ },
+ {
+  "label": "class Druid",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "leaf",
+    "line": 9
+   },
+   {
+    "icon": "Skill_Druid_WildShape",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.42,
+    "y": 0.5
+   }
+  ]
+ },
+ {
+  "label": "class Fighter",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "shield",
+    "line": 9
+   },
+   {
+    "icon": "Skill_Fighter_ActionSurge",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.54,
+    "y": 0.5
+   }
+  ]
+ },
+ {
+  "label": "class Monk",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "enso",
+    "line": 9
+   },
+   {
+    "icon": "Action_Monk_FlurryOfBlows",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.54,
+    "y": 0.5
+   }
+  ]
+ },
+ {
+  "label": "class Paladin",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "octagon",
+    "line": 9
+   },
+   {
+    "icon": "Action_Paladin_DivineSmite",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.54,
+    "y": 0.5
+   }
+  ]
+ },
+ {
+  "label": "class Ranger",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "triangle",
+    "line": 9
+   },
+   {
+    "icon": "Spell_Divination_HuntersMark",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.42,
+    "y": 0.6
+   }
+  ]
+ },
+ {
+  "label": "class Rogue",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "lozenge",
+    "line": 9
+   },
+   {
+    "icon": "Action_SneakAttack_Melee",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.44,
+    "y": 0.5
+   }
+  ]
+ },
+ {
+  "label": "class Sorcerer",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "hexagon",
+    "line": 9
+   },
+   {
+    "icon": "Skill_Sorcerer_Passive_Metamagic_TwinnedSpell",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.54,
+    "y": 0.5
+   }
+  ]
+ },
+ {
+  "label": "class Warlock",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "pentagon",
+    "line": 9
+   },
+   {
+    "icon": "Spell_Evocation_EldritchBlast",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.46,
+    "y": 0.46
+   }
+  ]
+ },
+ {
+  "label": "class Wizard",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "arch",
+    "line": 9
+   },
+   {
+    "icon": "Spell_Evocation_MagicMissile",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.42,
+    "y": 0.58
+   }
+  ]
+ },
+ {
+  "label": "class Carlislean Lycanthrope",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "crescent",
+    "line": 9
+   },
+   {
+    "icon": "Action_Wolf_InfectiousBite",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.54,
+    "y": 0.5
+   }
+  ]
+ },
+ {
+  "label": "class Artificer",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "cog",
+    "line": 9
+   },
+   {
+    "icon": "Action_WildMagic_Barbarian_WeaponInfusion",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.54,
+    "y": 0.5
+   }
+  ]
+ },
+ {
+  "label": "class Blood Hunter",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "drop",
+    "line": 9
+   },
+   {
+    "icon": "Action_MagicItem_Bloodrend",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.4,
+    "y": 0.62
+   }
+  ]
+ },
+ {
+  "label": "class Mystic",
+  "to": "creator",
+  "style": "glow",
+  "weight": 5,
+  "layers": [
+   {
+    "frame": "star8",
+    "line": 9
+   },
+   {
+    "icon": "TadpoleSuperPower_PsionicOverload",
+    "major": 0.88,
+    "mirror": "left",
+    "size": 0.54,
+    "y": 0.5
+   }
+  ]
+ }
 ]
