@@ -118,22 +118,13 @@ def _shape(name, c, r):
 
 def frame(name, line=9, size=0.96):
     """A procedural engraved frame (white strokes on clear), drawn 4x and scaled down: the class outline,
-    an inner hairline, a bead band between them, jewels at the corners and a few class-specific extras."""
+    an inner hairline, small jewels at the corners and a few class-specific extras (Charl, 2026-11-03: keep it light)."""
     import math
     K = 4; W = N * K; c = W / 2; r = size * W / 2; lw = line * K
     im = Image.new("L", (W, W), 0); d = ImageDraw.Draw(im)
 
     def stroke(pts, closed, width):
         d.line(pts + ([pts[0], pts[1]] if closed else []), fill=255, width=max(1, round(width)), joint="curve")
-
-    def walk(pts, closed, step):  # points spaced evenly along a polyline
-        P = pts + ([pts[0]] if closed else []); out = []; left = 0
-        for (x0, y0), (x1, y1) in zip(P, P[1:]):
-            L = math.hypot(x1 - x0, y1 - y0); t = left
-            while t < L:
-                out.append((x0 + (x1 - x0) * t / L, y0 + (y1 - y0) * t / L)); t += step
-            left = t - L
-        return out
 
     def jewel(x, y, h):
         dx, dy = x - c, y - c; L = math.hypot(dx, dy) or 1; ux, uy = dx / L, dy / L
@@ -144,18 +135,13 @@ def frame(name, line=9, size=0.96):
     scale = lambda pts, f: [(c + (x - c) * f, c + (y - c) * f) for x, y in pts]
     for pts, closed in lines:
         stroke(pts, closed, lw)                           # the outline
-        stroke(scale(pts, .8), closed, lw * .45)          # inner hairline
-        for x, y in walk(scale(pts, .9), closed, lw * 3.6):  # bead band
-            q = lw * .38; d.ellipse([x - q, y - q, x + q, y + q], fill=255)
+        stroke(scale(pts, .86), closed, lw * .4)          # inner hairline
     for x, y in jewels:
-        jewel(x, y, lw * 2.4)
+        jewel(x, y, lw * 1.7)
     if name == "sun":  # Cleric: alternating rays
-        for i in range(24):
-            a = 2 * math.pi * i / 24; r1 = r if i % 2 == 0 else r * .93
+        for i in range(16):
+            a = 2 * math.pi * i / 16; r1 = r if i % 2 == 0 else r * .93
             d.line([(c + r * .87 * math.sin(a), c - r * .87 * math.cos(a)), (c + r1 * math.sin(a), c - r1 * math.cos(a))], fill=255, width=round(lw * (.8 if i % 2 == 0 else .5)))
-    if name == "cog":  # Artificer: rivets on the hub ring
-        for x, y in walk([(c + r * .7 * math.sin(2 * math.pi * i / 60), c - r * .7 * math.cos(2 * math.pi * i / 60)) for i in range(60)], True, lw * 4):
-            q = lw * .25; d.ellipse([x - q, y - q, x + q, y + q], fill=255)
     if name == "enso":  # Monk: brush-end knots
         for x, y in (lines[0][0][-1], lines[1][0][0], lines[1][0][-1]):
             q = lw * .9; d.ellipse([x - q, y - q, x + q, y + q], fill=255)
@@ -166,6 +152,10 @@ def frame(name, line=9, size=0.96):
 def layer(spec):
     if spec.get("frame"):
         return frame(spec["frame"], spec.get("line", 9), spec.get("size", 0.96))
+    if spec.get("theme"):
+        import themes
+        a = np.asarray(themes.draw(spec["theme"], spec.get("line", 7))).astype(np.float64) / 255
+        return Image.fromarray((np.dstack([np.ones_like(a)] * 3 + [a]) * 255).astype(np.uint8), "RGBA")
     g, al, lab = lineart(spec["icon"])
     if spec.get("strokes"):
         keep = np.isin(lab, spec["strokes"])
@@ -203,7 +193,7 @@ def clear_of_frame(layers, gap=8):
     """Shrink glyph layers until none of their ink touches a frame layer (plus `gap` px at 512),
     so nothing clips once the glow thickens both. Returns the adjusted layers."""
     from PIL import ImageFilter
-    frames = [l for l in layers if l.get("frame")]
+    frames = [l for l in layers if l.get("frame") or l.get("theme")]
     if not frames:
         return layers
     fa = np.zeros((N, N), bool)
@@ -219,7 +209,7 @@ def clear_of_frame(layers, gap=8):
 
     out = []
     for l in layers:
-        if not l.get("frame"):
+        if not (l.get("frame") or l.get("theme")):
             # Try the glyph a little higher and lower too, and keep the placement that lets it stay largest.
             y0 = l.get("y", 0.5)
             l = max((fit(dict(l, y=round(y0 + dy, 3))) for dy in (0, -.04, .04, -.08, .08)), key=lambda t: t["size"])
