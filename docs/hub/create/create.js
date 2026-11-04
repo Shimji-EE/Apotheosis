@@ -467,20 +467,27 @@
     const final = scores();
     const speciesKey = s.mode === "half" ? "species Half-blood" : `species ${subOf(s.species) || s.species}`;
     const nameInput = el("input", { id: "cc-name", "data-name": "1", value: s.name, maxlength: "60", placeholder: "Name your character", "aria-label": "Character name" });
+    // Generative stage (alive.js): a glyph ring written by the build, one glyph lit per level,
+    // and the hero's ability "soul" behind the emblems.
+    const A = window.CreatorAlive;
+    const sigil = A ? A.sigil({ seedParts: [s.name, speciesKey, s.variant !== "None" ? `${s.variant} ${s.variantSub}` : "", s.cls, s.subclass, s.gestalt ? `${s.cls2} ${s.subclass2}` : "", s.background, s.religion, s.alignment], scores: final, level: s.level }) : "";
+    const emblems = el("div", { class: "stage-emblems" }, sigil, emblem(speciesKey, "stage-back"), subEmblem(s.cls, s.subclass, "stage-front"), s.gestalt ? subEmblem(s.cls2, s.subclass2, "stage-second") : "");
+    if (A) A.flare(emblems, `${speciesKey}|${s.cls}|${s.subclass}|${s.gestalt ? `${s.cls2}|${s.subclass2}` : ""}`);
     $("stage").replaceChildren(
-      el("div", { class: "stage-emblems" }, emblem(speciesKey, "stage-back"), subEmblem(s.cls, s.subclass, "stage-front"), s.gestalt ? subEmblem(s.cls2, s.subclass2, "stage-second") : ""),
+      emblems,
       el("p", { class: "stage-line", text: `${info.label}${s.variant !== "None" ? ` · ${s.variant}${O.VARIANTS[s.variant].sub ? ` (${s.variantSub})` : ""}` : ""}` }),
       el("p", { class: "stage-line stage-class", text: `${s.cls}${s.subclass ? `: ${s.subclass}` : ""}${s.gestalt ? ` / ${s.cls2}${s.subclass2 ? `: ${s.subclass2}` : ""}` : ""}` }),
       el("div", { class: "stage-level" },
         el("button", { type: "button", "data-level": "-1", "aria-label": "Lower level", text: "−", ...(s.level <= 1 ? { disabled: "" } : {}) }),
-        el("span", {}, el("small", { text: "Level" }), el("b", { text: s.level })),
+        el("span", {}, el("small", { text: "Level" }), el("b", { text: s.level, "data-k": "level" })),
         el("button", { type: "button", "data-level": "1", "aria-label": "Raise level", text: "+", ...(s.level >= 20 ? { disabled: "" } : {}) })),
       el("dl", { class: "stage-stats" },
         ...[["HP", maxHp()], ["AC", 10 + mod(final.dex)], ["Speed", `${info.speed} ft${s.variant === "Dhampir" ? " +10 m" : ""}`], ["Prof", signed(prof(s.level))]]
-          .map(([k, v]) => el("div", {}, el("dt", { text: k }), el("dd", { text: v })))),
-      el("div", { class: "stage-abilities" }, ...O.ABILITIES.map((a) => el("div", {}, el("span", { text: a }), el("b", { text: final[a] }), el("small", { text: signed(mod(final[a])) })))),
+          .map(([k, v]) => el("div", {}, el("dt", { text: k }), el("dd", { text: v, "data-k": k })))),
+      el("div", { class: "stage-abilities" }, ...O.ABILITIES.map((a) => el("div", {}, el("span", { text: a }), el("b", { text: final[a], "data-k": a }), el("small", { text: signed(mod(final[a])) })))),
       el("p", { class: "stage-line", text: [s.background, s.religion !== "None" ? s.religion : "", s.alignment].filter(Boolean).join(" · ") }),
       el("label", { class: "stage-name" }, nameInput));
+    if (A) A.numbers($("stage"));
   }
 
   /* ---------- render ---------- */

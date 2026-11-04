@@ -1082,3 +1082,29 @@ body.hub .haze { animation: m-haze 38s ease-in-out infinite alternate; }
 @keyframes ta-helix { to { background-position-x: -743px; } }
 @media (prefers-reduced-motion: reduce) { #tab-art, #tab-art * { animation: none !important; } }
 body.creator-page .cc-list, body.creator-page .cc-info, body.creator-page .cc-stage { -webkit-backdrop-filter: blur(5px) saturate(1.2); backdrop-filter: blur(5px) saturate(1.2); }
+
+/* Generative stage (create/alive.js, Charl 2026-11-04: "make it feel alive"). Behind the emblems: a ring
+   of the site's invented script written by the build, one glyph lit per level, and a hexagon of the six
+   ability scores (the hero's "soul") that swells as they change. Numbers count to new values. */
+.cc-sigil { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.sigil-guides polygon, .sigil-guides line { fill: none; stroke: rgba(216, 210, 198, 0.08); stroke-width: 0.6; }
+.sigil-guides polygon:last-of-type { stroke: rgba(208, 49, 63, 0.22); stroke-dasharray: 2 3; }
+.sigil-soul { fill: rgba(208, 49, 63, 0.12); stroke: var(--accent-bright); stroke-width: 1; stroke-linejoin: round; filter: drop-shadow(0 0 4px rgba(236, 74, 86, 0.6)); }
+.sigil-dots circle { fill: #ff8a8f; filter: drop-shadow(0 0 3px rgba(236, 74, 86, 0.9)); }
+.sigil-labels text { font: 600 7px var(--display); letter-spacing: 0.12em; text-transform: uppercase; text-anchor: middle; dominant-baseline: central; fill: rgba(140, 134, 123, 0.75); transition: fill 0.3s; }
+.sigil-labels text.is-high { fill: var(--accent-bright); }
+.sigil-glyph path { fill: none; stroke: rgba(140, 134, 123, 0.35); stroke-width: 1.6; stroke-linecap: square; stroke-linejoin: miter; stroke-dasharray: 1; transition: stroke 0.5s; }
+.sigil-glyph.is-lit path { stroke: var(--accent-bright); }
+.sigil-glyph.is-lit { filter: drop-shadow(0 0 2px rgba(236, 74, 86, 0.8)); }
+.stage-emblems.is-reforged > .stage-front, .stage-emblems.is-reforged > .stage-back { animation: m-reforge 0.7s var(--m-ease); }
+.stage-emblems.is-reforged > .stage-front { animation: m-reforge 0.7s var(--m-ease), m-ember 3.4s ease-in-out 0.7s infinite; }
+@keyframes m-reforge { 0% { transform: scale(0.82); filter: brightness(2.6) drop-shadow(0 0 22px rgba(255, 138, 143, 1)); } 100% { transform: none; } }
+.stage-stats div, .stage-abilities div, .stage-level span { position: relative; overflow: visible; }
+.stage-stats div.is-up, .stage-abilities div.is-up { animation: m-up 0.7s ease-out; }
+.stage-stats div.is-down, .stage-abilities div.is-down { animation: m-down 0.7s ease-out; }
+@keyframes m-up { 0% { border-color: var(--accent-bright); box-shadow: 0 0 14px rgba(236, 74, 86, 0.55); } 100% { box-shadow: none; } }
+@keyframes m-down { 0% { border-color: rgba(216, 210, 198, 0.4); background: rgba(216, 210, 198, 0.08); } }
+.cc-delta { position: absolute; right: 4px; top: 2px; pointer-events: none; font: 700 0.78rem var(--display); color: #ff8a8f; text-shadow: 0 0 6px rgba(236, 74, 86, 0.9); animation: m-delta 1.1s var(--m-ease) forwards; }
+.cc-delta.is-down { color: var(--ink-dim); text-shadow: none; }
+@keyframes m-delta { from { opacity: 0; transform: translateY(6px); } 25% { opacity: 1; } to { opacity: 0; transform: translateY(-16px); } }
+@media (prefers-reduced-motion: reduce) { .cc-delta { display: none; } }
