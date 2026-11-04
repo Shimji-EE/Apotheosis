@@ -56,3 +56,11 @@ forge `layers` (a game glyph, optionally an accent) and the LoRA redraws that co
 strokes that wander off the composition, and `pick: "auto"` keeps the candidate that holds the
 composition with the fewest strokes. `guide: "self"` redraws a cleaned first pass when no game glyph
 fits. `try PROMPT --icon GAME_ICON` tests one.
+
+## Badge (flat emblems)
+
+`badge.py make RECIPE.json` makes flat 2D class/subclass emblems in the style of Charl's flattened BG3
+badge sheet: one solid silhouette, 3-8 thin cut lines, tapered points, a few four-point sparkles, an
+optional ring for subclasses. Sources are BG3 badge PNGs (reference only, in the git-ignored
+icon-packs/bg3-badges) or forge/LoRA art; `add`/`remove` customise a traced base so each icon is an
+Apotheosis version, not a copy. Writes an SVG to badges/ and the site webp. Needs `pip install potracer`.
