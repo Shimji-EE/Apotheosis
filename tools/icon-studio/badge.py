@@ -16,6 +16,7 @@ A recipe is a list of icons:
   carves: [x, y, size] sparkles cut out of the fill. holes: [x, y, r] round holes. gears: [x, y, r] cogs.
   close (line-art sources): px radius that seals open outlines before filling (24 for a wolf's head).
   src or add src may also be forge layer specs: {"icon": NAME, "strokes": [...]} or a list of them.
+  keep / cut_colour: isolate the object of a full painted badge (see isolate()).
   ring: a thick round ring behind (subclass badges); the object breaks out of it at the top.
 
 Use:
@@ -51,6 +52,37 @@ def load(src):
     if p.suffix in (".png", ".webp") and p.exists():
         return Image.open(p).convert("RGBA")
     return forge.compose([{"icon": src, "major": 0.9, "size": 0.84}])  # a game line-art name
+
+
+def _poly(size, pts):
+    m = Image.new("L", size, 0)
+    ImageDraw.Draw(m).polygon([(x * size[0], y * size[1]) for x, y in pts], fill=255)
+    return np.asarray(m) > 0
+
+
+def isolate(im, keep=None, cut_colour=None):
+    """Pick the object out of a full painted badge (source coords 0-1).
+    keep: {"poly": [[x, y], ...], "max_sat": .35}: inside the polygon everything stays; outside, only
+      low-saturation (metal, silver) pixels stay, which drops a gold sunburst behind silver wings.
+    cut_colour: {"poly": [...], "hue": [lo, hi], "min_sat": .35, "inset": .045}: pixels of that hue
+      inside the polygon (shrunk by `inset`, so a rim survives) become holes, e.g. a gold cross on a shield."""
+    hsv = np.asarray(im.convert("HSV")).astype(float) / 255
+    a = np.asarray(im.getchannel("A")) > 128
+    if keep:
+        a &= _poly(im.size, keep["poly"]) | (hsv[..., 1] < keep.get("max_sat", 0.35))
+    if cut_colour:
+        lo, hi = cut_colour["hue"]
+        k = round(im.width * cut_colour.get("inset", 0.045))  # negative: grow the polygon instead
+        area = _poly(im.size, cut_colour["poly"])
+        area = ndi.binary_erosion(area, iterations=k) if k > 0 else ndi.binary_dilation(area, iterations=-k) if k < 0 else area
+        a &= ~(area & (hsv[..., 1] > cut_colour.get("min_sat", 0.35)) & (hsv[..., 0] > lo) & (hsv[..., 0] < hi))
+    lab, n = ndi.label(a)
+    if n:  # drop flame tips and other fragments the colour split leaves behind
+        sizes = ndi.sum(a, lab, range(1, n + 1))
+        a = np.isin(lab, 1 + np.flatnonzero(sizes > 0.01 * a.sum()))
+    out = np.asarray(im).copy()
+    out[..., 3] = a * 255
+    return Image.fromarray(out)
 
 
 def fit(im, size=0.84, x=0.5, y=0.5):
@@ -128,7 +160,10 @@ def is_lineart(src):
 
 
 def build(item):
-    base = fit(load(item["src"]), item.get("size", 0.84), item.get("x", 0.5), item.get("y", 0.5))
+    src = load(item["src"])
+    if item.get("keep") or item.get("cut_colour"):
+        src = isolate(src, item.get("keep"), item.get("cut_colour"))
+    base = fit(src, item.get("size", 0.84), item.get("x", 0.5), item.get("y", 0.5))
     solid, cut = silhouette(base, item.get("cuts", 6), close=item.get("close", 2), speck=item.get("speck", 0.0015),
                             lineart=is_lineart(item["src"]))
     for extra in item.get("add", []):
