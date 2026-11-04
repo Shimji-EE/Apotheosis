@@ -16,6 +16,7 @@ A recipe is a list of icons:
   carves: [x, y, size] sparkles cut out of the fill. holes: [x, y, r] round holes. gears: [x, y, r] cogs.
   close (line-art sources): px radius that seals open outlines before filling (24 for a wolf's head).
   src or add src may also be forge layer specs: {"icon": NAME, "strokes": [...]} or a list of them.
+  lines: [{"pts": [[x, y], ...], "w": 5}] cut lines drawn by hand (a shield rim, feather layers).
   keep / cut_colour: isolate the object of a full painted badge (see isolate()).
   ring: a thick round ring behind (subclass badges); the object breaks out of it at the top.
 
@@ -206,6 +207,8 @@ def finish(item, solid, cut):
         sparkle(d, x * N, y * N, s * N)
     for x, y, s in item.get("carves", []):  # a sparkle cut out of the silhouette
         sparkle(d, x * N, y * N, s * N, fill=0)
+    for ln in item.get("lines", []):  # hand-placed cut lines: {"pts": [[x, y], ...], "w": px at 512}
+        d.line([(x * N, y * N) for x, y in ln["pts"]], fill=0, width=ln.get("w", 5), joint="curve")
     for x, y, r in item.get("holes", []):
         d.ellipse([(x - r) * N, (y - r) * N, (x + r) * N, (y + r) * N], fill=0)
     for x, y, r in item.get("gears", []):

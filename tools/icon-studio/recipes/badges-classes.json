@@ -5,14 +5,8 @@
  {"label": "class Druid", "to": "creator", "src": "icon-packs/bg3-badges/Class_Druid_Hotbar_Icon.png", "cuts": 4},
  {"label": "class Fighter", "to": "creator", "src": "icon-packs/bg3-badges/Class_Fighter_Hotbar_Icon.png", "cuts": 6},
  {"label": "class Monk", "to": "creator", "src": "icon-packs/bg3-badges/Class_Monk_Hotbar_Icon.png", "cuts": 3, "speck": 0.012},
- {"label": "class Paladin", "to": "creator", "src": "icon-packs/bg3-badges/Class_Paladin_Badge_Icon.png", "cuts": 5, "size": 0.9, "keep": {"poly": [[0.28, 0.43], [0.5, 0.37], [0.72, 0.43], [0.75, 0.5], [0.72, 0.62], [0.66, 0.78], [0.5, 0.92], [0.34, 0.78], [0.28, 0.62], [0.25, 0.5]], "max_sat": 0.35}, "cut_colour": {"poly": [[0.5, 0.45], [0.54, 0.52], [0.62, 0.56], [0.54, 0.6], [0.5, 0.72], [0.46, 0.6], [0.38, 0.56], [0.46, 0.52]], "hue": [0.06, 0.17], "min_sat": 0.35, "inset": -0.015}},
+ {"label": "class Paladin", "to": "creator", "src": "icon-packs/bg3-badges/Class_Paladin_Badge_Icon.png", "cuts": 0, "size": 0.9, "keep": {"poly": [[0.28, 0.43], [0.5, 0.37], [0.72, 0.43], [0.75, 0.5], [0.72, 0.62], [0.66, 0.78], [0.5, 0.92], [0.34, 0.78], [0.28, 0.62], [0.25, 0.5]], "max_sat": 0.35}, "cut_colour": {"poly": [[0.5, 0.45], [0.54, 0.52], [0.62, 0.56], [0.54, 0.6], [0.5, 0.72], [0.46, 0.6], [0.38, 0.56], [0.46, 0.52]], "hue": [0.06, 0.17], "min_sat": 0.35, "inset": -0.015}, "lines": [{"pts": [[0.344, 0.383], [0.5, 0.324], [0.656, 0.383], [0.652, 0.566], [0.586, 0.684], [0.5, 0.75], [0.414, 0.684], [0.348, 0.566], [0.344, 0.383]], "w": 6}, {"pts": [[0.5, 0.324], [0.5, 0.398]], "w": 5}, {"pts": [[0.5, 0.562], [0.5, 0.746]], "w": 5}, {"pts": [[0.57, 0.293], [0.723, 0.293], [0.859, 0.312]], "w": 5}, {"pts": [[0.586, 0.344], [0.742, 0.355], [0.889, 0.359]], "w": 5}, {"pts": [[0.629, 0.395], [0.762, 0.402], [0.844, 0.398]], "w": 5}, {"pts": [[0.43, 0.293], [0.277, 0.293], [0.141, 0.312]], "w": 5}, {"pts": [[0.414, 0.344], [0.258, 0.355], [0.111, 0.359]], "w": 5}, {"pts": [[0.371, 0.395], [0.238, 0.402], [0.156, 0.398]], "w": 5}]},
  {"label": "class Ranger", "to": "creator", "src": "icon-packs/bg3-badges/Class_Ranger_Hotbar_Icon.png", "cuts": 6},
  {"label": "class Rogue", "to": "creator", "src": "icon-packs/bg3-badges/Class_Rogue_Hotbar_Icon.png", "cuts": 4},
- {"label": "class Sorcerer", "to": "creator", "src": {"draw": "sorcerer"}},
- {"label": "class Warlock", "to": "creator", "src": {"draw": "warlock"}},
- {"label": "class Wizard", "to": "creator", "src": "icon-packs/bg3-badges/Class_Wizard_Hotbar_Icon.png", "cuts": 6},
- {"label": "class Carlislean Lycanthrope", "to": "creator", "src": {"draw": "lycanthrope"}},
- {"label": "class Artificer", "to": "creator", "src": {"draw": "artificer"}},
- {"label": "class Blood Hunter", "to": "creator", "src": {"draw": "blood hunter"}},
- {"label": "class Mystic", "to": "creator", "src": {"draw": "mystic"}}
+ {"label": "class Wizard", "to": "creator", "src": "icon-packs/bg3-badges/Class_Wizard_Hotbar_Icon.png", "cuts": 6}
 ]
