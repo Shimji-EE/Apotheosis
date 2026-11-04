@@ -500,21 +500,6 @@
     feats: [["laurel", "breathe", "50% 52%"], ["rays", "twinkle"], ["star", "spin", "50% 52%"]],
     belief: [["rays", "spin-slow", "50% 54%"], ["halo", "breathe", "50% 54%"], ["sun", "spin", "50% 29%"], ["sky", "twinkle"]],
   };
-  // One small mark per class feature reached so far, for the tab bar.
-  function classMarks() {
-    const out = [];
-    for (const cls of [s.cls, s.gestalt ? s.cls2 : null].filter(Boolean)) {
-      const c = CLASSES[cls];
-      const list = c.features ? c.features.filter(([lv]) => lv <= s.level).map(([lv, n]) => [lv, n]) : srdClassFeatures(cls, s.level);
-      for (const [lv, n] of list) {
-        // A feature without a pack icon still leaves a mark: a small red lozenge.
-        if (!out.some((x) => x[1] === n)) out.push([lv, n, powerImg(n)]);
-      }
-    }
-    const el_ = window.CreatorMotifs.marks(out.sort((a, b) => a[0] - b[0]).map(([, n, img]) => [n, img]));
-    el_.id = "cc-marks";
-    return el_;
-  }
   function render() {
     // Faint engraved art behind the page, one living piece per tab (tools/icon-studio/tab_art.py): each
     // layer turns, slides or pulses on its own. The species helix lies on a diagonal and slides as if turning.
@@ -530,13 +515,9 @@
       art.classList.remove("is-in"); void art.offsetWidth; art.classList.add("is-in");
     }
     $("tabs").replaceChildren(...TABS.map(([k, t], i) => el("button", { type: "button", role: "tab", "aria-selected": String(tab === k), "data-tab": k },
-      el("span", { class: "tab-n", text: i + 1 }), t, problems().some(([pt]) => pt === k) ? el("span", { class: "tab-dot", title: "Something to choose here" }) : "")),
-      ...(window.CreatorMotifs ? [classMarks()] : []));
-    // The menu takes on the class (motifs.js): corner ornaments, tab markers and a faint engraving.
-    if (window.CreatorMotifs) {
-      const e = EMBLEMS[keyOf(`class ${s.cls}`)];
-      window.CreatorMotifs.apply({ cls: s.cls, second: s.gestalt ? s.cls2 : "", emblemSrc: e ? `../icons/creator/${e.file}` : "" });
-    }
+      el("span", { class: "tab-n", text: i + 1 }), t, problems().some(([pt]) => pt === k) ? el("span", { class: "tab-dot", title: "Something to choose here" }) : "")));
+    // Animated corner trims on the panel frames, drawn for the class (motifs.js).
+    if (window.CreatorMotifs) window.CreatorMotifs.apply({ cls: s.cls, second: s.gestalt ? s.cls2 : "" });
     const lists = { species: listSpecies, class: listClass, background: listBackground, abilities: listAbilities, feats: listFeats, belief: listBelief };
     const scroll = $("list").scrollTop;
     $("list").dataset.view = `${tab}:${s.mode}`; // replays the list's entrance only when this changes
