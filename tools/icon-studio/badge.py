@@ -13,11 +13,16 @@ A recipe is a list of icons:
     "sparkles": [[.2, .25, .06]], "ring": false}]
   cuts: how many inner edge lines to keep (3-8 reads best). add: extra silhouettes (customise a traced base).
   remove: boxes (0-1 coords) cleared from the silhouette. sparkles: [x, y, size] four-point stars.
+  carves: [x, y, size] sparkles cut out of the fill. holes: [x, y, r] round holes. gears: [x, y, r] cogs.
+  close (line-art sources): px radius that seals open outlines before filling (24 for a wolf's head).
+  src or add src may also be forge layer specs: {"icon": NAME, "strokes": [...]} or a list of them.
   ring: a thick round ring behind (subclass badges); the object breaks out of it at the top.
 
 Use:
   python tools/icon-studio/badge.py make RECIPE.json [--dry] [-o sheet.png]   writes SVG + site webp
-Needs: numpy scipy pillow potracer
+For BG3 classes, trace the "Class <Class> Hotbar Icon.png" (the bare object): the 300 px badge's sunburst
+and enamel disc trace as one blob.
+Needs: numpy scipy scikit-image pillow potracer
 """
 import argparse
 import json
@@ -38,6 +43,8 @@ RED = "#e0303f"
 
 
 def load(src):
+    if isinstance(src, (dict, list)):  # forge layer spec(s): {"icon": NAME, "strokes": [...]} etc.
+        return forge.compose(src if isinstance(src, list) else [src])
     p = Path(src)
     if not p.is_absolute():
         p = ROOT / p
@@ -56,45 +63,78 @@ def fit(im, size=0.84, x=0.5, y=0.5):
     return c
 
 
-def silhouette(im, cuts=6):
+def silhouette(im, cuts=6, line=5, min_w=7, speck=0.0015, close=2, lineart=None):
     """(solid mask, cut-line mask) from RGBA art."""
+    from skimage.morphology import skeletonize
     a = np.asarray(im.getchannel("A")).astype(float) / 255
-    g = np.asarray(im.convert("L")).astype(float) / 255
+    g = ndi.gaussian_filter(np.asarray(im.convert("L")).astype(float) / 255, 1.5)
     solid = a > 0.5
-    if solid.mean() < 0.12:  # line art: fill closed shapes, cut the strokes back in
-        lines = ndi.binary_closing(solid, iterations=2)
-        solid = ndi.binary_fill_holes(lines)
-        inner = lines & ndi.binary_erosion(solid, iterations=5)
-    else:  # painted badge: long, strong luminance edges inside the shape
-        e = np.hypot(ndi.sobel(ndi.gaussian_filter(g, 2), 0), ndi.sobel(ndi.gaussian_filter(g, 2), 1))
-        e = (e > np.percentile(e[solid], 92)) & ndi.binary_erosion(solid, iterations=8)
-        inner = e
-    lab, n = ndi.label(ndi.binary_dilation(inner, iterations=1))
-    if n:
-        sizes = ndi.sum(np.ones_like(a), lab, range(1, n + 1))
-        keep = 1 + np.argsort(-sizes)[:cuts]
-        inner = np.isin(lab, keep)
-    cut = ndi.binary_erosion(ndi.binary_dilation(inner, iterations=3), iterations=1)
-    solid = ndi.binary_opening(solid, iterations=2)
+    if lineart if lineart is not None else solid.mean() < 0.12:  # line art: fill shapes, cut strokes back in
+        lines = ndi.binary_dilation(solid, iterations=1)
+        # `close` (px radius) seals gaps in open outlines (a wolf's ears) so the outer shape fills.
+        r = max(1, close)
+        disk = np.hypot(*np.mgrid[-r:r + 1, -r:r + 1]) <= r
+        padded = np.pad(lines, r + 1)
+        solid = ndi.binary_fill_holes(ndi.binary_closing(padded, structure=disk))[r + 1:-r - 1, r + 1:-r - 1] | lines
+        inner = skeletonize(lines & ndi.binary_erosion(solid, iterations=5))
+    else:  # painted icon: the dark grooves of the painting (black top-hat), as centre lines
+        solid = ndi.binary_opening(solid, iterations=2)
+        t = ndi.black_tophat(g, size=11)
+        core = ndi.binary_erosion(solid, iterations=10)
+        inner = skeletonize((t > np.percentile(t[core], 86)) & core) if core.any() else np.zeros_like(solid)
+    # Thin parts (key shafts, blade tips) get a minimum width so they survive at 64 px.
+    thin = solid & ~ndi.binary_opening(solid, iterations=min_w // 2)
+    solid = solid | ndi.binary_dilation(thin, iterations=2)
+    lab, n = ndi.label(solid)
+    if n:  # drop specks and flecks
+        sizes = ndi.sum(solid, lab, range(1, n + 1))
+        solid = np.isin(lab, 1 + np.flatnonzero(sizes >= speck * solid.size))
+    cut = np.zeros_like(solid)
+    lab, n = ndi.label(inner & solid, structure=np.ones((3, 3)))
+    if n:  # the longest grooves become the cut lines
+        sizes = ndi.sum(inner, lab, range(1, n + 1))
+        keep = [1 + i for i in np.argsort(-sizes)[:cuts] if sizes[i] >= 25]
+        cut = ndi.binary_dilation(np.isin(lab, keep), iterations=line // 2)
     return solid, cut
 
 
-def sparkle(d, x, y, r):
+def gear(d, x, y, r, teeth=8):
+    """A small cog: toothed disc with a hole (the Artificer's mark)."""
+    g = r * 1.2  # a clean gap where it sits against the silhouette
+    d.ellipse([x - g, y - g, x + g, y + g], fill=0)
+    pts = []
+    for k in range(teeth * 4):
+        ang = 2 * np.pi * k / (teeth * 4)
+        rr = r if (k // 2) % 2 == 0 else r * 0.78
+        pts.append((x + rr * np.cos(ang), y + rr * np.sin(ang)))
+    d.polygon(pts, fill=255)
+    h = r * 0.32
+    d.ellipse([x - h, y - h, x + h, y + h], fill=0)
+
+
+def sparkle(d, x, y, r, fill=255):
     """Four-point star with concave sides."""
     pts = []
     for k in range(8):
         ang = np.pi / 4 * k
         rr = r if k % 2 == 0 else r * 0.22
         pts.append((x + rr * np.sin(ang), y - rr * np.cos(ang)))
-    d.polygon(pts, fill=255)
+    d.polygon(pts, fill=fill)
+
+
+def is_lineart(src):
+    """Forge glyphs (names or layer specs) are line art; image files are painted."""
+    return isinstance(src, (dict, list)) or not str(src).lower().endswith((".png", ".webp"))
 
 
 def build(item):
     base = fit(load(item["src"]), item.get("size", 0.84), item.get("x", 0.5), item.get("y", 0.5))
-    solid, cut = silhouette(base, item.get("cuts", 6))
+    solid, cut = silhouette(base, item.get("cuts", 6), close=item.get("close", 2), speck=item.get("speck", 0.0015),
+                            lineart=is_lineart(item["src"]))
     for extra in item.get("add", []):
         s2, c2 = silhouette(fit(load(extra["src"]), extra.get("size", 0.3), extra.get("x", 0.5), extra.get("y", 0.5)),
-                            extra.get("cuts", 3))
+                            extra.get("cuts", 3), close=extra.get("close", 2),
+                            lineart=is_lineart(extra["src"]))
         gap = ndi.binary_dilation(s2, iterations=6)  # a clean gap where the added part overlaps
         solid = (solid & ~gap) | s2
         cut = (cut & ~gap) | c2
@@ -112,6 +152,12 @@ def build(item):
         d = ImageDraw.Draw(m)
     for x, y, s in item.get("sparkles", []):
         sparkle(d, x * N, y * N, s * N)
+    for x, y, s in item.get("carves", []):  # a sparkle cut out of the silhouette
+        sparkle(d, x * N, y * N, s * N, fill=0)
+    for x, y, r in item.get("holes", []):
+        d.ellipse([(x - r) * N, (y - r) * N, (x + r) * N, (y + r) * N], fill=0)
+    for x, y, r in item.get("gears", []):
+        gear(d, x * N, y * N, r * N)
     return m
 
 
