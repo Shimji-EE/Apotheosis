@@ -1108,3 +1108,41 @@ body.creator-page .cc-list, body.creator-page .cc-info, body.creator-page .cc-st
 .cc-delta.is-down { color: var(--ink-dim); text-shadow: none; }
 @keyframes m-delta { from { opacity: 0; transform: translateY(6px); } 25% { opacity: 1; } to { opacity: 0; transform: translateY(-16px); } }
 @media (prefers-reduced-motion: reduce) { .cc-delta { display: none; } }
+
+/* The menu takes on the class (create/motifs.js, Charl 2026-11-04: "subtle and intentional"). Thin red
+   corner ornaments per class on the three panels (backgrounds stay put while the list scrolls), the
+   class's own tab-marker shape, a faint engraving of the class emblem behind the details, and one small
+   mark per class feature reached at the end of the tab bar. */
+body.creator-page .cc-list, body.creator-page .cc-info, body.creator-page .cc-stage {
+  background-image: var(--cc-c-tl, none), var(--cc-c-tr, none), var(--cc-c-br, none), var(--cc-c-bl, none),
+    linear-gradient(160deg, var(--glass-hi), transparent 40%), linear-gradient(180deg, var(--glass), var(--glass-deep));
+  background-repeat: no-repeat;
+  background-position: left 4px top 4px, right 4px top 4px, right 4px bottom 4px, left 4px bottom 4px, 0 0, 0 0;
+  background-size: 44px 44px, 44px 44px, 44px 44px, 44px 44px, auto, auto;
+}
+body.creator-page .cc-stage {
+  background-image: var(--cc-c-tl, none), var(--cc-c-tr, none), var(--cc-c-br, none), var(--cc-c-bl, none),
+    radial-gradient(ellipse at 50% 28%, rgba(208, 49, 63, 0.2), transparent 60%), linear-gradient(180deg, var(--glass), var(--glass-deep));
+}
+.cc-info > * { position: relative; z-index: 1; }
+body.creator-page .cc-info::before {
+  content: ""; position: absolute; right: -60px; bottom: -60px; width: 300px; height: 300px; pointer-events: none; z-index: 0;
+  background: var(--cc-engrave, none) center / contain no-repeat; opacity: 0.07; filter: grayscale(1) brightness(1.4);
+  -webkit-mask-image: radial-gradient(circle at 40% 40%, #000 30%, transparent 70%); mask-image: radial-gradient(circle at 40% 40%, #000 30%, transparent 70%);
+}
+body.creator-page .tab-n { clip-path: var(--cc-mark, polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%)); border-radius: var(--cc-mark-r, 0); width: 24px; transition: clip-path 0.6s var(--m-ease), border-radius 0.6s var(--m-ease); }
+body.cc-reshape .cc-list, body.cc-reshape .cc-info, body.cc-reshape .cc-stage { animation: cc-reshape 1.6s ease-in-out; }
+body.cc-reshape .cc-info::before { animation: cc-engrave 1.6s ease-in-out; }
+@keyframes cc-reshape { 40% { box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), inset 0 0 70px rgba(208, 49, 63, 0.16), 0 0 24px rgba(208, 49, 63, 0.12); } }
+@keyframes cc-engrave { from { opacity: 0; transform: scale(1.06); } }
+
+/* Feature marks: tinted to Grave Red, full colour on hover. */
+.cc-marks { margin-left: auto; align-self: center; display: flex; align-items: center; gap: 4px; padding: 0 0.4rem; }
+.cc-mark { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(208, 49, 63, 0.35); background: rgba(11, 10, 8, 0.6); overflow: hidden; }
+.cc-mark .trait-icon { width: 18px; height: 18px; margin: 0; filter: grayscale(1) sepia(1) hue-rotate(-35deg) saturate(2.6) brightness(0.85); opacity: 0.75; transition: filter 0.3s, opacity 0.3s; }
+.cc-mark:hover .trait-icon { filter: none; opacity: 1; }
+.cc-mark.is-new { animation: cc-mark-in 0.9s var(--m-ease) backwards; animation-delay: calc(var(--i, 0) * 30ms); }
+@keyframes cc-mark-in { from { opacity: 0; transform: translateY(-6px) scale(0.6); box-shadow: 0 0 12px rgba(236, 74, 86, 0.9); } }
+.cc-marks-more { font: 500 0.7rem var(--display); letter-spacing: 0.1em; color: var(--ink-dim); margin-right: 2px; }
+@media (max-width: 700px) { .cc-marks { width: 100%; margin: 0; padding: 0.4rem 0.2rem; flex-wrap: wrap; } }
+.cc-mark .trait-icon.is-blank { width: 7px; height: 7px; border: 0; border-radius: 0; background: var(--accent); transform: rotate(45deg); opacity: 0.7; filter: none; }
