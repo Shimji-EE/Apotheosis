@@ -170,7 +170,20 @@ def build(item):
         cut = np.zeros_like(solid)
     else:
         solid, cut = traced(item)
+    if item.get("drop_stars"):
+        solid = drop_stars(solid, *item["drop_stars"])
     return finish(item, solid, cut)
+
+
+def drop_stars(solid, max_area=0.02, max_solidity=0.6):
+    """Remove sparkle accents: separate pieces that are small and spiky (area well below their convex hull)."""
+    from skimage.measure import regionprops, label
+    lab = label(solid, connectivity=2)
+    for r in regionprops(lab):
+        tiny = r.area < 0.004 * solid.size and r.solidity < 0.85  # a small cross thickened to look solid
+        if tiny or (r.area < max_area * solid.size and r.solidity < max_solidity):
+            solid[lab == r.label] = False
+    return solid
 
 
 def traced(item):
