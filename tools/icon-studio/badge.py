@@ -160,12 +160,29 @@ def is_lineart(src):
 
 
 def build(item):
+    if isinstance(item["src"], dict) and "draw" in item["src"]:  # a procedural design (emblems.py)
+        import emblems
+        solid = emblems.draw(item["src"]["draw"])
+        a = Image.fromarray(solid.astype(np.uint8) * 255)
+        solid = np.asarray(fit(Image.merge("RGBA", (a, a, a, a)), item.get("size", 0.84), item.get("x", 0.5),
+                               item.get("y", 0.5)).getchannel("A")) > 127
+        cut = np.zeros_like(solid)
+    else:
+        solid, cut = traced(item)
+    return finish(item, solid, cut)
+
+
+def traced(item):
     src = load(item["src"])
     if item.get("keep") or item.get("cut_colour"):
         src = isolate(src, item.get("keep"), item.get("cut_colour"))
     base = fit(src, item.get("size", 0.84), item.get("x", 0.5), item.get("y", 0.5))
-    solid, cut = silhouette(base, item.get("cuts", 6), close=item.get("close", 2), speck=item.get("speck", 0.0015),
+    return silhouette(base, item.get("cuts", 6), close=item.get("close", 2), speck=item.get("speck", 0.0015),
                             lineart=is_lineart(item["src"]))
+
+
+def finish(item, solid, cut):
+    """Additions, removals, ring and accents on top of the base silhouette; returns the final mask."""
     for extra in item.get("add", []):
         s2, c2 = silhouette(fit(load(extra["src"]), extra.get("size", 0.3), extra.get("x", 0.5), extra.get("y", 0.5)),
                             extra.get("cuts", 3), close=extra.get("close", 2),
